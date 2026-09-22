@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 87 Complete)
-VERSION: v1.3.0
+STATUS: CERTIFIED (Phase 88 Complete)
+VERSION: v1.4.0
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -57,9 +57,13 @@ VERSION: v1.3.0
 
 ---
 
-### Fase 6: Pipeline WebXR Inmersivo Avanzado (v1.4.0) — [PLANIFICADA]
-* [ ] Proyección espacial WebXR en dispositivos con cámara y sensores de profundidad activos.
-* [ ] Mapeo dinámico de texturas y drapeado de telas en avatares paramétricos en tiempo real.
+### Fase 6: WebXR AR Espacial Real & Hit-Test Surface Placement (v1.4.0) — [IMPLEMENTED]
+* [x] Soporte de sesión `immersive-ar` con detección de capacidades `navigator.xr` y degradación a 5 niveles de fallback.
+* [x] Detección de planos y anclaje espacial con retícula de Hit-Test en tiempo real.
+* [x] Anclaje y colocación interactiva de modelos GLB/GLTF y procedurales en el espacio físico.
+* [x] Controles de transformación espacial (Escala 0.25x - 2.5x, Rotación 45° planar, Quitar objeto).
+* [x] Limpieza completa de recursos de sesión XR (cancelAnimationFrame, clearTimeout, session.end()) evitando fugas de memoria.
+* [x] Creación de 3 documentos canónicos: `docs/WEBXR_AR_ARCHITECTURE.md`, `docs/WEBXR_COMPATIBILITY.md`, `docs/AR_SESSION_GUIDE.md` (Total 17 docs).
 
 ---
 

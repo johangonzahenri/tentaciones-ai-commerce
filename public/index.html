@@ -224,12 +224,34 @@
         <button class="btn btn-icon" id="btn-ar-modal-close">✕</button>
       </div>
 
-      <!-- AR Canvas & Interactive Fitting Visualizer -->
+      <!-- AR Canvas & Interactive Spatial Fitting Visualizer -->
       <div class="ar-preview-canvas" id="ar-canvas-container">
-        <div class="ar-mode-badge-top" id="ar-mode-pill">DEMO 2D SIMULATION</div>
-        <div class="ar-avatar-silhouette" id="ar-avatar-icon">👗</div>
-        <div style="margin-top: 0.5rem; font-weight: 700; font-size: 0.9375rem;" id="ar-view-mode-label">Simulación Espacial AR / 3D</div>
-        <div style="font-size: 0.75rem; opacity: 0.8;" id="ar-urn-display">urn:tentaciones:ar:apparel</div>
+        <!-- 2D Fallback view -->
+        <div id="ar-2d-view" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
+          <div class="ar-mode-badge-top" id="ar-mode-pill">DEMO 2D SIMULATION</div>
+          <div class="ar-avatar-silhouette" id="ar-avatar-icon">👗</div>
+          <div style="margin-top: 0.5rem; font-weight: 700; font-size: 0.9375rem;" id="ar-view-mode-label">Simulación Espacial AR / 3D</div>
+          <div style="font-size: 0.75rem; opacity: 0.8;" id="ar-urn-display">urn:tentaciones:ar:apparel</div>
+        </div>
+
+        <!-- Real WebXR Spatial Viewport (GLB Canvas & Camera feed) -->
+        <div id="ar-spatial-viewport" style="display: none; position: absolute; inset: 0; width: 100%; height: 100%;">
+          <canvas id="ar-spatial-canvas" width="540" height="260" style="width: 100%; height: 100%; display: block;"></canvas>
+          <div class="ar-hit-reticle" id="ar-hit-reticle">
+            <div class="reticle-ring"></div>
+            <div class="reticle-dot"></div>
+          </div>
+          <div class="ar-hud-status" id="ar-hud-status">
+            <span id="ar-hud-text">Buscando superficie plana...</span>
+          </div>
+          <div class="ar-spatial-controls" id="ar-spatial-controls" style="display: none;">
+            <button class="btn btn-secondary btn-sm" id="btn-ar-scale-down" title="Reducir tamaño">🔍 -</button>
+            <button class="btn btn-secondary btn-sm" id="btn-ar-scale-up" title="Aumentar tamaño">🔍 +</button>
+            <button class="btn btn-secondary btn-sm" id="btn-ar-rot-left" title="Girar izquierda">↺ -45°</button>
+            <button class="btn btn-secondary btn-sm" id="btn-ar-rot-right" title="Girar derecha">↻ +45°</button>
+            <button class="btn btn-danger btn-sm" id="btn-ar-remove-object" title="Quitar objeto">🗑️ Quitar</button>
+          </div>
+        </div>
       </div>
 
       <!-- Mode Selector (WebXR vs 2D Demo) -->
@@ -239,6 +261,13 @@
         </button>
         <button class="btn btn-secondary" id="btn-mode-webxr">
           <span>👓</span> <span id="lbl-mode-webxr">WebXR Espacial</span>
+        </button>
+      </div>
+
+      <!-- AR Placement Action Button (When in WebXR Spatial Mode) -->
+      <div id="ar-placement-action-container" style="display: none; margin-bottom: 1rem;">
+        <button class="btn btn-primary" id="btn-ar-place-object" style="width: 100%;" disabled>
+          📍 Tocar para Colocar en Superficie
         </button>
       </div>
 

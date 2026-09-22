@@ -15,6 +15,12 @@ import {
 } from "../src/security/demo-guardrails.js";
 import { recommendSize, resolveVirtualFitting } from "../src/domain/ar-fitting.js";
 import { MODEL_3D_ASSET_REGISTRY, resolve3DAssetForProduct } from "../src/domain/3d-assets.js";
+import {
+  resolveARCapability,
+  determineFallbackTier,
+  clampARScale,
+  DEFAULT_AR_SESSION_CONFIG,
+} from "../src/domain/webxr-spatial.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +28,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 14 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 17 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -38,6 +44,9 @@ test("1. Documentation Completeness: All 14 canonical docs exist with mandatory 
     "PUBLIC_DEPLOYMENT.md",
     "DEMO_RELEASE.md",
     "RELEASE_1_3_0.md",
+    "WEBXR_AR_ARCHITECTURE.md",
+    "WEBXR_COMPATIBILITY.md",
+    "AR_SESSION_GUIDE.md",
   ];
 
   for (const doc of docs) {
@@ -289,4 +298,59 @@ test("15. Static Build & Zero Secret Invariant: Public distribution files contai
     }
   }
 });
+
+test("16. WebXR Spatial Capability Resolver: Accurately evaluates hardware capabilities and camera permissions", () => {
+  // 1. Full WebXR Support
+  const fullCaps = resolveARCapability({
+    hasNavigatorXR: true,
+    isSessionSupported: true,
+    hasHitTestSource: true,
+    cameraAllowed: true,
+  });
+  assert.equal(fullCaps.webxr, "AVAILABLE");
+  assert.equal(fullCaps.immersiveAr, "AVAILABLE");
+  assert.equal(fullCaps.hitTest, "AVAILABLE");
+  assert.equal(fullCaps.camera, "AVAILABLE");
+
+  // 2. Navigator XR absent (Desktop / Legacy Mobile)
+  const legacyCaps = resolveARCapability({
+    hasNavigatorXR: false,
+  });
+  assert.equal(legacyCaps.webxr, "UNAVAILABLE");
+  assert.equal(legacyCaps.immersiveAr, "UNAVAILABLE");
+  assert.equal(legacyCaps.hitTest, "UNAVAILABLE");
+
+  // 3. Permission Denied
+  const deniedCaps = resolveARCapability({
+    hasNavigatorXR: true,
+    isSessionSupported: true,
+    cameraAllowed: false,
+  });
+  assert.equal(deniedCaps.camera, "PERMISSION_DENIED");
+});
+
+test("17. Multi-Tier Fallback Cascade: Determines deterministic fallback path across all device scenarios", () => {
+  // Scenario 1: Native AR with hit-test
+  const fullCaps = resolveARCapability({
+    hasNavigatorXR: true,
+    isSessionSupported: true,
+    hasHitTestSource: true,
+    cameraAllowed: true,
+  });
+  assert.equal(determineFallbackTier(fullCaps, true), "TIER_1_IMMERSIVE_HIT_TEST");
+
+  // Scenario 2: WebXR unavailable, but real GLB exists -> Tier 2 (3D GLB Viewer)
+  const legacyCaps = resolveARCapability({ hasNavigatorXR: false });
+  assert.equal(determineFallbackTier(legacyCaps, true), "TIER_2_REAL_GLB_VIEWER");
+
+  // Scenario 3: Real GLB absent, but Canvas 3D available -> Tier 3 (Procedural Mesh)
+  assert.equal(determineFallbackTier(legacyCaps, false), "TIER_3_PROCEDURAL_3D_VIEWER");
+});
+
+test("18. AR Transform Constraints: Enforces min/max boundaries on spatial model scaling", () => {
+  assert.equal(clampARScale(1.0, DEFAULT_AR_SESSION_CONFIG), 1.0);
+  assert.equal(clampARScale(0.05, DEFAULT_AR_SESSION_CONFIG), 0.25, "Must clamp minimum scale to 0.25");
+  assert.equal(clampARScale(10.0, DEFAULT_AR_SESSION_CONFIG), 2.5, "Must clamp maximum scale to 2.5");
+});
+
 

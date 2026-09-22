@@ -82,8 +82,11 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (14 Documentos Certificados)
+## 6. Documentación Canónica (17 Documentos Certificados)
 
+* [`docs/WEBXR_AR_ARCHITECTURE.md`](docs/WEBXR_AR_ARCHITECTURE.md): Arquitectura de Realidad Aumentada WebXR y anclaje espacial Hit-Test.
+* [`docs/WEBXR_COMPATIBILITY.md`](docs/WEBXR_COMPATIBILITY.md): Matriz de compatibilidad de dispositivos y requerimientos de contexto seguro (HTTPS).
+* [`docs/AR_SESSION_GUIDE.md`](docs/AR_SESSION_GUIDE.md): Máquina de estados de la sesión AR y ciclo de vida de recursos.
 * [`docs/RELEASE_1_3_0.md`](docs/RELEASE_1_3_0.md): Registro de certificación y release v1.3.0.
 * [`docs/3D_ARCHITECTURE.md`](docs/3D_ARCHITECTURE.md): Arquitectura matemática del motor de proyección 3D Canvas.
 * [`docs/GLTF_ASSET_GUIDE.md`](docs/GLTF_ASSET_GUIDE.md): Especificación de modelos GLB/GLTF, licencias CC0 y presupuestos.

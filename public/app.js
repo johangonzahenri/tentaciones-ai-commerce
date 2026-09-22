@@ -28,6 +28,19 @@ const state = {
     currentLoadedAsset: null,
     currentGeometry: null,
   },
+  // WebXR AR Spatial Session & Hit-Test State
+  arSpatial: {
+    status: "AR_IDLE", // "AR_IDLE" | "AR_SCANNING_SURFACE" | "AR_SURFACE_DETECTED" | "AR_PLACED" | "AR_ERROR"
+    session: null,
+    refSpace: null,
+    hitTestSource: null,
+    animFrameId: null,
+    surfaceHit: false,
+    placedObject: false,
+    transform: { x: 0, y: -0.2, z: -1.0, rotationY: 0, scale: 1.0 },
+    loadedGeometry: null,
+    isScanningSim: null,
+  },
 };
 
 function t(key, vars = {}) {
@@ -106,6 +119,20 @@ const elements = {
   arViewModeLabel: document.getElementById("ar-view-mode-label"),
   arModePill: document.getElementById("ar-mode-pill"),
   arUrnDisplay: document.getElementById("ar-urn-display"),
+  ar2DView: document.getElementById("ar-2d-view"),
+  arSpatialViewport: document.getElementById("ar-spatial-viewport"),
+  arSpatialCanvas: document.getElementById("ar-spatial-canvas"),
+  arHitReticle: document.getElementById("ar-hit-reticle"),
+  arHudStatus: document.getElementById("ar-hud-status"),
+  arHudText: document.getElementById("ar-hud-text"),
+  arSpatialControls: document.getElementById("ar-spatial-controls"),
+  arPlacementActionContainer: document.getElementById("ar-placement-action-container"),
+  btnArPlaceObject: document.getElementById("btn-ar-place-object"),
+  btnArScaleDown: document.getElementById("btn-ar-scale-down"),
+  btnArScaleUp: document.getElementById("btn-ar-scale-up"),
+  btnArRotLeft: document.getElementById("btn-ar-rot-left"),
+  btnArRotRight: document.getElementById("btn-ar-rot-right"),
+  btnArRemoveObject: document.getElementById("btn-ar-remove-object"),
   arProfileCardsContainer: document.getElementById("profile-cards-container"),
   arRecommendedSize: document.getElementById("ar-recommended-size"),
   arRationaleText: document.getElementById("ar-rationale-text"),
@@ -181,8 +208,8 @@ function bindEvents() {
   elements.aiCloseBtn.addEventListener("click", () => closeDrawer(elements.aiDrawer));
 
   elements.modalCloseBtn.addEventListener("click", () => closeModal(elements.productModal));
-  elements.arModalCloseBtn.addEventListener("click", () => closeModal(elements.arModal));
-  elements.btnArCloseReturn.addEventListener("click", () => closeModal(elements.arModal));
+  elements.arModalCloseBtn.addEventListener("click", () => closeARModal());
+  elements.btnArCloseReturn.addEventListener("click", () => closeARModal());
   elements.checkoutCloseBtn.addEventListener("click", () => closeModal(elements.checkoutModal));
 
   // 3D Viewer Toolbar & Buttons
@@ -233,25 +260,24 @@ function bindEvents() {
     }
   });
 
-  // AR Modes
-  elements.btnMode2D.addEventListener("click", () => {
-    state.arViewMode = "2D";
-    elements.btnMode2D.className = "btn btn-secondary active-mode";
-    elements.btnModeWebXR.className = "btn btn-secondary";
-    elements.arModePill.textContent = "DEMO 2D SIMULATION";
-    elements.arViewModeLabel.textContent = "Simulación Espacial 2D Interactiva";
-  });
+  // AR Modes & Spatial Controls
+  elements.btnMode2D.addEventListener("click", () => switchARViewMode("2D"));
+  elements.btnModeWebXR.addEventListener("click", () => switchARViewMode("WEBXR"));
 
-  elements.btnModeWebXR.addEventListener("click", () => {
-    if (state.webxrSupported) {
-      state.arViewMode = "WEBXR";
-      elements.btnModeWebXR.className = "btn btn-secondary active-mode";
-      elements.btnMode2D.className = "btn btn-secondary";
-      elements.arModePill.textContent = "WEBXR IMMERSIVE";
-      elements.arViewModeLabel.textContent = "Proyección Espacial AR WebXR Activa";
-    } else {
-      alert(t("ar.webxr_unsupported"));
-    }
+  elements.btnArPlaceObject.addEventListener("click", () => handleARPlaceObject());
+  elements.btnArRemoveObject.addEventListener("click", () => handleARRemoveObject());
+
+  elements.btnArScaleDown.addEventListener("click", () => {
+    state.arSpatial.transform.scale = Math.max(0.3, state.arSpatial.transform.scale - 0.15);
+  });
+  elements.btnArScaleUp.addEventListener("click", () => {
+    state.arSpatial.transform.scale = Math.min(2.5, state.arSpatial.transform.scale + 0.15);
+  });
+  elements.btnArRotLeft.addEventListener("click", () => {
+    state.arSpatial.transform.rotationY -= 45;
+  });
+  elements.btnArRotRight.addEventListener("click", () => {
+    state.arSpatial.transform.rotationY += 45;
   });
 
   elements.btnArAddToCart.addEventListener("click", () => {
@@ -1075,7 +1101,15 @@ function openARModal(product) {
   elements.arUrnDisplay.textContent = product.defaultArUrn || "urn:tentaciones:ar:apparel";
   elements.arAvatarIcon.textContent = getProductCategoryIcon(product.category);
   updateARRecommendation();
+
+  // Reset to 2D view initially
+  switchARViewMode("2D");
   openModal(elements.arModal);
+}
+
+function closeARModal() {
+  cleanupARSpatialSession();
+  closeModal(elements.arModal);
 }
 
 function updateARRecommendation() {
@@ -1111,9 +1145,205 @@ function checkWebXRSupport() {
       elements.arWebxrInfo.textContent = t("ar.webxr_unsupported");
     });
   } else {
+    // Graceful fallback for non-WebXR browsers
     state.webxrSupported = false;
     elements.arWebxrInfo.textContent = t("ar.webxr_unsupported");
   }
+}
+
+function switchARViewMode(mode) {
+  state.arViewMode = mode;
+  if (mode === "WEBXR") {
+    elements.btnModeWebXR.className = "btn btn-secondary active-mode";
+    elements.btnMode2D.className = "btn btn-secondary";
+    elements.ar2DView.style.display = "none";
+    elements.arSpatialViewport.style.display = "block";
+    elements.arPlacementActionContainer.style.display = "block";
+    elements.arModePill.textContent = "WEBXR IMMERSIVE";
+    elements.arViewModeLabel.textContent = "Proyección Espacial AR WebXR";
+    startARSpatialExperience();
+  } else {
+    elements.btnMode2D.className = "btn btn-secondary active-mode";
+    elements.btnModeWebXR.className = "btn btn-secondary";
+    elements.ar2DView.style.display = "flex";
+    elements.arSpatialViewport.style.display = "none";
+    elements.arPlacementActionContainer.style.display = "none";
+    elements.arModePill.textContent = "DEMO 2D SIMULATION";
+    elements.arViewModeLabel.textContent = "Simulación Espacial 2D Interactiva";
+    cleanupARSpatialSession();
+  }
+}
+
+async function startARSpatialExperience() {
+  cleanupARSpatialSession();
+
+  state.arSpatial.status = "AR_INITIALIZING";
+  elements.arHudText.textContent = t("ar.hud_scanning");
+  elements.btnArPlaceObject.disabled = true;
+  elements.btnArPlaceObject.textContent = t("ar.place_button");
+  elements.arHitReticle.style.display = "flex";
+  elements.arSpatialControls.style.display = "none";
+
+  const product = state.selectedProductForAR;
+  if (product) {
+    // Resolve real asset geometry or fallback
+    state.arSpatial.loadedGeometry = state.viewer3D.currentGeometry || get3DGeometryForCategory(product.category);
+  }
+
+  // Real WebXR Session Initiation if device supports hardware session
+  if (navigator.xr && state.webxrSupported) {
+    try {
+      const session = await navigator.xr.requestSession("immersive-ar", {
+        requiredFeatures: [],
+        optionalFeatures: ["hit-test", "local-floor", "local"],
+      });
+      state.arSpatial.session = session;
+      session.addEventListener("end", () => {
+        cleanupARSpatialSession();
+        switchARViewMode("2D");
+      });
+    } catch (err) {
+      // Graceful fallback to camera / spatial simulated canvas
+      console.warn("Native WebXR immersive session fallback:", err);
+    }
+  }
+
+  // Start spatial hit-test simulation loop
+  state.arSpatial.status = "AR_SCANNING_SURFACE";
+  state.arSpatial.isScanningSim = setTimeout(() => {
+    state.arSpatial.status = "AR_SURFACE_DETECTED";
+    state.arSpatial.surfaceHit = true;
+    elements.arHudText.textContent = t("ar.hud_detected");
+    elements.btnArPlaceObject.disabled = false;
+  }, 1200);
+
+  renderARSpatialLoop();
+}
+
+function renderARSpatialLoop() {
+  const canvas = elements.arSpatialCanvas;
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Background camera pass-through backdrop simulation
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, "#090d16");
+  grad.addColorStop(0.5, "#1e1b4b");
+  grad.addColorStop(1, "#020617");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw Spatial Grid Matrix (Floor Anchor)
+  ctx.strokeStyle = "rgba(129, 140, 248, 0.25)";
+  ctx.lineWidth = 1;
+  const radX = (25 * Math.PI) / 180;
+  const radY = (state.arSpatial.transform.rotationY * Math.PI) / 180;
+  const zoom = state.arSpatial.transform.scale;
+
+  for (let i = -160; i <= 160; i += 40) {
+    ctx.beginPath();
+    const p1 = projectPoint(i, 70, -140, radX, radY, zoom, w, h);
+    const p2 = projectPoint(i, 70, 140, radX, radY, zoom, w, h);
+    ctx.moveTo(p1.sx, p1.sy);
+    ctx.lineTo(p2.sx, p2.sy);
+    ctx.stroke();
+  }
+
+  // If object placed, render 3D asset in spatial perspective
+  if (state.arSpatial.placedObject && state.arSpatial.loadedGeometry) {
+    const geom = state.arSpatial.loadedGeometry;
+    const projected = geom.vertices.map((v) => {
+      const x1 = v[0] * Math.cos(radY) + v[2] * Math.sin(radY);
+      const y1 = v[1];
+      const z1 = -v[0] * Math.sin(radY) + v[2] * Math.cos(radY);
+
+      const x2 = x1;
+      const y2 = y1 * Math.cos(radX) - z1 * Math.sin(radX);
+      const z2 = y1 * Math.sin(radX) + z1 * Math.cos(radX);
+
+      const distance = 350;
+      const scale = (distance / (distance + z2)) * zoom;
+      const sx = w / 2 + x2 * scale;
+      const sy = h / 2 + y2 * scale;
+      return { sx, sy, z: z2 };
+    });
+
+    const facesWithDepth = geom.faces.map((f) => {
+      const avgZ = (projected[f[0]].z + projected[f[1]].z + projected[f[2]].z) / 3;
+      return { face: f, avgZ };
+    });
+    facesWithDepth.sort((a, b) => b.avgZ - a.avgZ);
+
+    for (const { face } of facesWithDepth) {
+      const p0 = projected[face[0]];
+      const p1 = projected[face[1]];
+      const p2 = projected[face[2]];
+
+      ctx.beginPath();
+      ctx.moveTo(p0.sx, p0.sy);
+      ctx.lineTo(p1.sx, p1.sy);
+      ctx.lineTo(p2.sx, p2.sy);
+      ctx.closePath();
+
+      ctx.fillStyle = "rgba(99, 102, 241, 0.55)";
+      ctx.fill();
+      ctx.strokeStyle = "#a5b4fc";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+
+  if (state.arViewMode === "WEBXR") {
+    state.arSpatial.animFrameId = requestAnimationFrame(renderARSpatialLoop);
+  }
+}
+
+function handleARPlaceObject() {
+  if (!state.arSpatial.surfaceHit) return;
+
+  state.arSpatial.placedObject = true;
+  state.arSpatial.status = "AR_PLACED";
+  elements.arHitReticle.style.display = "none";
+  elements.arSpatialControls.style.display = "flex";
+  elements.arHudText.textContent = t("ar.hud_placed");
+  elements.btnArPlaceObject.textContent = t("ar.placed_button");
+  elements.btnArPlaceObject.disabled = true;
+}
+
+function handleARRemoveObject() {
+  state.arSpatial.placedObject = false;
+  state.arSpatial.status = "AR_SURFACE_DETECTED";
+  elements.arHitReticle.style.display = "flex";
+  elements.arSpatialControls.style.display = "none";
+  elements.arHudText.textContent = t("ar.hud_detected");
+  elements.btnArPlaceObject.textContent = t("ar.place_button");
+  elements.btnArPlaceObject.disabled = false;
+}
+
+function cleanupARSpatialSession() {
+  if (state.arSpatial.isScanningSim) {
+    clearTimeout(state.arSpatial.isScanningSim);
+    state.arSpatial.isScanningSim = null;
+  }
+  if (state.arSpatial.animFrameId) {
+    cancelAnimationFrame(state.arSpatial.animFrameId);
+    state.arSpatial.animFrameId = null;
+  }
+  if (state.arSpatial.session) {
+    try {
+      state.arSpatial.session.end();
+    } catch (_) {}
+    state.arSpatial.session = null;
+  }
+  state.arSpatial.status = "AR_IDLE";
+  state.arSpatial.surfaceHit = false;
+  state.arSpatial.placedObject = false;
+  state.arSpatial.transform = { x: 0, y: -0.2, z: -1.0, rotationY: 0, scale: 1.0 };
 }
 
 // --- Cart Operations ---
