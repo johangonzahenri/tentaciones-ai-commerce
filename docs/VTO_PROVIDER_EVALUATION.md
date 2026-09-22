@@ -34,7 +34,7 @@ El ecosistema de visión computacional y comercio electrónico ofrece distintas 
 
 ---
 
-## 3. Justificación de FASHN AI como Proveedor Piloto
+## 3. Justificación de FASHN AI como Proveedor Piloto & Ciclo de Vida de Modelos
 
 Se seleccionó **FASHN AI** como el primer conector real para *Tentaciones AI Commerce* por las siguientes razones de arquitectura y producto:
 
@@ -42,6 +42,10 @@ Se seleccionó **FASHN AI** como el primer conector real para *Tentaciones AI Co
 2. **API Asíncrona Limpia y Predecible**: La secuencia `/v1/run` -> `/v1/status/{id}` permite desacoplar la carga de trabajo en el servidor con sondeo reactivo no bloqueante.
 3. **Compatibilidad con Avatares Sintéticos y Fotos Reales**: Permite una experiencia dual donde el usuario puede probarse la ropa tanto en modelos prediseñados (Nova, Sora, Mateo) como en su propia fotografía.
 4. **Independencia de Dispositivo**: Al ejecutarse en la nube del proveedor, los usuarios con smartphones de gama baja disfrutan de la misma calidad visual que aquellos con dispositivos de última generación.
+
+### Clasificación de Ciclo de Vida de Modelos Oficiales FASHN:
+* **`tryon-max` (Recommended Preview Model)**: Modelo de última generación recomendado para evaluación de alta fidelidad visual y microtexturas; se encuentra en fase de ciclo de vida *Preview*. Utiliza el esquema `product_image` + `model_image`.
+* **`tryon-v1.6` (Production-Stable Model)**: Modelo consolidado y estable (*Stable*) optimizado para alto volumen de peticiones y latencia reducida en e-commerce. Utiliza el esquema `garment_image` + `model_image` + `category`.
 
 ---
 

@@ -83,8 +83,9 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (27 Documentos Certificados)
+## 6. Documentación Canónica (28 Documentos Certificados)
 
+* [`docs/VTO_FIRST_PILOT_EVALUATION.md`](docs/VTO_FIRST_PILOT_EVALUATION.md): Matriz de evaluación observacional de calidad visual y benchmark técnico del piloto VTO.
 * [`docs/VTO_FIRST_PILOT.md`](docs/VTO_FIRST_PILOT.md): Registro de evaluación del primer piloto VTO con FASHN AI y diagnóstico de ejecución.
 * [`docs/VTO_ENGINE_ARCHITECTURE.md`](docs/VTO_ENGINE_ARCHITECTURE.md): Arquitectura del motor de Virtual Try-On, abstracción de proveedores y máquina de estados.
 * [`docs/VTO_PROVIDER_EVALUATION.md`](docs/VTO_PROVIDER_EVALUATION.md): Evaluación comparativa de proveedores VTO (FASHN, Perfect Corp, Banuba).

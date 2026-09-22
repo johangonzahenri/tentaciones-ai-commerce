@@ -254,3 +254,32 @@ test("VTO 10. Security & Fail-Closed Guardrails: Secret presence audit in static
   assert.ok(!redacted.includes("sk_live_112233"));
   assert.ok(redacted.includes("[REDACTED_FASHN_KEY]"));
 });
+
+test("VTO 11. Error Classification: Mappings for PoseError, ImageLoadError, and Moderation", () => {
+  const fashnProvider = new FashnVirtualTryOnProvider({ apiKey: "fa_live_mock_key_test_123" });
+  // Access classifyFashnError via prototype
+  const classify = (fashnProvider as unknown as { classifyFashnError: (e: string) => string }).classifyFashnError;
+  assert.ok(classify("PoseError: person not fully visible").includes("PoseError"));
+  assert.ok(classify("ImageLoadError: could not fetch garment").includes("ImageLoadError"));
+  assert.ok(classify("ContentModerationError: NSFW detected").includes("ContentModerationError"));
+  assert.ok(classify("PipelineError: diffusion steps timed out").includes("PipelineError"));
+  assert.ok(classify("UnavailableError: GPU worker node busy").includes("UnavailableError"));
+});
+
+test("VTO 12. Mode Isolation Matrix: PUBLIC_DEMO blocks external providers while PRIVATE_CONNECTED allows configured providers", () => {
+  const publicConfig: OperationalModeConfig = {
+    mode: "PUBLIC_DEMO",
+    defaultCurrency: "CLP",
+    freeShippingThresholdCLP: 30000,
+  };
+  const privateConfig: OperationalModeConfig = {
+    mode: "PRIVATE_CONNECTED_DEMO",
+    defaultCurrency: "CLP",
+    freeShippingThresholdCLP: 30000,
+  };
+
+  assert.doesNotThrow(() => assertSafeVTOMode(publicConfig, "demo-synthetic"));
+  assert.throws(() => assertSafeVTOMode(publicConfig, "fashn-pilot"), /strictly prohibited in PUBLIC_DEMO/);
+  assert.doesNotThrow(() => assertSafeVTOMode(privateConfig, "fashn-pilot"));
+  assert.doesNotThrow(() => assertSafeVTOMode(privateConfig, "demo-synthetic"));
+});

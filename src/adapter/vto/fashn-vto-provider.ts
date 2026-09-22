@@ -331,6 +331,9 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
     if (lower.includes("pipelineerror") || lower.includes("pipeline")) {
       return "PipelineError: Neural diffusion inference failed for the provided pose.";
     }
+    if (lower.includes("poseerror") || lower.includes("pose")) {
+      return "PoseError: User pose is too occluded, tilted, or not clearly distinguishable.";
+    }
     return undefined;
   }
 

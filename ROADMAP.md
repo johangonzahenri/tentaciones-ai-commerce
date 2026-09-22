@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 91 Complete)
-VERSION: v1.6.1
+STATUS: CERTIFIED (Phase 92 Complete)
+VERSION: v1.6.2
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -89,24 +89,31 @@ VERSION: v1.6.1
 
 ---
 
-### Fase 9: Primer Piloto Real FASHN & Verificación End-to-End (v1.6.1) — [IMPLEMENTED]
+### Fase 9: Validación End-to-End del Conector FASHN (v1.6.1) — [IMPLEMENTED]
 * [x] Integración de esquemas oficiales FASHN API (`tryon-max` con `product_image`, `tryon-v1.6` con `garment_image`).
 * [x] Salida efímera en memoria con `return_base64: true` y validación estricta de dominios CDN (`cdn.fashn.ai`, `media.fashn.ai`).
 * [x] Clasificación y sanitización de errores FASHN (`ImageLoadError`, `InputValidationError`, `ContentModerationError`, `UnavailableError`, `PipelineError`).
 * [x] Creación de `docs/VTO_FIRST_PILOT.md` (Total 27 documentos canónicos certificados).
-* [x] Diagnóstico honesto de ejecución del piloto real: Arquitectura verificada, ejecución bloqueada por credenciales no configuradas (`FASHN_API_KEY` ausente).
-* [x] Verificación de 50 pruebas automatizadas en `tentaciones-ai-commerce` y 1600 pruebas en AI Operating Platform pasando al 100%.
 
 ---
 
-### Fase 9: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
+### Fase 10: Auditoría del Primer Piloto Real & Matriz de Calidad VTO (v1.6.2) — [IMPLEMENTED]
+* [x] Clasificación de `tryon-max` como *Recommended Preview Model* y `tryon-v1.6` como *Stable Model*.
+* [x] Soporte tipado para `PoseError` en el clasificador de errores de inferencia.
+* [x] Creación de la matriz observacional de calidad `docs/VTO_FIRST_PILOT_EVALUATION.md` (Total 28 documentos canónicos certificados).
+* [x] Verificación de aislamiento estricto `PUBLIC_DEMO` vs `PRIVATE_CONNECTED_DEMO`.
+* [x] Diagnóstico técnico honesto: `REAL PILOT = BLOCKED BY MISSING CREDENTIAL` (sin inventar resultados ni simular ejecuciones externas no ocurridas).
+
+---
+
+### Fase 11: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 10: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
+### Fase 12: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).
 
