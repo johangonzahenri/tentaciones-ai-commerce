@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveOperationalMode } from "./contracts/operational-mode.js";
 import { createExperienceService } from "./adapter/tentaciones-service-factory.js";
+import { createVTOService } from "./adapter/vto/vto-provider-factory.js";
 import { sanitizeErrorMessage } from "./security/demo-guardrails.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +14,7 @@ const PUBLIC_DIR = path.resolve(__dirname, "../../public");
 const PORT = Number(process.env.PORT || 4000);
 const modeConfig = resolveOperationalMode(process.env);
 const service = createExperienceService(modeConfig);
+const vtoService = createVTOService(modeConfig);
 
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -127,6 +129,65 @@ export function createServer(): http.Server {
               res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
             }
           });
+          return;
+        }
+
+        // --- AI Virtual Try-On (VTO) Endpoints ---
+        if (req.method === "POST" && pathname === "/api/vto/validate") {
+          let body = "";
+          req.on("data", (chunk) => { body += chunk; });
+          req.on("end", async () => {
+            try {
+              const data = JSON.parse(body || "{}");
+              const validation = await vtoService.validateTryOn(data);
+              res.writeHead(validation.valid ? 200 : 400);
+              res.end(JSON.stringify(validation));
+            } catch (err) {
+              res.writeHead(400);
+              res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
+            }
+          });
+          return;
+        }
+
+        if (req.method === "POST" && pathname === "/api/vto/generate") {
+          let body = "";
+          req.on("data", (chunk) => { body += chunk; });
+          req.on("end", async () => {
+            try {
+              const data = JSON.parse(body || "{}");
+              const submission = await vtoService.submitTryOn(data);
+              res.writeHead(200);
+              res.end(JSON.stringify(submission));
+            } catch (err) {
+              res.writeHead(400);
+              res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
+            }
+          });
+          return;
+        }
+
+        if (req.method === "GET" && pathname.startsWith("/api/vto/status/")) {
+          const jobId = pathname.replace("/api/vto/status/", "");
+          const status = await vtoService.checkStatus(jobId);
+          res.writeHead(200);
+          res.end(JSON.stringify(status));
+          return;
+        }
+
+        if (req.method === "GET" && pathname.startsWith("/api/vto/result/")) {
+          const jobId = pathname.replace("/api/vto/result/", "");
+          const result = await vtoService.fetchResult(jobId);
+          res.writeHead(200);
+          res.end(JSON.stringify(result));
+          return;
+        }
+
+        if (req.method === "POST" && pathname.startsWith("/api/vto/cancel/")) {
+          const jobId = pathname.replace("/api/vto/cancel/", "");
+          await vtoService.cancelJob(jobId);
+          res.writeHead(200);
+          res.end(JSON.stringify({ success: true, jobId, status: "CANCELLED" }));
           return;
         }
 

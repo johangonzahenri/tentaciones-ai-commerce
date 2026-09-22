@@ -2,7 +2,7 @@
 
 CANONICAL DOCUMENT: docs/CASE_STUDY.md  
 STATUS: CERTIFIED  
-VERSION: 1.5.0  
+VERSION: 1.6.0  
 APPLICATION: PROJ-01-TENTACIONES  
 PORTFOLIO: AI Operating Platform  
 
@@ -14,7 +14,8 @@ PORTFOLIO: AI Operating Platform
 1. **Natural Language Semantic Discovery:** AI-driven intent parsing of style, weather, and occasion.
 2. **Deterministic Biometric Size Recommendation:** Precise morphological matching across standard customer silhouettes (Nova, Sora, Mateo).
 3. **Hardware-Accelerated 3D & WebXR Spatial AR:** Real-time glTF 2.0 / GLB model inspection and floor/table hit-test projection in the browser with 0 native app installs.
-4. **Fail-Closed Security & Strict IP Protection:** Zero secret exposure, simulated risk-free checkout, and architectural boundaries separating the public storefront from proprietary AI Operating Platform orchestration kernels.
+4. **AI Virtual Try-On (VTO Engine):** Provider-agnostic image-based virtual try-on engine synthesizing photorealistic garment fit on user photos or synthetic avatars with FASHN AI integration and offline deterministic fallback.
+5. **Fail-Closed Security & Strict IP Protection:** Zero secret exposure, simulated risk-free checkout, and architectural boundaries separating the public storefront from proprietary AI Operating Platform orchestration kernels.
 
 ---
 

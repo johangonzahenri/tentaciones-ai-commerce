@@ -46,6 +46,19 @@ const state = {
     currentStep: 1,
     totalSteps: 5,
   },
+  // AI Virtual Try-On (VTO) State
+  vto: {
+    selectedProduct: null,
+    consentGranted: false,
+    selectedAvatar: "Nova",
+    uploadedPhotoBase64: null,
+    uploadedPhotoMime: null,
+    uploadedPhotoBlobUrl: null,
+    inputMode: "SYNTHETIC_AVATAR", // "SYNTHETIC_AVATAR" | "USER_PHOTO"
+    activeJobId: null,
+    statusPollTimer: null,
+    currentResult: null,
+  },
 };
 
 function t(key, vars = {}) {
@@ -173,6 +186,32 @@ const elements = {
   btnWalkthroughNext: document.getElementById("btn-walkthrough-next"),
   btnWalkthroughTry: document.getElementById("btn-walkthrough-try"),
   honestyTableContainer: document.getElementById("honesty-table-container"),
+  // VTO Elements
+  vtoModal: document.getElementById("vto-modal"),
+  vtoModalTitle: document.getElementById("vto-modal-title"),
+  vtoModalCloseBtn: document.getElementById("btn-vto-modal-close"),
+  vtoModalProductName: document.getElementById("vto-modal-product-name"),
+  vtoConsentBox: document.getElementById("vto-consent-box"),
+  btnVtoConsentAccept: document.getElementById("btn-vto-consent-accept"),
+  btnVtoConsentCancel: document.getElementById("btn-vto-consent-cancel"),
+  vtoPhotoBox: document.getElementById("vto-photo-box"),
+  vtoAvatarContainer: document.getElementById("vto-avatar-container"),
+  vtoDropzone: document.getElementById("vto-dropzone"),
+  vtoFileInput: document.getElementById("vto-file-input"),
+  vtoDropzoneContent: document.getElementById("vto-dropzone-content"),
+  vtoUploadPreview: document.getElementById("vto-upload-preview"),
+  vtoUploadPreviewImg: document.getElementById("vto-upload-preview-img"),
+  btnVtoRemovePhoto: document.getElementById("btn-vto-remove-photo"),
+  btnVtoGenerate: document.getElementById("btn-vto-generate"),
+  vtoProcessingBox: document.getElementById("vto-processing-box"),
+  vtoProcessingStatus: document.getElementById("vto-processing-status"),
+  vtoProgressFill: document.getElementById("vto-progress-fill"),
+  vtoResultBox: document.getElementById("vto-result-box"),
+  vtoResultImg: document.getElementById("vto-result-img"),
+  vtoResultSize: document.getElementById("vto-result-size"),
+  vtoResultDisclaimer: document.getElementById("vto-result-disclaimer"),
+  btnVtoAddToCart: document.getElementById("btn-vto-add-to-cart"),
+  btnVtoTryAnother: document.getElementById("btn-vto-try-another"),
 };
 
 // --- Initialization ---
@@ -349,6 +388,66 @@ function bindEvents() {
     e.preventDefault();
     handleAIChat();
   });
+
+  // VTO Event Listeners
+  if (elements.vtoModalCloseBtn) {
+    elements.vtoModalCloseBtn.addEventListener("click", () => closeVTOModal());
+  }
+  if (elements.btnVtoConsentAccept) {
+    elements.btnVtoConsentAccept.addEventListener("click", () => {
+      state.vto.consentGranted = true;
+      if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
+      if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+      renderVTOAvatars();
+    });
+  }
+  if (elements.btnVtoConsentCancel) {
+    elements.btnVtoConsentCancel.addEventListener("click", () => closeVTOModal());
+  }
+  if (elements.vtoDropzone && elements.vtoFileInput) {
+    elements.vtoDropzone.addEventListener("click", () => elements.vtoFileInput.click());
+    elements.vtoFileInput.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) handleVTOPhotoUpload(file);
+    });
+    elements.vtoDropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      elements.vtoDropzone.style.borderColor = "var(--primary-color)";
+    });
+    elements.vtoDropzone.addEventListener("dragleave", () => {
+      elements.vtoDropzone.style.borderColor = "var(--border-color)";
+    });
+    elements.vtoDropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      elements.vtoDropzone.style.borderColor = "var(--border-color)";
+      const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handleVTOPhotoUpload(file);
+    });
+  }
+  if (elements.btnVtoRemovePhoto) {
+    elements.btnVtoRemovePhoto.addEventListener("click", () => removeVTOPhoto());
+  }
+  if (elements.btnVtoGenerate) {
+    elements.btnVtoGenerate.addEventListener("click", () => handleVTOGenerate());
+  }
+  if (elements.btnVtoTryAnother) {
+    elements.btnVtoTryAnother.addEventListener("click", () => {
+      if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+      if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    });
+  }
+  if (elements.btnVtoAddToCart) {
+    elements.btnVtoAddToCart.addEventListener("click", () => {
+      const product = state.vto.selectedProduct;
+      if (product) {
+        const recSize = state.vto.currentResult && state.vto.currentResult.recommendedSize;
+        const matchedVariant = (recSize && product.variants.find((v) => String(v.size) === String(recSize))) || product.variants[0];
+        addToCart(product, matchedVariant);
+        closeVTOModal();
+        openDrawer(elements.cartDrawer);
+      }
+    });
+  }
 }
 
 // --- Theme & Language ---
@@ -451,6 +550,30 @@ function applyI18n() {
   if (hTitle) hTitle.textContent = t("honesty.title");
   const hSub = document.getElementById("honesty-subtitle-label");
   if (hSub) hSub.textContent = t("honesty.subtitle");
+
+  // VTO Modal Labels
+  if (elements.vtoModalTitle) elements.vtoModalTitle.textContent = t("tryon.title");
+  const vtoConsentH = document.getElementById("vto-consent-heading");
+  if (vtoConsentH) vtoConsentH.textContent = t("tryon.consent_title");
+  const vtoConsentP = document.getElementById("vto-consent-paragraph");
+  if (vtoConsentP) vtoConsentP.textContent = t("tryon.consent_text");
+  if (elements.btnVtoConsentAccept) elements.btnVtoConsentAccept.textContent = t("tryon.consent_accept");
+  if (elements.btnVtoConsentCancel) elements.btnVtoConsentCancel.textContent = t("tryon.consent_decline");
+  const vtoSelectAvLabel = document.getElementById("vto-select-avatar-label");
+  if (vtoSelectAvLabel) vtoSelectAvLabel.textContent = t("tryon.select_avatar");
+  const vtoUploadLabel = document.getElementById("vto-upload-label");
+  if (vtoUploadLabel) vtoUploadLabel.textContent = t("tryon.upload_own_photo");
+  const vtoDropText = document.getElementById("vto-drop-text");
+  if (vtoDropText) vtoDropText.textContent = t("tryon.dropzone_text");
+  const vtoDropSub = document.getElementById("vto-drop-sub");
+  if (vtoDropSub) vtoDropSub.textContent = t("tryon.dropzone_sub");
+  if (elements.btnVtoRemovePhoto) elements.btnVtoRemovePhoto.textContent = t("tryon.remove_photo");
+  if (elements.btnVtoGenerate) elements.btnVtoGenerate.textContent = t("tryon.generate_btn");
+  const vtoResHead = document.getElementById("vto-result-heading");
+  if (vtoResHead) vtoResHead.textContent = t("tryon.result_heading");
+  if (elements.vtoResultDisclaimer) elements.vtoResultDisclaimer.textContent = t("tryon.disclaimer");
+  if (elements.btnVtoAddToCart) elements.btnVtoAddToCart.textContent = t("tryon.add_to_cart");
+  if (elements.btnVtoTryAnother) elements.btnVtoTryAnother.textContent = t("tryon.try_another");
 
   renderCategories();
   renderCatalog();
@@ -605,6 +728,15 @@ function renderCatalog() {
       row1.appendChild(arBtn);
     }
 
+    if (isProductVTOCompatible(product)) {
+      const vtoBtn = document.createElement("button");
+      vtoBtn.className = "btn btn-secondary";
+      vtoBtn.textContent = "✨ IA";
+      vtoBtn.title = t("product.try_on_ai");
+      vtoBtn.addEventListener("click", () => openVTOModal(product));
+      row1.appendChild(vtoBtn);
+    }
+
     const addBtn = document.createElement("button");
     addBtn.className = "btn btn-primary";
     addBtn.style.width = "100%";
@@ -685,6 +817,7 @@ function openProductDetailModal(product) {
 
   const actionRow = document.createElement("div");
   actionRow.style.display = "flex";
+  actionRow.style.flexWrap = "wrap";
   actionRow.style.gap = "0.75rem";
 
   const addCartBtn = document.createElement("button");
@@ -718,6 +851,17 @@ function openProductDetailModal(product) {
       openARModal(product);
     });
     actionRow.appendChild(arBtn);
+  }
+
+  if (isProductVTOCompatible(product)) {
+    const vtoBtn = document.createElement("button");
+    vtoBtn.className = "btn btn-secondary";
+    vtoBtn.textContent = "✨ " + t("product.try_on_ai");
+    vtoBtn.addEventListener("click", () => {
+      closeModal(elements.productModal);
+      openVTOModal(product);
+    });
+    actionRow.appendChild(vtoBtn);
   }
 
   container.appendChild(brandEl);
@@ -1819,6 +1963,14 @@ const HONESTY_DATA = [
     }
   },
   {
+    feature: { es: "Motor de Virtual Try-On con IA (VTO)", en: "AI Virtual Try-On Engine (VTO)" },
+    status: "IMPLEMENTED",
+    detail: {
+      es: "Abstracción provider-agnostic con modo Demo offline y conector FASHN AI para prendas compatibles.",
+      en: "Provider-agnostic abstraction with offline Demo mode and FASHN AI connector for supported apparel."
+    }
+  },
+  {
     feature: { es: "Pasarelas de Pago Bancario Real (Stripe / Transbank Live)", en: "Real Banking Payment Gateways (Stripe / Transbank Live)" },
     status: "NOT_IMPLEMENTED",
     detail: {
@@ -1827,6 +1979,302 @@ const HONESTY_DATA = [
     }
   }
 ];
+
+// --- AI Virtual Try-On (VTO) Controller ---
+const VTO_COMPATIBLE_CATEGORIES = ["poleras", "camisas", "polerones", "chaquetas", "vestidos", "pantalones", "faldas"];
+
+const VTO_AVATARS = [
+  { id: "Nova", name: "Nova", subtitle: "Femenino / Contemporáneo (1.68m, Talla S/M)", icon: "👩" },
+  { id: "Sora", name: "Sora", subtitle: "Unisex / Streetwear (1.74m, Talla M)", icon: "🧑" },
+  { id: "Mateo", name: "Mateo", subtitle: "Masculino / Atlético (1.82m, Talla L)", icon: "👨" },
+];
+
+function isProductVTOCompatible(product) {
+  if (!product || !product.category) return false;
+  return VTO_COMPATIBLE_CATEGORIES.includes(product.category.toLowerCase());
+}
+
+function openVTOModal(product) {
+  state.vto.selectedProduct = product;
+  if (elements.vtoModalProductName) {
+    elements.vtoModalProductName.textContent = `${product.name} (${product.brand})`;
+  }
+
+  // Reset display boxes
+  if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+  if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+
+  if (!state.vto.consentGranted) {
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "block";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+  } else {
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    renderVTOAvatars();
+  }
+
+  openModal(elements.vtoModal);
+}
+
+function closeVTOModal() {
+  if (state.vto.statusPollTimer) {
+    clearInterval(state.vto.statusPollTimer);
+    state.vto.statusPollTimer = null;
+  }
+  closeModal(elements.vtoModal);
+}
+
+function renderVTOAvatars() {
+  if (!elements.vtoAvatarContainer) return;
+
+  while (elements.vtoAvatarContainer.firstChild) {
+    elements.vtoAvatarContainer.removeChild(elements.vtoAvatarContainer.firstChild);
+  }
+
+  for (const avatar of VTO_AVATARS) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `vto-avatar-card ${state.vto.selectedAvatar === avatar.id && state.vto.inputMode === "SYNTHETIC_AVATAR" ? "active" : ""}`;
+    card.style.display = "flex";
+    card.style.alignItems = "center";
+    card.style.gap = "0.75rem";
+    card.style.padding = "0.75rem 1rem";
+    card.style.borderRadius = "0.5rem";
+    card.style.border = state.vto.selectedAvatar === avatar.id && state.vto.inputMode === "SYNTHETIC_AVATAR" ? "2px solid var(--primary-color)" : "1px solid var(--border-color)";
+    card.style.backgroundColor = "var(--bg-secondary)";
+    card.style.cursor = "pointer";
+    card.style.width = "100%";
+    card.style.textAlign = "left";
+
+    const icon = document.createElement("span");
+    icon.style.fontSize = "1.75rem";
+    icon.textContent = avatar.icon;
+
+    const info = document.createElement("div");
+    const name = document.createElement("div");
+    name.style.fontWeight = "600";
+    name.style.fontSize = "0.875rem";
+    name.textContent = avatar.name;
+
+    const sub = document.createElement("div");
+    sub.style.fontSize = "0.75rem";
+    sub.style.color = "var(--text-secondary)";
+    sub.textContent = avatar.subtitle;
+
+    info.appendChild(name);
+    info.appendChild(sub);
+    card.appendChild(icon);
+    card.appendChild(info);
+
+    card.addEventListener("click", () => {
+      state.vto.selectedAvatar = avatar.id;
+      state.vto.inputMode = "SYNTHETIC_AVATAR";
+      removeVTOPhoto();
+      renderVTOAvatars();
+    });
+
+    elements.vtoAvatarContainer.appendChild(card);
+  }
+}
+
+function handleVTOPhotoUpload(file) {
+  if (!file) return;
+
+  const validMimes = ["image/jpeg", "image/png", "image/webp"];
+  if (!validMimes.includes(file.type)) {
+    alert(t("tryon.invalid_mime") || "Formato no válido. Use JPG, PNG o WebP.");
+    return;
+  }
+
+  const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+  if (file.size > maxSizeBytes) {
+    alert(t("tryon.max_size_exceeded") || "La imagen excede el límite de 5 MB.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+    const parts = String(dataUrl).split(",");
+    if (parts.length < 2) return;
+
+    state.vto.uploadedPhotoBase64 = parts[1];
+    state.vto.uploadedPhotoMime = file.type;
+    state.vto.inputMode = "USER_PHOTO";
+
+    if (state.vto.uploadedPhotoBlobUrl) {
+      URL.revokeObjectURL(state.vto.uploadedPhotoBlobUrl);
+    }
+    state.vto.uploadedPhotoBlobUrl = URL.createObjectURL(file);
+
+    if (elements.vtoUploadPreviewImg) {
+      elements.vtoUploadPreviewImg.src = state.vto.uploadedPhotoBlobUrl;
+    }
+    if (elements.vtoDropzoneContent) {
+      elements.vtoDropzoneContent.style.display = "none";
+    }
+    if (elements.vtoUploadPreview) {
+      elements.vtoUploadPreview.style.display = "block";
+    }
+
+    renderVTOAvatars();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeVTOPhoto() {
+  if (state.vto.uploadedPhotoBlobUrl) {
+    URL.revokeObjectURL(state.vto.uploadedPhotoBlobUrl);
+    state.vto.uploadedPhotoBlobUrl = null;
+  }
+  state.vto.uploadedPhotoBase64 = null;
+  state.vto.uploadedPhotoMime = null;
+  state.vto.inputMode = "SYNTHETIC_AVATAR";
+
+  if (elements.vtoFileInput) {
+    elements.vtoFileInput.value = "";
+  }
+  if (elements.vtoUploadPreviewImg) {
+    elements.vtoUploadPreviewImg.src = "";
+  }
+  if (elements.vtoUploadPreview) {
+    elements.vtoUploadPreview.style.display = "none";
+  }
+  if (elements.vtoDropzoneContent) {
+    elements.vtoDropzoneContent.style.display = "block";
+  }
+
+  renderVTOAvatars();
+}
+
+async function handleVTOGenerate() {
+  if (!state.vto.selectedProduct) return;
+
+  if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+  if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "block";
+  if (elements.vtoProcessingStatus) elements.vtoProcessingStatus.textContent = t("tryon.status_submitting");
+  if (elements.vtoProgressFill) elements.vtoProgressFill.style.width = "15%";
+
+  const payload = {
+    productId: state.vto.selectedProduct.id,
+    inputType: state.vto.inputMode,
+    syntheticProfileId: state.vto.selectedAvatar,
+    userConsentGiven: true,
+  };
+
+  if (state.vto.inputMode === "USER_PHOTO" && state.vto.uploadedPhotoBase64) {
+    payload.userImageBase64 = state.vto.uploadedPhotoBase64;
+    payload.userImageMimeType = state.vto.uploadedPhotoMime || "image/jpeg";
+  }
+
+  try {
+    const res = await fetch("/api/vto/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `HTTP error ${res.status}`);
+    }
+
+    const job = await res.json();
+    state.vto.activeJobId = job.jobId;
+
+    if (elements.vtoProgressFill) elements.vtoProgressFill.style.width = `${Math.max(25, job.progress || 25)}%`;
+    if (elements.vtoProcessingStatus) elements.vtoProcessingStatus.textContent = getLocalizedStageMessage(job.stage);
+
+    pollVTOStatus(job.jobId);
+  } catch (err) {
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    alert(`Error al iniciar probador virtual: ${err.message}`);
+  }
+}
+
+function pollVTOStatus(jobId) {
+  if (state.vto.statusPollTimer) {
+    clearInterval(state.vto.statusPollTimer);
+  }
+
+  state.vto.statusPollTimer = setInterval(async () => {
+    try {
+      const res = await fetch(`/api/vto/status/${encodeURIComponent(jobId)}`);
+      if (!res.ok) throw new Error("Error consultando estado del trabajo");
+
+      const statusData = await res.json();
+      if (elements.vtoProgressFill) {
+        elements.vtoProgressFill.style.width = `${statusData.progress || 50}%`;
+      }
+      if (elements.vtoProcessingStatus) {
+        elements.vtoProcessingStatus.textContent = getLocalizedStageMessage(statusData.stage);
+      }
+
+      if (statusData.status === "COMPLETED") {
+        clearInterval(state.vto.statusPollTimer);
+        state.vto.statusPollTimer = null;
+        await fetchAndDisplayVTOResult(jobId);
+      } else if (statusData.status === "FAILED") {
+        clearInterval(state.vto.statusPollTimer);
+        state.vto.statusPollTimer = null;
+        if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+        if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+        alert(`Generación de Virtual Try-On fallida: ${statusData.errorMessage || "Error desconocido"}`);
+      }
+    } catch {
+      // Continue polling until timeout
+    }
+  }, 800);
+}
+
+async function fetchAndDisplayVTOResult(jobId) {
+  try {
+    const res = await fetch(`/api/vto/result/${encodeURIComponent(jobId)}`);
+    if (!res.ok) throw new Error("No se pudo obtener el resultado del probador");
+
+    const result = await res.json();
+    state.vto.currentResult = result;
+
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "block";
+
+    if (elements.vtoResultImg) {
+      elements.vtoResultImg.src = result.outputImageUrl;
+      elements.vtoResultImg.alt = `Virtual Try-On: ${state.vto.selectedProduct?.name || "Prenda"}`;
+    }
+
+    if (elements.vtoResultSize) {
+      elements.vtoResultSize.textContent = `Talla Recomendada: ${result.recommendedSize || "M"} (${result.confidencePercent || 94}% confianza)`;
+    }
+
+    if (elements.vtoResultDisclaimer) {
+      elements.vtoResultDisclaimer.textContent = result.disclaimer || t("tryon.disclaimer");
+    }
+  } catch (err) {
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    alert(`Error recuperando resultado: ${err.message}`);
+  }
+}
+
+function getLocalizedStageMessage(stage) {
+  const isEn = state.lang !== "es-419";
+  switch (stage) {
+    case "QUEUED":
+      return isEn ? "Job queued in processing queue..." : "Solicitud en cola de procesamiento...";
+    case "SEGMENTING":
+      return isEn ? "Segmenting pose and garment silhouette..." : "Segmentando pose corporal y silueta textil...";
+    case "WARPING":
+      return isEn ? "Calculating 2D/3D cloth deformation warp..." : "Ajustando deformación y caída de tela...";
+    case "INPAINTING":
+      return isEn ? "Synthesizing realistic texture inpainting..." : "Sintetizando texturas y sombras fotorrealistas...";
+    case "FINALIZING":
+      return isEn ? "Finalizing high-resolution rendering..." : "Finalizando renderizado de alta resolución...";
+    default:
+      return isEn ? "Processing with AI Neural Engine..." : "Procesando con Motor Neuronal de IA...";
+  }
+}
 
 function renderWalkthrough() {
   if (!elements.walkthroughCardContainer || !elements.walkthroughDotsContainer) return;

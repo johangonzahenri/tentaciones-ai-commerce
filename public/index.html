@@ -352,6 +352,97 @@
     </div>
   </div>
 
+  <!-- AI Virtual Try-On (VTO) Modal -->
+  <div class="modal-backdrop" id="vto-modal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <h2 id="vto-modal-title" style="font-size: 1.25rem; font-weight: 800;">Probador Virtual con IA (AI VTO)</h2>
+            <span class="demo-badge-sm" id="vto-mode-badge">AI TRY-ON DEMO</span>
+          </div>
+          <p id="vto-modal-product-name" style="font-size: 0.8125rem; color: var(--text-secondary);"></p>
+        </div>
+        <button class="btn btn-icon" id="btn-vto-modal-close">✕</button>
+      </div>
+
+      <!-- Step 1: Explicit Privacy & Consent Box -->
+      <div id="vto-consent-box" style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <span style="font-size: 1.25rem;">🔒</span>
+          <h3 style="font-size: 0.9375rem; font-weight: 700;" id="vto-consent-title">Consentimiento de Privacidad y Procesamiento</h3>
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;" id="vto-consent-desc">
+          Para generar tu prueba virtual, procesaremos tu imagen junto con la prenda seleccionada mediante nuestro motor de IA. La fotografía se procesa de forma efímera, no se almacena permanentemente y se destruye al cerrar la sesión.
+        </p>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary" id="btn-vto-consent-accept" style="flex: 1;">Aceptar y Continuar</button>
+          <button class="btn btn-secondary" id="btn-vto-consent-cancel">Cancelar</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Photo Selection & Preset Avatars -->
+      <div id="vto-photo-box" style="display: none; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.5rem;" id="vto-avatar-label">Opción 1: Elige un avatar modelo demo:</label>
+          <div class="profile-cards-grid" id="vto-avatar-container">
+            <!-- Rendered dynamically via app.js -->
+          </div>
+        </div>
+
+        <div style="border-top: 1px dashed var(--border); padding-top: 0.75rem;">
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.5rem;" id="vto-upload-label">Opción 2: Sube tu propia fotografía (JPG, PNG, WEBP máx 5MB):</label>
+          <div class="vto-upload-dropzone" id="vto-dropzone" style="border: 2px dashed var(--border); border-radius: var(--radius-md); padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+            <input type="file" id="vto-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            <div id="vto-dropzone-content">
+              <span style="font-size: 2rem;">📸</span>
+              <p style="font-size: 0.8125rem; font-weight: 600; margin-top: 0.25rem;" id="vto-dropzone-text">Arrastra una foto aquí o haz clic para explorar</p>
+              <span style="font-size: 0.7rem; color: var(--text-secondary);">Procesamiento seguro efímero</span>
+            </div>
+            <div id="vto-upload-preview" style="display: none; align-items: center; justify-content: center; gap: 0.5rem;">
+              <img id="vto-upload-preview-img" style="max-height: 80px; border-radius: var(--radius-sm);" alt="User Photo">
+              <button class="btn btn-xs btn-danger" id="btn-vto-remove-photo">Quitar</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="btn-vto-generate" style="width: 100%; margin-top: 0.5rem;">✨ Generar Prueba Virtual con IA</button>
+      </div>
+
+      <!-- Step 3: Animated Processing State -->
+      <div id="vto-processing-box" style="display: none; text-align: center; padding: 2.5rem 1rem;">
+        <div class="loading-spinner" style="width: 48px; height: 48px; margin: 0 auto 1rem;"></div>
+        <h3 style="font-size: 1.125rem; font-weight: 800; margin-bottom: 0.5rem;" id="vto-processing-title">Generando Prueba Virtual con IA...</h3>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.25rem;" id="vto-processing-status">Analizando morfología y alineando puntos clave...</p>
+        <div class="vto-progress-track" style="width: 100%; height: 8px; background: var(--bg-muted); border-radius: var(--radius-full); overflow: hidden;">
+          <div id="vto-progress-fill" style="width: 20%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.3s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Step 4: Result Display -->
+      <div id="vto-result-box" style="display: none; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
+        <div class="vto-result-image-wrapper" style="text-align: center; background: #0b1120; border-radius: var(--radius-md); padding: 1rem; position: relative;">
+          <img id="vto-result-img" src="/assets/images/demo-vto-composite.svg" style="max-width: 100%; max-height: 360px; border-radius: var(--radius-sm);" alt="Virtual Try-On Result">
+        </div>
+
+        <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.875rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8125rem; font-weight: 700;">Talla Calibrada por IA:</span>
+            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);" id="vto-result-size">M</span>
+          </div>
+          <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.35rem;" id="vto-result-disclaimer">
+            Visualización generada por IA. El resultado es una aproximación visual y no garantiza el ajuste físico exacto.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-primary" id="btn-vto-add-to-cart" style="flex: 1;">Añadir a la Bolsa con Talla Sugerida</button>
+          <button class="btn btn-secondary" id="btn-vto-try-another">Probar Otra Foto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Shopping Cart Drawer -->
   <aside class="drawer" id="cart-drawer" aria-label="Carrito de compras">
     <div class="drawer-header">

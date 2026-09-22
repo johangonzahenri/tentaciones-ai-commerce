@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="vtoStudioBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="silkShimmer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="50%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Studio Background -->
+  <rect width="600" height="800" fill="url(#vtoStudioBg)" />
+
+  <!-- Soft Studio Light Spotlight -->
+  <ellipse cx="300" cy="380" rx="220" ry="320" fill="rgba(236,72,153,0.06)" filter="url(#softGlow)" />
+
+  <!-- Avatar Head & Neck Silhouette (Neutral Stylized Model) -->
+  <ellipse cx="300" cy="140" rx="36" ry="46" fill="#cbd5e1" opacity="0.9" />
+  <rect x="290" y="180" width="20" height="40" rx="6" fill="#cbd5e1" opacity="0.9" />
+
+  <!-- Shoulders & Arms Base -->
+  <path d="M220,240 Q300,210 380,240 L410,400 L385,410 L365,270 L235,270 L215,410 L190,400 Z" fill="#94a3b8" opacity="0.8" />
+
+  <!-- Draped AI Virtual Garment (Aura Silk Dress / Atelier Top Overlay) -->
+  <g id="vto-garment-layer" filter="url(#softGlow)">
+    <!-- Main Bodice & Drape Curves -->
+    <path d="M245,235 Q300,255 355,235 L380,450 Q300,480 220,450 Z" fill="url(#silkShimmer)" opacity="0.92" />
+    <!-- Waistline Accent -->
+    <path d="M250,340 Q300,355 350,340 L355,365 Q300,380 245,365 Z" fill="#ffffff" opacity="0.3" />
+    <!-- Lower Flare Hemline -->
+    <path d="M220,450 Q300,480 380,450 L420,640 Q300,690 180,640 Z" fill="url(#silkShimmer)" opacity="0.95" />
+    <!-- Pleat & Fabric Shadows -->
+    <path d="M260,360 L240,645" stroke="rgba(0,0,0,0.3)" stroke-width="4" fill="none" />
+    <path d="M300,370 L300,660" stroke="rgba(0,0,0,0.25)" stroke-width="5" fill="none" />
+    <path d="M340,360 L360,645" stroke="rgba(0,0,0,0.3)" stroke-width="4" fill="none" />
+  </g>
+
+  <!-- Legs Silhouette Below Hemline -->
+  <rect x="260" y="640" width="28" height="110" rx="10" fill="#64748b" opacity="0.8" />
+  <rect x="312" y="640" width="28" height="110" rx="10" fill="#64748b" opacity="0.8" />
+
+  <!-- Top Watermark Badge: AI TRY-ON DEMO -->
+  <rect x="30" y="30" width="180" height="32" rx="16" fill="rgba(15,23,42,0.85)" stroke="#38bdf8" stroke-width="1.5" />
+  <circle cx="48" cy="46" r="5" fill="#38bdf8" />
+  <text x="62" y="51" fill="#38bdf8" font-family="system-ui, sans-serif" font-size="12" font-weight="800" letter-spacing="0.5">AI TRY-ON DEMO</text>
+
+  <!-- Top Right Sizing Match Pill -->
+  <rect x="420" y="30" width="150" height="32" rx="16" fill="rgba(16,185,129,0.2)" stroke="#10b981" stroke-width="1.5" />
+  <text x="440" y="51" fill="#10b981" font-family="system-ui, sans-serif" font-size="12" font-weight="700">Talla Calibrada: M</text>
+
+  <!-- Bottom HUD Card -->
+  <rect x="40" y="690" width="520" height="75" rx="12" fill="rgba(15,23,42,0.92)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+  <text x="60" y="720" fill="#ffffff" font-family="system-ui, sans-serif" font-size="15" font-weight="800">Prueba Virtual Generada con IA</text>
+  <text x="60" y="742" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11">Aproximación visual sintética · 92% Confianza de ajuste · Tentaciones Atelier</text>
+</svg>

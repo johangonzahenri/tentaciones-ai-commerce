@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 89 Complete)
-VERSION: v1.5.0
+STATUS: CERTIFIED (Phase 90 Complete)
+VERSION: v1.6.0
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -78,13 +78,25 @@ VERSION: v1.5.0
 
 ---
 
-### Fase 8: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
+### Fase 8: AI Virtual Try-On Engine & Provider Abstraction (v1.6.0) — [IMPLEMENTED]
+* [x] Definición del contrato provider-agnostic `IVirtualTryOnProvider` y máquina de estados `TryOnState`.
+* [x] Implementación de `DemoVirtualTryOnProvider` (offline, determinista) y `FashnVirtualTryOnProvider` (FASHN AI API Cloud).
+* [x] Servicio de dominio `VirtualTryOnService` y fábrica `createVTOService` según modo operativo.
+* [x] Guardrails de seguridad fail-closed (`assertSafeVTOMode`, `validateUserImagePayload`, `sanitizeVTOResponse`, `redactVTOSecrets`).
+* [x] Endpoints REST `/api/vto/validate`, `/api/vto/generate`, `/api/vto/status/:id`, `/api/vto/result/:id`, `/api/vto/cancel/:id`.
+* [x] UI del probador virtual con modal de 4 etapas (Consentimiento, Selección Avatar/Foto, Progreso por fases, Visualización de Resultado con recomendación de talla).
+* [x] Creación de 5 documentos canónicos: `docs/VTO_ENGINE_ARCHITECTURE.md`, `docs/VTO_PROVIDER_EVALUATION.md`, `docs/VTO_PRIVACY.md`, `docs/VTO_API_INTEGRATION.md`, `docs/VTO_PRODUCT_COMPATIBILITY.md` (Total 26 docs certificados).
+
+---
+
+### Fase 9: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 9: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
+### Fase 10: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).
+

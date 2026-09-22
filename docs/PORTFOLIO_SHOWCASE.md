@@ -33,7 +33,11 @@ During a live presentation, investor pitch, or client workshop, the showcase hig
 - **Demonstration:** Add products to cart $\rightarrow$ Check free shipping progress indicator ($30,000 threshold) $\rightarrow$ Complete simulated Webpay checkout.
 - **Value:** Demonstrates end-to-end purchasing workflow with zero financial risk or real credit card exposure.
 
-### Pillar 5: Commercial Demo Performance Metrics
+### Pillar 5: AI Virtual Try-On Engine (VTO)
+- **Demonstration:** Select an apparel garment $\rightarrow$ Click **"✨ Probar con IA"** $\rightarrow$ Consent $\rightarrow$ Select avatar or upload user photo $\rightarrow$ Inspect neural synthesis with recommended size.
+- **Value:** Photorealistic generative try-on resolving customer silhouette uncertainty with provider-agnostic cloud/offline execution.
+
+### Pillar 6: Commercial Demo Performance Metrics
 - **Live Metrics Bar:**
   - **Conversion Rate:** **14.2%** (vs 2.8% industry average for standard fashion e-commerce).
   - **Return Reduction:** **-38.5%** achieved through AI biometric fitting.

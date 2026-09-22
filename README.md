@@ -15,8 +15,9 @@
 
 * 🛍️ **Descubrimiento Asistido con IA:** Comprensión de lenguaje natural en español e inglés para interpretar ocasiones de uso, estilos y especificaciones técnicas de prendas.
 * 🧊 **Visualización 3D Interactiva con GLB/GLTF Real:** Carga de modelos espaciales binarios y JSON con rotación orbital de 60 FPS, zoom dinámico y auto-giro sin dependencias externas.
-* 👓 **Probador Virtual AR & Sizing Paramétrico:** Simulación espacial con perfiles biométricos (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
-* 🛒 **Bolsa de Compras Inteligente:** Cálculo en tiempo real del beneficio de despacho gratuito (\$30.000 CLP).
+* 👓 **Probador Virtual AR & Sizing Paramétrico:** Simulación espacial WebXR con hit-test de superficie y perfiles biométricos (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
+* ✨ **AI Virtual Try-On (VTO Engine):** Motor provider-agnostic de probador virtual con síntesis neuronal fotorrealista de prendas en fotos de usuario y avatares calibrados, conector FASHN AI y modo demo determinista.
+* 🛒 **Bolsa de Compras Inteligente:** Cálculo en tiempo real del beneficio de despacho gratuito ($30.000 CLP).
 * 💳 **Checkout Seguro Demo:** Pasarela de pago simulada (`WEBPAY_DEMO`) con control de existencias antes de mutación y cero riesgo financiero.
 
 ---
@@ -37,9 +38,9 @@ BÚSQUEDA ASISTIDA POR IA ("zapatillas de running para maratón")
         ↓
 DETALLE DEL PRODUCTO
         ↓
-VISUALIZADOR 3D GLTF / GLB REAL
+VISUALIZADOR 3D GLTF / GLB REAL ──► PROBADOR WEBXR SPATIAL AR
         ↓
-PROBADOR VIRTUAL AR (Nova / Sora / Mateo)
+MOTOR DE AI VIRTUAL TRY-ON (Fotos de Usuario o Avatares Nova / Sora / Mateo)
         ↓
 CALIBRACIÓN BIOMÉTRICA DE TALLA
         ↓
@@ -76,15 +77,20 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ## 5. Modos de Operación y Seguridad Fail-Closed
 
-1. **`PUBLIC_DEMO` (Predeterminado):** Entorno 100% sintético, sin dependencias externas, sin llamadas a dominios corporativos privados y con rechazo automático de credenciales reales.
-2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado a una instancia de AI Operating Platform mediante gateway autenticado.
+1. **`PUBLIC_DEMO` (Predeterminado):** Entorno 100% sintético, sin dependencias externas, sin llamadas a dominios corporativos privados y con rechazo automático de credenciales reales. Utiliza `DemoVirtualTryOnProvider`.
+2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado a una instancia de AI Operating Platform mediante gateway autenticado con soporte opcional para proveedores de inferencia VTO externos (e.g. FASHN AI con API Key en el backend).
 3. **`DEVELOPMENT`:** Modo local para desarrollo continuo y pruebas unitarias.
 
 ---
 
-## 6. Documentación Canónica (21 Documentos Certificados)
+## 6. Documentación Canónica (26 Documentos Certificados)
 
-* [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md): Caso de estudio técnico completo (Problema, Solución, Pipeline 3D/AR, Seguridad, Invariantes).
+* [`docs/VTO_ENGINE_ARCHITECTURE.md`](docs/VTO_ENGINE_ARCHITECTURE.md): Arquitectura del motor de Virtual Try-On, abstracción de proveedores y máquina de estados.
+* [`docs/VTO_PROVIDER_EVALUATION.md`](docs/VTO_PROVIDER_EVALUATION.md): Evaluación comparativa de proveedores VTO (FASHN, Perfect Corp, Banuba).
+* [`docs/VTO_PRIVACY.md`](docs/VTO_PRIVACY.md): Política de privacidad de datos biométricos, consentimiento y manejo efímero de fotos.
+* [`docs/VTO_API_INTEGRATION.md`](docs/VTO_API_INTEGRATION.md): Especificación de endpoints REST y protocolo de integración con FASHN AI API.
+* [`docs/VTO_PRODUCT_COMPATIBILITY.md`](docs/VTO_PRODUCT_COMPATIBILITY.md): Matriz de compatibilidad de catálogo y directrices de preparación de prendas.
+* [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md): Caso de estudio técnico completo (Problema, Solución, Tríada Visual 3D/AR/VTO, Seguridad, Invariantes).
 * [`docs/SHOWCASE_MEDIA.md`](docs/SHOWCASE_MEDIA.md): Inventario de activos visuales, diagramas técnicos SVG y modelos 3D binarios.
 * [`docs/SHOWCASE_ARCHITECTURE.md`](docs/SHOWCASE_ARCHITECTURE.md): Arquitectura multicapa de showcase y límites de integración de portafolio.
 * [`docs/WEBXR_AR_ARCHITECTURE.md`](docs/WEBXR_AR_ARCHITECTURE.md): Arquitectura de Realidad Aumentada WebXR y anclaje espacial Hit-Test.
