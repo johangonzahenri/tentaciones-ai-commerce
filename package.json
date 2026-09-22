@@ -1,0 +1,28 @@
+{
+  "name": "tentaciones-ai-commerce",
+  "version": "1.0.0",
+  "description": "Tentaciones AI Commerce — Intelligent Fashion & Footwear E-Commerce with 3D/AR Virtual Try-On, powered by AI Operating Platform",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/tests/**/*.test.js",
+    "test:ts": "node --loader ts-node/esm --test tests/**/*.test.ts",
+    "start": "node dist/src/server.js",
+    "dev": "tsc -w"
+  },
+  "keywords": [
+    "e-commerce",
+    "ai-commerce",
+    "virtual-try-on",
+    "ar",
+    "webxr",
+    "ai-operating-platform"
+  ],
+  "author": "Johan Gonzalez",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  }
+}

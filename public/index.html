@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENTACIONES — AI Smart Commerce & Virtual Try-On</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top System Status Bar -->
+  <aside class="status-bar" aria-label="System Status">
+    <span class="status-dot" id="status-indicator"></span>
+    <span id="status-text">Plataforma Padre: ONLINE (AI Operating Platform v1.4.0)</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="brand" id="brand-link">
+        <div class="brand-icon">🛍️</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="brand-title">TENTACIONES</span>
+            <span class="brand-badge">Child App</span>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-secondary);" id="brand-tagline">AI Smart Commerce & Virtual Try-On</span>
+        </div>
+      </a>
+
+      <nav class="nav-actions">
+        <button class="btn btn-secondary" id="btn-ai-assistant">
+          <span>✨</span>
+          <span id="nav-ai-label">Asistente IA</span>
+        </button>
+
+        <button class="btn btn-icon" id="btn-theme-toggle" title="Cambiar tema">
+          <span id="theme-icon">🌙</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-lang-toggle">
+          <span id="lang-label">English</span>
+        </button>
+
+        <button class="btn btn-primary" id="btn-cart-open">
+          <span>🛒</span>
+          <span id="nav-cart-label">Carrito</span>
+          <span class="cart-badge" id="cart-counter">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-pill">
+        <span>⚡</span>
+        <span id="hero-badge">Moda & Calzado Impulsado por AI Operating Platform</span>
+      </div>
+      <h1 class="hero-title" id="hero-title">Tu Estilo, Perfeccionado por Inteligencia Artificial</h1>
+      <p class="hero-subtitle" id="hero-subtitle">Prueba prendas y calzado en Realidad Aumentada 3D, recibe recomendaciones biométricas y disfruta de una experiencia de compra fluida.</p>
+
+      <!-- Natural Language AI Search Box -->
+      <form class="search-box" id="search-form" onsubmit="return false;">
+        <input type="text" class="search-input" id="search-input" placeholder="Ej: 'zapatillas de running para maratón', 'vestido de gala negro'..." autocomplete="off">
+        <button type="submit" class="btn btn-primary" id="search-btn">Buscar con IA</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Category Filter Bar -->
+  <div class="category-nav" id="category-container" role="tablist">
+    <!-- Category tabs rendered dynamically via app.js -->
+  </div>
+
+  <!-- Main Product Catalog -->
+  <main class="main-content">
+    <div class="product-grid" id="product-grid">
+      <!-- Product cards rendered dynamically via app.js -->
+    </div>
+  </main>
+
+  <!-- Product Detail Modal -->
+  <div class="modal-backdrop" id="product-modal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <h2 id="modal-product-title" style="font-size: 1.25rem; font-weight: 800;"></h2>
+        <button class="btn btn-icon" id="btn-modal-close">✕</button>
+      </div>
+      <div id="modal-product-body">
+        <!-- Injected safely via createElement in app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- AR Virtual Fitting Room Modal -->
+  <div class="modal-backdrop" id="ar-modal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div>
+          <h2 id="ar-modal-title" style="font-size: 1.25rem; font-weight: 800;">Probador Virtual 3D / AR</h2>
+          <p id="ar-modal-product-name" style="font-size: 0.8125rem; color: var(--text-secondary);"></p>
+        </div>
+        <button class="btn btn-icon" id="btn-ar-modal-close">✕</button>
+      </div>
+
+      <div class="ar-preview-canvas" id="ar-canvas-container">
+        <div class="ar-avatar-silhouette" id="ar-avatar-icon">👗</div>
+        <div style="margin-top: 0.5rem; font-weight: 700; font-size: 0.9375rem;" id="ar-view-mode-label">Simulación Espacial AR / 3D</div>
+        <div style="font-size: 0.75rem; opacity: 0.8;" id="ar-urn-display">urn:tentaciones:ar:apparel</div>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.35rem;" id="ar-profile-label">Seleccionar Perfil Biométrico Demo:</label>
+        <select class="btn btn-secondary" style="width: 100%; padding: 0.5rem;" id="ar-profile-select">
+          <option value="Nova">Nova (Atlético Femenino - 1.68m)</option>
+          <option value="Sora">Sora (Unisex Slim - 1.75m)</option>
+          <option value="Mateo">Mateo (Deportivo Masculino - 1.82m)</option>
+        </select>
+      </div>
+
+      <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.8125rem; font-weight: 700;" id="ar-rec-title">Talla Recomendada por IA:</span>
+          <span style="font-size: 1.125rem; font-weight: 800; color: var(--primary);" id="ar-recommended-size">M</span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;" id="ar-rationale-text">Calculado en base a proporciones de silueta.</p>
+      </div>
+
+      <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 0.75rem;" id="ar-webxr-info">
+        WebXR no detectado en este dispositivo. Activando Modo 2D Interactivo de Alta Fidelidad.
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Cart Drawer -->
+  <aside class="drawer" id="cart-drawer" aria-label="Carrito de compras">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 1.25rem;">🛒</span>
+        <h2 style="font-size: 1.125rem; font-weight: 800;" id="cart-drawer-title">Bolsa de Compras</h2>
+      </div>
+      <button class="btn btn-icon" id="btn-cart-close">✕</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Shipping Progress Indicator -->
+      <div class="shipping-progress-container" id="shipping-progress-box">
+        <div class="shipping-progress-text" id="shipping-progress-label">Te faltan $30.000 para Despacho Gratis.</div>
+        <div class="shipping-progress-bar">
+          <div class="shipping-progress-fill" id="shipping-progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Cart Item List -->
+      <div id="cart-items-container">
+        <!-- Injected safely via createElement in app.js -->
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.35rem;">
+        <span id="cart-subtotal-label">Subtotal</span>
+        <span id="cart-subtotal-val" style="font-weight: 700;">$0 CLP</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.75rem;">
+        <span id="cart-shipping-label">Envío</span>
+        <span id="cart-shipping-val" style="font-weight: 700; color: var(--success);">$0 CLP</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 800; margin-bottom: 1rem; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+        <span id="cart-total-label">Total</span>
+        <span id="cart-total-val" style="color: var(--primary);">$0 CLP</span>
+      </div>
+      <button class="btn btn-primary" style="width: 100%;" id="btn-checkout-open">Proceder al Pago (Demo)</button>
+    </div>
+  </aside>
+
+  <!-- AI Assistant Chat Drawer -->
+  <aside class="drawer" id="ai-drawer" aria-label="Asistente de IA">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 1.25rem;">✨</span>
+        <div>
+          <h2 style="font-size: 1.05rem; font-weight: 800;" id="ai-drawer-title">Asistente Conversacional</h2>
+          <p style="font-size: 0.6875rem; color: var(--text-secondary);">Powered by AI Operating Platform</p>
+        </div>
+      </div>
+      <button class="btn btn-icon" id="btn-ai-close">✕</button>
+    </div>
+
+    <div class="drawer-body" id="ai-messages-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <!-- Messages rendered dynamically via app.js -->
+    </div>
+
+    <div class="drawer-footer">
+      <form id="ai-chat-form" style="display: flex; gap: 0.5rem;" onsubmit="return false;">
+        <input type="text" class="search-input" id="ai-chat-input" placeholder="Pregúntame sobre tallas, carritos o ropa..." style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md);">
+        <button type="submit" class="btn btn-primary" id="ai-chat-send">Enviar</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Checkout Demo Modal -->
+  <div class="modal-backdrop" id="checkout-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;" id="checkout-modal-title">Checkout Simulado Webpay Demo</h2>
+          <p style="font-size: 0.75rem; color: var(--text-secondary);" id="checkout-modal-subtitle">Integración comercial sobre AI Operating Platform</p>
+        </div>
+        <button class="btn btn-icon" id="btn-checkout-close">✕</button>
+      </div>
+
+      <div style="background-color: var(--primary-light); color: var(--primary); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem;" id="checkout-notice">
+        Esta es una simulación comercial segura conectada a AI Operating Platform. Cero cargos reales.
+      </div>
+
+      <form id="checkout-form" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div>
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.25rem;" id="lbl-cust-name">Nombre Completo</label>
+          <input type="text" class="search-input" id="checkout-cust-name" required value="María José Silva" style="width: 100%; border: 1px solid var(--border); background: var(--bg-muted); border-radius: var(--radius-md);">
+        </div>
+        <div>
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.25rem;" id="lbl-cust-email">Correo Electrónico</label>
+          <input type="email" class="search-input" id="checkout-cust-email" required value="maria.silva@example.com" style="width: 100%; border: 1px solid var(--border); background: var(--bg-muted); border-radius: var(--radius-md);">
+        </div>
+        <div>
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.25rem;" id="lbl-cust-street">Dirección de Entrega</label>
+          <input type="text" class="search-input" id="checkout-cust-street" required value="Av. Providencia 1234, Dpto 802" style="width: 100%; border: 1px solid var(--border); background: var(--bg-muted); border-radius: var(--radius-md);">
+        </div>
+        <div>
+          <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.25rem;" id="lbl-cust-city">Ciudad / Comuna</label>
+          <input type="text" class="search-input" id="checkout-cust-city" required value="Santiago, Providencia" style="width: 100%; border: 1px solid var(--border); background: var(--bg-muted); border-radius: var(--radius-md);">
+        </div>
+
+        <div style="border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; display: flex; justify-content: space-between; font-weight: 800;">
+          <span>Total a Pagar:</span>
+          <span id="checkout-total-val" style="color: var(--primary);">$0 CLP</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;" id="btn-submit-payment">Pagar con Webpay Demo</button>
+      </form>
+
+      <div id="checkout-success-box" style="display: none; text-align: center; padding: 1.5rem 0;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--success); margin-bottom: 0.25rem;" id="checkout-success-title">¡Compra Confirmada Exitosamente!</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;" id="checkout-success-order-id">Orden N° tentaciones-a1b2c3d4</p>
+        <button class="btn btn-secondary" id="btn-checkout-success-done" style="width: 100%;">Continuar Comprando</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 Tentaciones AI Commerce — Proyecto 01 del Portafolio de Aplicaciones de AI Operating Platform.</p>
+    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-muted);">Zero Runtime Dependencies • 100% Native Architecture • Autonomous AI E-Commerce</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
