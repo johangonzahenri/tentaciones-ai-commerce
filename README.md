@@ -72,24 +72,39 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ```text
 tentaciones-ai-commerce/
-├── public/                     # Storefront Single Page Application
-│   ├── index.html              # Layout HTML semántico y accesible
-│   ├── styles.css              # Sistema de diseño con soporte Claro/Oscuro
+├── docs/                       # Documentación canónica certificada
+│   ├── PUBLIC_DEMO.md          # Especificación y aislamiento del modo Demo Público
+│   ├── DEMO_SECURITY.md        # Políticas fail-closed y sanitización de datos
+│   ├── IP_PROTECTION.md        # Límites de propiedad intelectual y arquitectura polyrepo
+│   ├── MULTICLIENT_ARCHITECTURE.md # Contrato headless multi-cliente (Web/Mobile/Kiosk)
+│   ├── PORTFOLIO_SHOWCASE.md   # Guía comercial y métricas de demostración
+│   └── DEPLOYMENT_STRATEGY.md  # Topología de despliegue y hardening
+├── public/                     # Storefront Web SPA Accesible
+│   ├── index.html              # Layout HTML semántico con banner de demo segura
+│   ├── styles.css              # Sistema de diseño, métricas y drawer showcase
 │   ├── app.js                  # Controlador DOM seguro (0 innerHTML)
 │   └── i18n.js                 # Diccionario bilingüe (es-419 / en)
 ├── src/
+│   ├── contracts/              # Contratos de experiencia desacoplados
+│   │   ├── experience-contract.ts # ITentacionesExperienceService
+│   │   └── operational-mode.ts    # Resolvedor de modos operativos
 │   ├── domain/                 # Entidades y lógica de negocio
 │   │   ├── types.ts            # Tipos e interfaces de dominio
-│   │   ├── catalog-data.ts     # Catálogo demo de moda y calzado
+│   │   ├── catalog-data.ts     # Catálogo sintético de moda y calzado
 │   │   └── ar-fitting.ts       # Calibración biométrica y URNs AR
+│   ├── security/               # Invariantes de seguridad fail-closed
+│   │   └── demo-guardrails.ts  # Gatekeeper, sanitización y redaction
+│   ├── adapter/                # Implementaciones del contrato
+│   │   ├── demo-adapter.ts     # Adaptador sintético para demo público
+│   │   ├── platform-client.ts  # Cliente HTTP REST para Platform API
+│   │   ├── tentaciones-platform-adapter.ts # Adaptador conectado con fallback
+│   │   └── tentaciones-service-factory.ts  # Fábrica del servicio según modo
 │   ├── engine/
 │   │   └── commerce-engine.ts  # Motor de búsqueda, carrito y checkout
-│   ├── adapter/
-│   │   ├── platform-client.ts  # Cliente HTTP REST para Platform API
-│   │   └── tentaciones-platform-adapter.ts # Adaptador con fallback
 │   └── server.ts               # Servidor HTTP nativo con cabeceras de seguridad
 ├── tests/
-│   └── tentaciones.test.ts     # Suite de 18 pruebas automatizadas
+│   ├── tentaciones.test.ts     # Suite de pruebas automatizadas
+│   └── demo-security.test.ts   # Pruebas de seguridad fail-closed y multicliente
 ├── README.md                   # Presentación del proyecto
 ├── ARCHITECTURE.md             # Especificación arquitectónica detallada
 ├── INTEGRATION.md              # Contrato de integración con la plataforma
@@ -100,6 +115,14 @@ tentaciones-ai-commerce/
 
 ---
 
-## 5. Licencia
+## 5. Modos de Operación y Seguridad Fail-Closed
+
+1. **`PUBLIC_DEMO` (Por Defecto):** Aislamiento 100% sintético. Cero secretos en bundle, sin llamadas salientes a dominios corporativos internos, y rechazo inmediato de tokens de pago reales.
+2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado de demostración para clientes autorizados mediante gateway seguro a AI Operating Platform.
+3. **`DEVELOPMENT`:** Modo local para pruebas de desarrollo e integración.
+
+---
+
+## 6. Licencia
 
 Desarrollado bajo licencia **Apache-2.0**.

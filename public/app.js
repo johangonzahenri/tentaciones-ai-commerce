@@ -83,12 +83,21 @@ const elements = {
   checkoutSuccessBox: document.getElementById("checkout-success-box"),
   checkoutSuccessOrderId: document.getElementById("checkout-success-order-id"),
   checkoutSuccessDoneBtn: document.getElementById("btn-checkout-success-done"),
+  showcaseBtn: document.getElementById("btn-showcase-open"),
+  showcaseCloseBtn: document.getElementById("btn-showcase-close"),
+  showcaseDrawer: document.getElementById("showcase-drawer"),
+  metricsBar: document.getElementById("metrics-bar"),
+  metricConversion: document.getElementById("metric-conversion"),
+  metricReturnReduction: document.getElementById("metric-return-reduction"),
+  metricArEngagement: document.getElementById("metric-ar-engagement"),
+  metricIsolation: document.getElementById("metric-isolation"),
 };
 
 // --- Initialization ---
 async function initApp() {
   bindEvents();
   await loadCatalog();
+  await loadMetrics();
   renderCategories();
   renderCatalog();
   renderCart();
@@ -108,6 +117,13 @@ function bindEvents() {
 
   elements.cartOpenBtn.addEventListener("click", () => openDrawer(elements.cartDrawer));
   elements.cartCloseBtn.addEventListener("click", () => closeDrawer(elements.cartDrawer));
+
+  if (elements.showcaseBtn && elements.showcaseDrawer) {
+    elements.showcaseBtn.addEventListener("click", () => openDrawer(elements.showcaseDrawer));
+  }
+  if (elements.showcaseCloseBtn && elements.showcaseDrawer) {
+    elements.showcaseCloseBtn.addEventListener("click", () => closeDrawer(elements.showcaseDrawer));
+  }
 
   elements.aiAssistantBtn.addEventListener("click", () => openDrawer(elements.aiDrawer));
   elements.aiCloseBtn.addEventListener("click", () => closeDrawer(elements.aiDrawer));
@@ -162,14 +178,47 @@ function applyI18n() {
   elements.heroSubtitle.textContent = t("hero.subtitle");
   elements.searchInput.placeholder = t("search.placeholder");
   elements.searchBtn.textContent = t("search.button");
-  document.getElementById("nav-ai-label").textContent = t("nav.ai_assistant");
-  document.getElementById("nav-cart-label").textContent = t("nav.cart");
+  const navAi = document.getElementById("nav-ai-label");
+  if (navAi) navAi.textContent = t("nav.ai_assistant");
+  const navCart = document.getElementById("nav-cart-label");
+  if (navCart) navCart.textContent = t("nav.cart");
+  const navShowcase = document.getElementById("nav-showcase-label");
+  if (navShowcase) navShowcase.textContent = t("nav.showcase");
+  const demoDisc = document.getElementById("demo-disclosure-text");
+  if (demoDisc) demoDisc.textContent = t("demo.banner");
+  const brandBadge = document.getElementById("brand-badge-mode");
+  if (brandBadge) brandBadge.textContent = t("demo.mode_badge");
+  
+  const lblConv = document.getElementById("lbl-metric-conversion");
+  if (lblConv) lblConv.textContent = t("metrics.conversion_rate");
+  const lblRet = document.getElementById("lbl-metric-return");
+  if (lblRet) lblRet.textContent = t("metrics.return_reduction");
+  const lblAr = document.getElementById("lbl-metric-ar");
+  if (lblAr) lblAr.textContent = t("metrics.ar_engagement");
+  const lblIso = document.getElementById("lbl-metric-isolation");
+  if (lblIso) lblIso.textContent = t("metrics.demo_isolation");
+
   renderCategories();
   renderCatalog();
   renderCart();
 }
 
 // --- Data Fetching ---
+async function loadMetrics() {
+  try {
+    const res = await fetch("/api/metrics");
+    if (res.ok) {
+      const data = await res.json();
+      if (elements.metricConversion) elements.metricConversion.textContent = `${data.conversionRate}%`;
+      if (elements.metricReturnReduction) elements.metricReturnReduction.textContent = `${data.returnReductionPercent}%`;
+      if (elements.metricArEngagement) elements.metricArEngagement.textContent = `${data.arEngagementMinutes} min`;
+      if (elements.metricIsolation) elements.metricIsolation.textContent = `${data.demoSecurityIsolationPercent}%`;
+    }
+  } catch {
+    // Keep defaults
+  }
+}
+
 async function loadCatalog() {
   try {
     const res = await fetch("/api/products");

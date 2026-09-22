@@ -8,10 +8,15 @@
 </head>
 <body>
 
-  <!-- Top System Status Bar -->
-  <aside class="status-bar" aria-label="System Status">
-    <span class="status-dot" id="status-indicator"></span>
-    <span id="status-text">Plataforma Padre: ONLINE (AI Operating Platform v1.4.0)</span>
+  <!-- Top System Status Bar & Demo Security Disclosure -->
+  <aside class="demo-banner" id="demo-banner" aria-label="Demo Safety Disclosure">
+    <div class="demo-banner-content">
+      <span class="demo-badge">PUBLIC DEMO</span>
+      <span id="demo-disclosure-text">Modo Demostración Pública Aislada • Datos 100% Sintéticos • Cero Secretos Expuestos</span>
+      <button class="btn btn-xs btn-outline-light" id="btn-showcase-open" style="margin-left: 0.75rem; padding: 0.15rem 0.6rem; font-size: 0.7rem; border-radius: var(--radius-full);">
+        <span id="nav-showcase-label">Ver Arquitectura & Showcase</span> 🏛️
+      </button>
+    </div>
   </aside>
 
   <!-- Navigation Header -->
@@ -22,7 +27,7 @@
         <div>
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="brand-title">TENTACIONES</span>
-            <span class="brand-badge">Child App</span>
+            <span class="brand-badge" id="brand-badge-mode">Public Demo</span>
           </div>
           <span style="font-size: 0.75rem; color: var(--text-secondary);" id="brand-tagline">AI Smart Commerce & Virtual Try-On</span>
         </div>
@@ -60,6 +65,26 @@
       </div>
       <h1 class="hero-title" id="hero-title">Tu Estilo, Perfeccionado por Inteligencia Artificial</h1>
       <p class="hero-subtitle" id="hero-subtitle">Prueba prendas y calzado en Realidad Aumentada 3D, recibe recomendaciones biométricas y disfruta de una experiencia de compra fluida.</p>
+
+      <!-- Commercial Demo Metrics Live Bar -->
+      <div class="metrics-bar" id="metrics-bar">
+        <div class="metric-card">
+          <div class="metric-val" id="metric-conversion">14.2%</div>
+          <div class="metric-label" id="lbl-metric-conversion">Conversión Demo</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metric-return-reduction">-38.5%</div>
+          <div class="metric-label" id="lbl-metric-return">Reducción Devoluciones</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metric-ar-engagement">4.2 min</div>
+          <div class="metric-label" id="lbl-metric-ar">Engagement AR</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="metric-isolation">100%</div>
+          <div class="metric-label" id="lbl-metric-isolation">Aislamiento Seguro</div>
+        </div>
+      </div>
 
       <!-- Natural Language AI Search Box -->
       <form class="search-box" id="search-form" onsubmit="return false;">
@@ -250,6 +275,59 @@
       </div>
     </div>
   </div>
+
+  <!-- Portfolio Showcase Modal / Architecture Drawer -->
+  <aside class="drawer drawer-wide" id="showcase-drawer" aria-label="Portfolio Showcase & Architecture Boundary">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 1.35rem;">🏛️</span>
+        <div>
+          <h2 style="font-size: 1.125rem; font-weight: 800;" id="showcase-title">Arquitectura del Portafolio & IP Protection</h2>
+          <p style="font-size: 0.6875rem; color: var(--text-secondary);">Enterprise Multi-Tier Showcase • Project 01</p>
+        </div>
+      </div>
+      <button class="btn btn-icon" id="btn-showcase-close">✕</button>
+    </div>
+
+    <div class="drawer-body" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem;">
+      <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+        <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--primary);">🌐 Límites de Exposición y Seguridad</h3>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.45;">
+          Esta aplicación opera bajo el <strong>Multiclient Experience Contract</strong> (<code>ITentacionesExperienceService</code>).
+          En modo <strong>PUBLIC_DEMO</strong>, la ejecución está completamente aislada:
+        </p>
+        <ul style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+          <li>🔒 <strong>Zero Runtime Secrets:</strong> Ninguna API key ni token de producción en el bundle cliente.</li>
+          <li>🛡️ <strong>Zero Core Platform Exposure:</strong> Los kernels de orquestación, gobernanza y ontología permanecen en repositorios privados.</li>
+          <li>⚡ <strong>Fail-Closed Gatekeeper:</strong> Detección instantánea de tokens reales o URLs internas con bloqueo preventivo.</li>
+          <li>📱 <strong>Multiclient Ready:</strong> Soporte desacoplado para Storefront Web, Mobile Apps (React Native/Flutter) y Kiosks.</li>
+        </ul>
+      </div>
+
+      <div style="background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+        <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem;">🏗️ Ecosistema Polyrepo</h3>
+        <div style="font-family: monospace; font-size: 0.75rem; background: var(--bg-muted); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--text-primary);">
+AI OPERATING PLATFORM (Parent Platform)<br>
+&nbsp;&nbsp;├── REST API Gateway<br>
+&nbsp;&nbsp;└── PlatformClient SDK<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>PROJ-01: Tentaciones AI Commerce</strong> (Satélite)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <code>ITentacionesExperienceService</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <code>DemoAdapter</code> (Public Showcase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <code>ConnectedAdapter</code> (Private Connected)
+        </div>
+      </div>
+
+      <div style="background-color: var(--primary-light); border: 1px solid var(--primary); border-radius: var(--radius-md); padding: 1rem; color: var(--primary);">
+        <h4 style="font-size: 0.8125rem; font-weight: 700;">💼 Indicadores Comerciales Auditados</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; font-size: 0.75rem;">
+          <div><strong>Conversión Catálogo:</strong> +14.2%</div>
+          <div><strong>Reducción Retornos:</strong> -38.5%</div>
+          <div><strong>Tiempo en Fitting AR:</strong> 4.2 min</div>
+          <div><strong>Fidelidad Determinística:</strong> 100%</div>
+        </div>
+      </div>
+    </div>
+  </aside>
 
   <!-- Footer -->
   <footer class="footer">

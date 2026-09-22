@@ -6,38 +6,40 @@
 
 1. **Desacoplamiento Estricto**: Tentaciones es una aplicación consumidora (**Child Application**). No aloja ni duplica el motor central de agentes, la base de datos de eventos ni el gateway de políticas de seguridad.
 2. **Defensa en Profundidad & Seguridad DOM**: El código frontend en `public/app.js` aplica una política estricta de **0 innerHTML, 0 outerHTML, 0 eval() y 0 document.write()**, construyendo la interfaz exclusivamente mediante APIs seguras del DOM.
-3. **Resiliencia & Dual-State Operation**: Toda capacidad de IA (`product.discovery`, `product.recommendation`, `product.compare`, `cart.assistance`, `ar.fitting_room`) cuenta con una ruta primaria vía `PlatformClient` y una ruta secundaria determinista en `TentacionesCommerceEngine` (`LOCAL_FALLBACK`).
+3. **Contrato Multicliente (`ITentacionesExperienceService`)**: Desacopla completamente los clientes de visualización (Web Storefront, Mobile Apps, Kiosks) de la implementación subyacente.
+4. **Aislamiento Fail-Closed en Modo Demo**: En `PUBLIC_DEMO`, el sistema opera de forma 100% sintética, rechazando llamadas a URLs internas corporativas, impidiendo fugas de claves o secretos, y bloqueando tokens de pago de producción.
 
 ---
 
-## 2. Diagrama de Capas
+## 2. Diagrama de Capas Multicliente
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                      CAPA DE PRESENTACIÓN                    │
-│      Storefront SPA (HTML5 / Vanilla JS / CSS Variables)    │
-│            Catálogo • Modal AR • Drawer Carrito             │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼ (Fetch / REST)
-┌─────────────────────────────────────────────────────────────┐
-│                       CAPA DE SERVIDOR                       │
-│    Node.js Native Server (src/server.ts • 0 Runtime Deps)    │
-│        Enrutador de API • Servidor de Estáticos • CSP        │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      CAPA DE ADAPTADOR                       │
-│               TentacionesPlatformAdapter                     │
-│    Conmutación Automática (Platform API <-> Local Engine)   │
-└───────────────┬─────────────────────────────┬───────────────┘
-                │                             │
-    (ONLINE)    ▼                             ▼    (OFFLINE / FALLBACK)
-┌───────────────────────────────┐ ┌───────────────────────────┐
-│   PlatformClient REST SDK     │ │ TentacionesCommerceEngine │
-│   Llamadas a /api/v1/tasks    │ │ Motor en memoria local    │
-└───────────────────────────────┘ └───────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      CAPA MULTICLIENTE / SURFACES                       │
+│    Storefront Web (SPA)  │  Mobile App (iOS/Android)  │  In-Store Kiosk │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                                     ▼ (REST /api/*)
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       CAPA DE SERVIDOR / GATEWAY                        │
+│    Node.js Native Server (src/server.ts) • CSP • Sanitized Handlers     │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                  CONTRATO DE EXPERIENCIA MULTICLIENTE                    │
+│      ITentacionesExperienceService (src/contracts/experience-contract.ts)│
+└──────────────────┬──────────────────┬───────────────────────────────────┘
+                   │                                  │
+       (PUBLIC_DEMO)                                   │ (PRIVATE_CONNECTED)
+                   ▼                                  ▼
+┌─────────────────────────────────────┐ ┌─────────────────────────────────┐
+│           DemoAdapter               │ │     ConnectedServiceWrapper     │
+│   - Catálogo 100% Sintético         │ │   - TentacionesPlatformAdapter  │
+│   - Fitting Biométrico Local        │ │   - PlatformClient REST SDK     │
+│   - Métricas Comerciales Demo       │ │   - Conexión con AI Operating   │
+│   - Invariantes Fail-Closed         │ │     Platform Core Gateway       │
+└─────────────────────────────────────┘ └─────────────────────────────────┘
 ```
 
 ---
