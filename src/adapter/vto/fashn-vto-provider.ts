@@ -15,6 +15,7 @@ export interface FashnProviderConfig {
   apiKey: string;
   apiBaseUrl?: string;
   modelName?: "tryon-v1.6" | "tryon-max";
+  returnBase64?: boolean;
   timeoutMs?: number;
   maxPollAttempts?: number;
 }
@@ -33,6 +34,7 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
   private apiKey: string;
   private apiBaseUrl: string;
   private modelName: "tryon-v1.6" | "tryon-max";
+  private returnBase64: boolean;
   private timeoutMs: number;
   private jobMetadata = new Map<string, { requestId: string; productId: string; productName: string; category: TryOnCategory; submittedAt: number }>();
 
@@ -44,7 +46,8 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
     }
     this.apiKey = config.apiKey;
     this.apiBaseUrl = config.apiBaseUrl || "https://api.fashn.ai/v1";
-    this.modelName = config.modelName || "tryon-v1.6";
+    this.modelName = config.modelName || "tryon-max";
+    this.returnBase64 = config.returnBase64 ?? true;
     this.timeoutMs = config.timeoutMs || 30000;
   }
 
@@ -80,18 +83,24 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
       throw new Error("Both model_image and garment_image are required for FASHN AI Virtual Try-On");
     }
 
-    // Build payload according to model specification
-    const payload: Record<string, unknown> = {
-      model_name: this.modelName,
+    // Build payload according to official FASHN API schema
+    const inputs: Record<string, unknown> = {
       model_image: modelImage,
+      return_base64: this.returnBase64,
+      num_images: 1,
     };
 
     if (this.modelName === "tryon-v1.6") {
-      payload.garment_image = garmentImage;
-      payload.category = this.mapFashnCategory(input.category);
+      inputs.garment_image = garmentImage;
+      inputs.category = this.mapFashnCategory(input.category);
     } else {
-      payload.product_image = garmentImage;
+      inputs.product_image = garmentImage;
     }
+
+    const payload: Record<string, unknown> = {
+      model_name: this.modelName,
+      inputs,
+    };
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
@@ -247,6 +256,7 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
       const data = (await response.json()) as { id: string; status: string; output?: string[]; error?: string };
 
       if (data.status !== "completed" || !data.output || data.output.length === 0) {
+        const errorCategory = this.classifyFashnError(data.error);
         return {
           jobId,
           requestId: metaInfo.requestId,
@@ -262,8 +272,16 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
             es: "El procesamiento con FASHN AI no generó una imagen válida.",
             en: "FASHN AI processing did not yield a valid output image.",
           },
-          error: redactVTOSecrets(data.error || "FASHN output array is empty"),
+          error: redactVTOSecrets(errorCategory || data.error || "FASHN output array is empty"),
         };
+      }
+
+      const rawOutput = data.output[0];
+      const isBase64 = rawOutput.startsWith("data:image/");
+      const isAllowedCdn = rawOutput.startsWith("https://cdn.fashn.ai/") || rawOutput.startsWith("https://media.fashn.ai/");
+
+      if (!isBase64 && !isAllowedCdn) {
+        throw new Error("FASHN result returned an untrusted or invalid image URL domain");
       }
 
       return {
@@ -272,12 +290,12 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
         productId: metaInfo.productId,
         productName: metaInfo.productName,
         status: "SUCCESS",
-        resultImageUrl: data.output[0],
+        resultImageUrl: rawOutput,
         isSyntheticDemo: false,
         providerId: this.providerId,
         category: metaInfo.category,
         recommendedSize: "M",
-        fitConfidence: 0.88,
+        fitConfidence: 88,
         processingTimeMs: Date.now() - metaInfo.submittedAt,
         completedAt: new Date().toISOString(),
         disclaimer: {
@@ -292,8 +310,28 @@ export class FashnVirtualTryOnProvider implements IVirtualTryOnProvider {
   }
 
   public async cancel(jobId: string): Promise<void> {
-    // In FASHN API, cancelled jobs are handled client-side or by terminating local polling
     this.jobMetadata.delete(jobId);
+  }
+
+  private classifyFashnError(errorText?: string): string | undefined {
+    if (!errorText) return undefined;
+    const lower = errorText.toLowerCase();
+    if (lower.includes("imageloaderror") || lower.includes("image load") || lower.includes("could not load")) {
+      return "ImageLoadError: Failed to fetch model or garment image.";
+    }
+    if (lower.includes("inputvalidationerror") || lower.includes("validation")) {
+      return "InputValidationError: Garment or model input format is invalid.";
+    }
+    if (lower.includes("contentmoderationerror") || lower.includes("moderation") || lower.includes("nsfw")) {
+      return "ContentModerationError: Image blocked by provider safety policy.";
+    }
+    if (lower.includes("unavailableerror") || lower.includes("service unavailable")) {
+      return "UnavailableError: FASHN AI inference service temporarily unavailable.";
+    }
+    if (lower.includes("pipelineerror") || lower.includes("pipeline")) {
+      return "PipelineError: Neural diffusion inference failed for the provided pose.";
+    }
+    return undefined;
   }
 
   private mapFashnCategory(cat: TryOnCategory): string {

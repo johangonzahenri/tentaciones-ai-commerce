@@ -224,3 +224,33 @@ test("VTO 8. Factory: createVTOService returns secure service based on operation
   const provider = createVTOProvider(publicConfig);
   assert.equal(provider.providerId, "demo-synthetic");
 });
+
+test("VTO 9. Contract Parity: DemoVirtualTryOnProvider and FashnVirtualTryOnProvider implement IVirtualTryOnProvider", () => {
+  const demoProvider = new DemoVirtualTryOnProvider();
+  const fashnProvider = new FashnVirtualTryOnProvider({ apiKey: "fa_live_mock_key_test_123" });
+
+  assert.equal(typeof demoProvider.validateInput, "function");
+  assert.equal(typeof demoProvider.prepareInput, "function");
+  assert.equal(typeof demoProvider.startTryOn, "function");
+  assert.equal(typeof demoProvider.getStatus, "function");
+  assert.equal(typeof demoProvider.getResult, "function");
+  assert.equal(typeof demoProvider.cancel, "function");
+
+  assert.equal(typeof fashnProvider.validateInput, "function");
+  assert.equal(typeof fashnProvider.prepareInput, "function");
+  assert.equal(typeof fashnProvider.startTryOn, "function");
+  assert.equal(typeof fashnProvider.getStatus, "function");
+  assert.equal(typeof fashnProvider.getResult, "function");
+  assert.equal(typeof fashnProvider.cancel, "function");
+
+  assert.equal(demoProvider.isSynthetic, true);
+  assert.equal(fashnProvider.isSynthetic, false);
+});
+
+test("VTO 10. Security & Fail-Closed Guardrails: Secret presence audit in static outputs", () => {
+  const sampleLog = "Submitted job to Fashn with authorization Bearer fa_live_99887766 and api_key=sk_live_112233";
+  const redacted = redactVTOSecrets(sampleLog);
+  assert.ok(!redacted.includes("fa_live_99887766"));
+  assert.ok(!redacted.includes("sk_live_112233"));
+  assert.ok(redacted.includes("[REDACTED_FASHN_KEY]"));
+});

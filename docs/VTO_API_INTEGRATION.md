@@ -122,14 +122,39 @@ Recupera el resultado final una vez que el trabajo está en estado `COMPLETED`.
 El conector `FashnVirtualTryOnProvider` traduce las peticiones internas al esquema oficial de FASHN AI (`https://api.fashn.ai/v1`):
 
 ### Modelos y Parámetros
-1. **`tryon-v1.6`**:
-   - `model_image`: URL o Base64 de la persona o avatar.
-   - `garment_image`: URL de la prenda de catálogo.
-   - `category`: `"tops" | "bottoms" | "one-pieces"`.
-   - `mode`: `"performance"` o `"balanced"`.
-2. **`tryon-max`**:
-   - Soporta mayor resolución de texturas y preservación de pliegues complejos.
-   - Parámetros: `model_image`, `product_image`.
+1. **`tryon-max` (Modelo Primario Recomendado)**:
+   - Esquema de solicitud (`POST /v1/run`):
+     ```json
+     {
+       "model_name": "tryon-max",
+       "inputs": {
+         "model_image": "<base64_data_uri_or_url>",
+         "product_image": "<garment_url_or_base64>",
+         "return_base64": true,
+         "num_images": 1
+       }
+     }
+     ```
+   - Ventaja: Mayor fidelidad en caída textil, preservación de costuras y soporte amplio para prendas complejas.
+
+2. **`tryon-v1.6` (Modelo Secundario de Alto Rendimiento)**:
+   - Esquema de solicitud (`POST /v1/run`):
+     ```json
+     {
+       "model_name": "tryon-v1.6",
+       "inputs": {
+         "model_image": "<base64_data_uri_or_url>",
+         "garment_image": "<garment_url_or_base64>",
+         "category": "tops",
+         "return_base64": true,
+         "num_images": 1
+       }
+     }
+     ```
+
+### Validación de Host y Clasificación de Errores
+- **Validación de Entrega**: Solo se aceptan salidas con formato Base64 Data URI o provenientes de los hosts CDN oficiales documentados (`https://cdn.fashn.ai/` y `https://media.fashn.ai/`).
+- **Clasificación de Errores**: Mapeo estricto de `ImageLoadError`, `InputValidationError`, `ContentModerationError`, `UnavailableError`, y `PipelineError` a mensajes seguros sin revelar stack traces.
 
 ---
 
@@ -138,7 +163,7 @@ El conector `FashnVirtualTryOnProvider` traduce las peticiones internas al esque
 | Variable | Tipo | Default | Descripción |
 |---|---|---|---|
 | `VTO_PROVIDER` | string | `"DEMO"` | Proveedor activo (`"DEMO"` o `"FASHN"`). |
-| `FASHN_API_KEY` | string | `""` | Llave API privada del proveedor FASHN (solo backend). |
-| `FASHN_MODEL_NAME` | string | `"tryon-v1.6"` | Modelo de red neuronal (`"tryon-v1.6"` o `"tryon-max"`). |
+| `FASHN_API_KEY` | string | `""` | Llave API privada del proveedor FASHN (solo backend en `PRIVATE_CONNECTED_DEMO`). |
+| `FASHN_MODEL_NAME` | string | `"tryon-max"` | Modelo de red neuronal (`"tryon-max"` o `"tryon-v1.6"`). |
 | `VTO_POLL_INTERVAL_MS` | number | `1000` | Intervalo de polling al proveedor externo en ms. |
 | `VTO_JOB_TIMEOUT_MS` | number | `60000` | Tiempo máximo de espera de inferencia (60s). |

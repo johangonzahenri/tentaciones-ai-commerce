@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 90 Complete)
-VERSION: v1.6.0
+STATUS: CERTIFIED (Phase 91 Complete)
+VERSION: v1.6.1
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -86,6 +86,16 @@ VERSION: v1.6.0
 * [x] Endpoints REST `/api/vto/validate`, `/api/vto/generate`, `/api/vto/status/:id`, `/api/vto/result/:id`, `/api/vto/cancel/:id`.
 * [x] UI del probador virtual con modal de 4 etapas (Consentimiento, Selección Avatar/Foto, Progreso por fases, Visualización de Resultado con recomendación de talla).
 * [x] Creación de 5 documentos canónicos: `docs/VTO_ENGINE_ARCHITECTURE.md`, `docs/VTO_PROVIDER_EVALUATION.md`, `docs/VTO_PRIVACY.md`, `docs/VTO_API_INTEGRATION.md`, `docs/VTO_PRODUCT_COMPATIBILITY.md` (Total 26 docs certificados).
+
+---
+
+### Fase 9: Primer Piloto Real FASHN & Verificación End-to-End (v1.6.1) — [IMPLEMENTED]
+* [x] Integración de esquemas oficiales FASHN API (`tryon-max` con `product_image`, `tryon-v1.6` con `garment_image`).
+* [x] Salida efímera en memoria con `return_base64: true` y validación estricta de dominios CDN (`cdn.fashn.ai`, `media.fashn.ai`).
+* [x] Clasificación y sanitización de errores FASHN (`ImageLoadError`, `InputValidationError`, `ContentModerationError`, `UnavailableError`, `PipelineError`).
+* [x] Creación de `docs/VTO_FIRST_PILOT.md` (Total 27 documentos canónicos certificados).
+* [x] Diagnóstico honesto de ejecución del piloto real: Arquitectura verificada, ejecución bloqueada por credenciales no configuradas (`FASHN_API_KEY` ausente).
+* [x] Verificación de 50 pruebas automatizadas en `tentaciones-ai-commerce` y 1600 pruebas en AI Operating Platform pasando al 100%.
 
 ---
 
