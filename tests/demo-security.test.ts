@@ -21,6 +21,13 @@ import {
   clampARScale,
   DEFAULT_AR_SESSION_CONFIG,
 } from "../src/domain/webxr-spatial.js";
+import {
+  SHOWCASE_MEDIA_REGISTRY,
+  AR_WALKTHROUGH_STEPS,
+  PRODUCT_HONESTY_MATRIX,
+  resolveWalkthroughStep,
+  resolveShowcaseMedia,
+} from "../src/domain/showcase-assets.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +35,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 17 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 21 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -47,6 +54,10 @@ test("1. Documentation Completeness: All 17 canonical docs exist with mandatory 
     "WEBXR_AR_ARCHITECTURE.md",
     "WEBXR_COMPATIBILITY.md",
     "AR_SESSION_GUIDE.md",
+    "AR_EXPERIENCE.md",
+    "CASE_STUDY.md",
+    "SHOWCASE_MEDIA.md",
+    "SHOWCASE_ARCHITECTURE.md",
   ];
 
   for (const doc of docs) {
@@ -352,5 +363,71 @@ test("18. AR Transform Constraints: Enforces min/max boundaries on spatial model
   assert.equal(clampARScale(0.05, DEFAULT_AR_SESSION_CONFIG), 0.25, "Must clamp minimum scale to 0.25");
   assert.equal(clampARScale(10.0, DEFAULT_AR_SESSION_CONFIG), 2.5, "Must clamp maximum scale to 2.5");
 });
+
+test("19. Showcase Media & Asset Registry: All registered media assets exist with valid SVG/binary structures", () => {
+  assert.ok(SHOWCASE_MEDIA_REGISTRY.length >= 6, "Must register at least 6 showcase media items");
+
+  for (const item of SHOWCASE_MEDIA_REGISTRY) {
+    const physicalPath = path.join(ROOT_DIR, "public", item.path.replace(/^\//, ""));
+    assert.ok(fs.existsSync(physicalPath), `Physical media file ${physicalPath} must exist`);
+    const stat = fs.statSync(physicalPath);
+    assert.ok(stat.size > 100, `Physical media file ${physicalPath} must be non-empty`);
+    assert.ok(item.license.includes("CC0") || item.license.includes("Synthetic"), "License must be CC0/Synthetic");
+    assert.ok(item.caption.es.length > 0 && item.caption.en.length > 0, "Captions must have bilingual parity");
+  }
+
+  const heroMedia = resolveShowcaseMedia("hero-cover-canvas");
+  assert.ok(heroMedia, "Must find hero media asset");
+  assert.equal(heroMedia.format, "svg");
+});
+
+test("20. AR Walkthrough Stepper Domain: 5-step sequence is complete with bilingual descriptions and badges", () => {
+  assert.equal(AR_WALKTHROUGH_STEPS.length, 5, "Must define exactly 5 sequential walkthrough steps");
+
+  for (let i = 1; i <= 5; i++) {
+    const step = resolveWalkthroughStep(i);
+    assert.ok(step, `Walkthrough step ${i} must resolve`);
+    assert.equal(step.stepNumber, i);
+    assert.ok(step.title.es.length > 0 && step.title.en.length > 0, `Step ${i} must have bilingual titles`);
+    assert.ok(step.subtitle.es.length > 0 && step.subtitle.en.length > 0, `Step ${i} must have bilingual subtitles`);
+    assert.ok(step.description.es.length > 0 && step.description.en.length > 0, `Step ${i} must have bilingual descriptions`);
+    assert.ok(step.technicalDetails.es.length > 0 && step.technicalDetails.en.length > 0, `Step ${i} must have bilingual technical details`);
+    assert.ok(step.badge.es.length > 0 && step.badge.en.length > 0, `Step ${i} must have bilingual badges`);
+  }
+});
+
+test("21. Product Honesty Matrix: Capabilities explicitly distinguish implemented features from out-of-scope items", () => {
+  assert.ok(PRODUCT_HONESTY_MATRIX.length >= 7, "Honesty matrix must contain at least 7 verified feature evaluations");
+
+  const implemented = PRODUCT_HONESTY_MATRIX.filter((f) => f.status === "IMPLEMENTED");
+  const notImplemented = PRODUCT_HONESTY_MATRIX.filter((f) => f.status === "NOT_IMPLEMENTED");
+
+  assert.ok(implemented.some((f) => f.featureId === "3d_viewer"), "3D viewer must be marked IMPLEMENTED");
+  assert.ok(implemented.some((f) => f.featureId === "real_glb_gltf"), "Real GLB loading must be marked IMPLEMENTED");
+  assert.ok(implemented.some((f) => f.featureId === "webxr_hit_test"), "WebXR hit-test must be marked IMPLEMENTED");
+  assert.ok(implemented.some((f) => f.featureId === "biometric_sizing"), "Biometric sizing must be marked IMPLEMENTED");
+
+  assert.ok(notImplemented.some((f) => f.featureId === "body_tracking_mesh"), "Body tracking mesh must be marked NOT_IMPLEMENTED");
+  assert.ok(notImplemented.some((f) => f.featureId === "cloth_physics_simulation"), "Cloth physics must be marked NOT_IMPLEMENTED");
+  assert.ok(notImplemented.some((f) => f.featureId === "production_payment_gateways"), "Production payments must be marked NOT_IMPLEMENTED");
+});
+
+test("22. DOM Hygiene & Security Invariant: Zero unsafe DOM manipulation APIs in frontend codebase", () => {
+  const scriptsToCheck = ["app.js", "i18n.js"];
+  const forbiddenApis = ["innerHTML", "outerHTML", "document.write", "eval("];
+
+  for (const script of scriptsToCheck) {
+    const filePath = path.join(ROOT_DIR, "public", script);
+    const content = fs.readFileSync(filePath, "utf8");
+
+    for (const api of forbiddenApis) {
+      assert.ok(
+        !content.includes(api),
+        `Public script ${script} must not contain unsafe DOM API '${api}'`
+      );
+    }
+  }
+});
+
 
 

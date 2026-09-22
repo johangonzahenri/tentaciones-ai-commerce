@@ -4,6 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TENTACIONES — AI Fashion Commerce & Virtual Try-On</title>
+  
+  <!-- SEO & Open Graph Metadata -->
+  <meta name="description" content="Tentaciones AI Commerce — Immersive 3D/AR fashion commerce experience with WebXR spatial hit-test and biometric sizing. Project 01 of AI Operating Platform.">
+  <meta property="og:title" content="TENTACIONES — AI Fashion Commerce & Virtual Try-On">
+  <meta property="og:description" content="Experience autonomous AI-assisted shopping with real GLB/glTF 3D inspection and WebXR spatial AR placement.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/images/hero-cover.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TENTACIONES — AI Fashion Commerce & Virtual Try-On">
+  <meta name="twitter:description" content="AI fashion commerce with WebXR 3D spatial fitting and biometric calibration.">
+  <meta name="twitter:image" content="/assets/images/hero-cover.svg">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -34,6 +47,11 @@
       </a>
 
       <nav class="nav-actions">
+        <a href="#walkthrough-section" class="btn btn-secondary" id="btn-nav-walkthrough" style="text-decoration: none;">
+          <span>👓</span>
+          <span id="nav-walkthrough-label">Paso a Paso AR</span>
+        </a>
+
         <button class="btn btn-secondary" id="btn-ai-assistant">
           <span>✨</span>
           <span id="nav-ai-label">Asistente IA</span>
@@ -69,7 +87,7 @@
       <div class="hero-cta-group">
         <button class="btn btn-primary btn-lg" id="btn-hero-try-now">
           <span>👓</span>
-          <span id="hero-cta-try-text">PROBAR AHORA</span>
+          <span id="hero-cta-try-text">PROBAR AR</span>
         </button>
         <a href="#catalog-section" class="btn btn-secondary btn-lg" id="btn-hero-explore">
           <span>🛍️</span>
@@ -124,6 +142,39 @@
       <!-- Product cards rendered dynamically via app.js -->
     </div>
   </main>
+
+  <!-- Interactive AR Walkthrough Section -->
+  <section class="walkthrough-section" id="walkthrough-section" aria-label="Interactive AR Walkthrough">
+    <div class="walkthrough-container">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div class="hero-pill" style="margin-bottom: 0.75rem;">
+          <span>🔍</span>
+          <span id="walkthrough-badge">RECORRIDO TÉCNICO INTERACTIVO</span>
+        </div>
+        <h2 class="section-title" id="walkthrough-main-title">Walkthrough Paso a Paso: Flujo del Probador AR</h2>
+        <p class="section-subtitle" id="walkthrough-main-subtitle">Descubre cómo funciona internamente la experiencia espacial desde la selección hasta la compra.</p>
+      </div>
+
+      <!-- Stepper Controls & Dots -->
+      <div class="walkthrough-stepper-header">
+        <div class="walkthrough-dots" id="walkthrough-dots-container">
+          <!-- Step indicator dots rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Active Walkthrough Card (Rendered via DOM createElement in app.js) -->
+      <div class="walkthrough-card-wrapper" id="walkthrough-card-container">
+        <!-- Dynamic card content injected safely -->
+      </div>
+
+      <!-- Navigation Stepper Buttons -->
+      <div class="walkthrough-nav-controls">
+        <button class="btn btn-secondary" id="btn-walkthrough-prev">← Anterior</button>
+        <button class="btn btn-primary" id="btn-walkthrough-try">Probar en Vivo 👓</button>
+        <button class="btn btn-secondary" id="btn-walkthrough-next">Siguiente →</button>
+      </div>
+    </div>
+  </section>
 
   <!-- How It Works Section -->
   <section class="how-it-works-section">
@@ -418,7 +469,7 @@
     </div>
   </div>
 
-  <!-- Portfolio Showcase Modal / Architecture Drawer -->
+  <!-- Portfolio Showcase Modal / Architecture & Honesty Drawer -->
   <aside class="drawer drawer-wide" id="showcase-drawer" aria-label="Portfolio Showcase & Architecture Boundary">
     <div class="drawer-header">
       <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -444,6 +495,15 @@
           <li>⚡ <strong>Fail-Closed Gatekeeper:</strong> Detección instantánea de tokens reales o URLs internas con bloqueo preventivo.</li>
           <li>📱 <strong>Multiclient Ready:</strong> Soporte desacoplado para Storefront Web, Mobile Apps y Kioskos.</li>
         </ul>
+      </div>
+
+      <!-- Product Technical Honesty Matrix Container -->
+      <div style="background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
+        <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary);" id="honesty-title-label">Matriz de Honestidad Técnica de Producto</h3>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem;" id="honesty-subtitle-label">Transparencia de capacidades implementadas vs funciones fuera de alcance</p>
+        <div class="honesty-table-wrapper" id="honesty-table-container">
+          <!-- Honesty table injected safely via DOM createElement in app.js -->
+        </div>
       </div>
 
       <div style="background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">

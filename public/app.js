@@ -41,6 +41,11 @@ const state = {
     loadedGeometry: null,
     isScanningSim: null,
   },
+  // Walkthrough Stepper State
+  walkthrough: {
+    currentStep: 1,
+    totalSteps: 5,
+  },
 };
 
 function t(key, vars = {}) {
@@ -161,6 +166,13 @@ const elements = {
   metricFittings: document.getElementById("metric-fittings"),
   metricRecommendations: document.getElementById("metric-recommendations"),
   metricOrders: document.getElementById("metric-orders"),
+  // Walkthrough & Honesty Elements
+  walkthroughCardContainer: document.getElementById("walkthrough-card-container"),
+  walkthroughDotsContainer: document.getElementById("walkthrough-dots-container"),
+  btnWalkthroughPrev: document.getElementById("btn-walkthrough-prev"),
+  btnWalkthroughNext: document.getElementById("btn-walkthrough-next"),
+  btnWalkthroughTry: document.getElementById("btn-walkthrough-try"),
+  honestyTableContainer: document.getElementById("honesty-table-container"),
 };
 
 // --- Initialization ---
@@ -173,6 +185,8 @@ async function initApp() {
   renderCatalog();
   renderCart();
   renderARProfiles();
+  renderWalkthrough();
+  renderHonestyMatrix();
   addAIMessage("system", state.lang === "es-419" ? "¡Hola! Soy tu asistente de moda en Tentaciones. ¿Buscas zapatillas de running, un vestido elegante o asistencia con tu talla?" : "Hello! I am your fashion assistant at Tentaciones. Are you looking for running shoes, an elegant dress, or size advice?");
   checkWebXRSupport();
 }
@@ -193,6 +207,30 @@ function bindEvents() {
       openARModal(firstArProd);
     }
   });
+
+  // Walkthrough Controls
+  if (elements.btnWalkthroughPrev) {
+    elements.btnWalkthroughPrev.addEventListener("click", () => {
+      state.walkthrough.currentStep = state.walkthrough.currentStep > 1 ? state.walkthrough.currentStep - 1 : state.walkthrough.totalSteps;
+      renderWalkthrough();
+    });
+  }
+
+  if (elements.btnWalkthroughNext) {
+    elements.btnWalkthroughNext.addEventListener("click", () => {
+      state.walkthrough.currentStep = state.walkthrough.currentStep < state.walkthrough.totalSteps ? state.walkthrough.currentStep + 1 : 1;
+      renderWalkthrough();
+    });
+  }
+
+  if (elements.btnWalkthroughTry) {
+    elements.btnWalkthroughTry.addEventListener("click", () => {
+      const targetProd = state.products.find((p) => p.arAvailable) || state.products[0];
+      if (targetProd) {
+        openARModal(targetProd);
+      }
+    });
+  }
 
   elements.cartOpenBtn.addEventListener("click", () => openDrawer(elements.cartDrawer));
   elements.cartCloseBtn.addEventListener("click", () => closeDrawer(elements.cartDrawer));
@@ -396,10 +434,30 @@ function applyI18n() {
   const arRecT = document.getElementById("ar-rec-title");
   if (arRecT) arRecT.textContent = t("ar.rec_size_title");
 
+  // Walkthrough & Honesty Labels
+  const wtBadge = document.getElementById("walkthrough-badge");
+  if (wtBadge) wtBadge.textContent = t("walkthrough.badge");
+  const wtTitle = document.getElementById("walkthrough-main-title");
+  if (wtTitle) wtTitle.textContent = t("walkthrough.title");
+  const wtSub = document.getElementById("walkthrough-main-subtitle");
+  if (wtSub) wtSub.textContent = t("walkthrough.subtitle");
+  const navWt = document.getElementById("nav-walkthrough-label");
+  if (navWt) navWt.textContent = t("nav.walkthrough");
+  if (elements.btnWalkthroughPrev) elements.btnWalkthroughPrev.textContent = t("walkthrough.prev");
+  if (elements.btnWalkthroughNext) elements.btnWalkthroughNext.textContent = t("walkthrough.next");
+  if (elements.btnWalkthroughTry) elements.btnWalkthroughTry.textContent = t("walkthrough.try_live");
+
+  const hTitle = document.getElementById("honesty-title-label");
+  if (hTitle) hTitle.textContent = t("honesty.title");
+  const hSub = document.getElementById("honesty-subtitle-label");
+  if (hSub) hSub.textContent = t("honesty.subtitle");
+
   renderCategories();
   renderCatalog();
   renderCart();
   renderARProfiles();
+  renderWalkthrough();
+  renderHonestyMatrix();
   if (state.selectedProductForAR) {
     updateARRecommendation();
   }
@@ -1625,6 +1683,278 @@ function getProductCategoryIcon(category) {
     case "accesorios": return "🧦";
     default: return "🛍️";
   }
+}
+
+// --- Interactive AR Walkthrough & Product Honesty Matrix Data & Logic ---
+const WALKTHROUGH_STEPS_DATA = [
+  {
+    stepNumber: 1,
+    id: "select-and-inspect",
+    title: { es: "1. Selección e Inspección 3D", en: "1. Selection & 3D Inspection" },
+    subtitle: { es: "Renderizado tridimensional inmediato en el navegador", en: "Instant 3D rendering in the web browser" },
+    description: {
+      es: "El usuario explora el catálogo asistido por IA y abre la vista 3D interactiva del producto. El motor carga assets binarios glTF / GLB reales con iluminación PBR optimizada y control orbital 360°.",
+      en: "The user explores the AI-assisted catalog and opens the interactive 3D product view. The engine loads real glTF / GLB binary assets with optimized PBR lighting and 360° orbital controls."
+    },
+    technicalDetails: {
+      es: "Formatos: GLB/glTF 2.0. Render: Canvas WebGL / Procedural fallback. Peso medio: < 2.5 MB.",
+      en: "Formats: GLB/glTF 2.0. Render: Canvas WebGL / Procedural fallback. Average size: < 2.5 MB."
+    },
+    badge: { es: "Inspección 3D", en: "3D Inspection" },
+    image: "/assets/images/walkthrough-step1.svg",
+  },
+  {
+    stepNumber: 2,
+    id: "webxr-handshake",
+    title: { es: "2. Handshake y Detección WebXR", en: "2. WebXR Handshake & Detection" },
+    subtitle: { es: "Evaluación de hardware y permisos de cámara", en: "Hardware evaluation & camera permissions" },
+    description: {
+      es: "Al presionar 'Probar en Realidad Aumentada', el sistema consulta navigator.xr.isSessionSupported('immersive-ar') y verifica hit-test. Si el dispositivo no tiene soporte AR inmersivo, degrada de forma transparente a visualizador 3D interactivo.",
+      en: "Upon clicking 'Try in Augmented Reality', the system queries navigator.xr.isSessionSupported('immersive-ar') and verifies hit-test. If unsupported, it gracefully degrades to the interactive 3D viewer."
+    },
+    technicalDetails: {
+      es: "Feature flags: requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay', 'light-estimation'].",
+      en: "Feature flags: requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay', 'light-estimation']."
+    },
+    badge: { es: "Handshake WebXR", en: "WebXR Handshake" },
+    image: "/assets/images/walkthrough-step2.svg",
+  },
+  {
+    stepNumber: 3,
+    id: "hit-test-scanning",
+    title: { es: "3. Escaneo y Detección de Planos", en: "3. Plane Scanning & Hit-Testing" },
+    subtitle: { es: "Cálculo de intersección espacial con superficies reales", en: "Spatial raycasting against physical floor and table planes" },
+    description: {
+      es: "La cámara transmite el stream óptico y el runtime WebXR calcula rayos de hit-test (XRHitTestSource) contra planos físicos detectados. Una retícula visual proyectada sobre el suelo indica el punto exacto de anclaje.",
+      en: "The camera transmits the optical stream and WebXR calculates hit-test rays (XRHitTestSource) against detected physical planes. A projected floor reticle indicates the exact anchoring point."
+    },
+    technicalDetails: {
+      es: "Frecuencia: 60 fps en XRFrame loop. Raycast referenceSpace: 'viewer' transformado a 'local-floor'.",
+      en: "Frequency: 60 fps XRFrame loop. Raycast referenceSpace: 'viewer' transformed into 'local-floor'."
+    },
+    badge: { es: "Hit-Test Óptico", en: "Optical Hit-Test" },
+    image: "/assets/images/walkthrough-step3.svg",
+  },
+  {
+    stepNumber: 4,
+    id: "spatial-placement",
+    title: { es: "4. Anclaje y Fijación Espacial", en: "4. Spatial Anchoring & Placement" },
+    subtitle: { es: "Ubicación del modelo en coordenadas de mundo real", en: "Model placement into real-world coordinate system" },
+    description: {
+      es: "Al tocar la pantalla (select event), la matriz de transformación del hit-test se transfiere al modelo 3D. El objeto queda fijado en el espacio tridimensional real mientras el usuario camina a su alrededor.",
+      en: "On tap (select event), the hit-test transform matrix transfers to the 3D model. The item becomes anchored in real physical 3D space, allowing 6-DoF user exploration."
+    },
+    technicalDetails: {
+      es: "Transform: Matriz 4x4 de pose espacial (XRRigidTransform). Escala clamped: 0.25x a 2.50x.",
+      en: "Transform: 4x4 spatial pose matrix (XRRigidTransform). Clamped scale: 0.25x to 2.50x."
+    },
+    badge: { es: "Anclaje 6-DoF", en: "6-DoF Anchor" },
+    image: "/assets/images/walkthrough-step4.svg",
+  },
+  {
+    stepNumber: 5,
+    id: "transform-and-bag",
+    title: { es: "5. Interacción y Adición al Carrito", en: "5. Interaction & Bag Handoff" },
+    subtitle: { es: "Validación biométrica de talla y compra fluida", en: "Biometric size validation & seamless checkout" },
+    description: {
+      es: "El probador muestra la recomendación de talla calculada para el perfil seleccionado (Nova, Sora, Mateo). Con un toque, el usuario transfiere la prenda verificada al carrito demo y continúa con el flujo de compra.",
+      en: "The fitting engine displays the calculated size recommendation for the selected profile (Nova, Sora, Mateo). With one tap, the user transfers the verified item to the demo bag and proceeds."
+    },
+    technicalDetails: {
+      es: "Biometría: Ajuste determinista por categoría. Carrito: Persistencia local reactiva sin cookies de terceros.",
+      en: "Biometrics: Category deterministic sizing. Bag: Reactive local persistence without third-party cookies."
+    },
+    badge: { es: "Checkout Demo", en: "Demo Checkout" },
+    image: "/assets/images/walkthrough-step5.svg",
+  },
+];
+
+const HONESTY_DATA = [
+  {
+    feature: { es: "Visualizador 3D Orbitable", en: "Orbitable 3D Viewer" },
+    status: "IMPLEMENTED",
+    detail: {
+      es: "Renderizado WebGL nativo en Canvas con iluminación direccional y órbita táctil/ratón.",
+      en: "Native Canvas WebGL rendering with directional lighting and touch/mouse orbital control."
+    }
+  },
+  {
+    feature: { es: "Carga de Modelos Reales GLB / glTF 2.0", en: "Real GLB / glTF 2.0 Model Loading" },
+    status: "IMPLEMENTED",
+    detail: {
+      es: "Archivos binarios GLB y JSON glTF 2.0 servidos localmente con validación de magic header.",
+      en: "Binary GLB and JSON glTF 2.0 files served locally with magic header verification."
+    }
+  },
+  {
+    feature: { es: "WebXR Immersive AR & Hit-Testing", en: "WebXR Immersive AR & Hit-Testing" },
+    status: "IMPLEMENTED",
+    detail: {
+      es: "Soporte completo para dispositivos compatibles con WebXR (Android Chrome, ARCore). Detección automática de suelo.",
+      en: "Full support for WebXR-compatible devices (Android Chrome, ARCore). Automatic floor detection."
+    }
+  },
+  {
+    feature: { es: "Motor de Recomendación de Tallas", en: "Biometric Sizing Engine" },
+    status: "IMPLEMENTED",
+    detail: {
+      es: "Algoritmo determinista de ajuste morfológico según categoría y perfiles demo sintéticos.",
+      en: "Deterministic morphological sizing algorithm across product categories and synthetic demo profiles."
+    }
+  },
+  {
+    feature: { es: "Tracking Corporal en Tiempo Real (Body Mesh)", en: "Real-time Body Mesh Tracking" },
+    status: "NOT_IMPLEMENTED",
+    detail: {
+      es: "Fuera de alcance en esta fase. No se ejecuta malla esquelética compleja en el cliente.",
+      en: "Out of scope for this phase. Complex skeletal mesh fitting is not executed on client."
+    }
+  },
+  {
+    feature: { es: "Simulación Física de Telas (Cloth Physics)", en: "Real-time Cloth Deformation Physics" },
+    status: "NOT_IMPLEMENTED",
+    detail: {
+      es: "Los modelos textiles son estáticos / semi-rígidos para garantizar 60 fps en móviles web estándar.",
+      en: "Textile models are static / semi-rigid to ensure solid 60 fps on standard mobile browsers."
+    }
+  },
+  {
+    feature: { es: "Pasarelas de Pago Bancario Real (Stripe / Transbank Live)", en: "Real Banking Payment Gateways (Stripe / Transbank Live)" },
+    status: "NOT_IMPLEMENTED",
+    detail: {
+      es: "Estrictamente bloqueado por diseño (Fail-Closed). Solo se ejecuta simulador Webpay Demo.",
+      en: "Strictly forbidden by design (Fail-Closed). Only simulated Webpay Demo is active."
+    }
+  }
+];
+
+function renderWalkthrough() {
+  if (!elements.walkthroughCardContainer || !elements.walkthroughDotsContainer) return;
+
+  // Render Dots
+  while (elements.walkthroughDotsContainer.firstChild) {
+    elements.walkthroughDotsContainer.removeChild(elements.walkthroughDotsContainer.firstChild);
+  }
+
+  for (let i = 1; i <= state.walkthrough.totalSteps; i++) {
+    const dot = document.createElement("button");
+    dot.className = "walkthrough-dot" + (state.walkthrough.currentStep === i ? " active" : "");
+    dot.setAttribute("aria-label", `Paso ${i}`);
+    dot.addEventListener("click", () => {
+      state.walkthrough.currentStep = i;
+      renderWalkthrough();
+    });
+    elements.walkthroughDotsContainer.appendChild(dot);
+  }
+
+  // Render Card
+  const step = WALKTHROUGH_STEPS_DATA.find((s) => s.stepNumber === state.walkthrough.currentStep) || WALKTHROUGH_STEPS_DATA[0];
+  const langKey = state.lang === "es-419" ? "es" : "en";
+
+  while (elements.walkthroughCardContainer.firstChild) {
+    elements.walkthroughCardContainer.removeChild(elements.walkthroughCardContainer.firstChild);
+  }
+
+  const card = document.createElement("div");
+  card.className = "walkthrough-card";
+
+  // Media box
+  const mediaBox = document.createElement("div");
+  mediaBox.className = "walkthrough-media-box";
+  const img = document.createElement("img");
+  img.className = "walkthrough-media-img";
+  img.src = step.image;
+  img.alt = step.title[langKey];
+  mediaBox.appendChild(img);
+
+  // Info box
+  const infoBox = document.createElement("div");
+  infoBox.className = "walkthrough-info-box";
+
+  const badge = document.createElement("span");
+  badge.className = "walkthrough-step-badge";
+  badge.textContent = step.badge[langKey];
+
+  const title = document.createElement("h3");
+  title.className = "walkthrough-step-title";
+  title.textContent = step.title[langKey];
+
+  const sub = document.createElement("div");
+  sub.className = "walkthrough-step-sub";
+  sub.textContent = step.subtitle[langKey];
+
+  const desc = document.createElement("p");
+  desc.className = "walkthrough-step-desc";
+  desc.textContent = step.description[langKey];
+
+  const tech = document.createElement("div");
+  tech.className = "walkthrough-tech-box";
+  tech.textContent = step.technicalDetails[langKey];
+
+  infoBox.appendChild(badge);
+  infoBox.appendChild(title);
+  infoBox.appendChild(sub);
+  infoBox.appendChild(desc);
+  infoBox.appendChild(tech);
+
+  card.appendChild(mediaBox);
+  card.appendChild(infoBox);
+  elements.walkthroughCardContainer.appendChild(card);
+}
+
+function renderHonestyMatrix() {
+  if (!elements.honestyTableContainer) return;
+  const langKey = state.lang === "es-419" ? "es" : "en";
+
+  while (elements.honestyTableContainer.firstChild) {
+    elements.honestyTableContainer.removeChild(elements.honestyTableContainer.firstChild);
+  }
+
+  const table = document.createElement("table");
+  table.className = "honesty-table";
+
+  const thead = document.createElement("thead");
+  const trHead = document.createElement("tr");
+
+  const thFeature = document.createElement("th");
+  thFeature.textContent = t("honesty.col_feature");
+  const thStatus = document.createElement("th");
+  thStatus.textContent = t("honesty.col_status");
+  const thDetail = document.createElement("th");
+  thDetail.textContent = t("honesty.col_detail");
+
+  trHead.appendChild(thFeature);
+  trHead.appendChild(thStatus);
+  trHead.appendChild(thDetail);
+  thead.appendChild(trHead);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  for (const row of HONESTY_DATA) {
+    const tr = document.createElement("tr");
+
+    const tdFeature = document.createElement("td");
+    tdFeature.style.fontWeight = "600";
+    tdFeature.textContent = row.feature[langKey];
+
+    const tdStatus = document.createElement("td");
+    const badge = document.createElement("span");
+    badge.className = "honesty-badge " + (row.status === "IMPLEMENTED" ? "honesty-badge-implemented" : "honesty-badge-not-implemented");
+    badge.textContent = row.status;
+    tdStatus.appendChild(badge);
+
+    const tdDetail = document.createElement("td");
+    tdDetail.style.color = "var(--text-secondary)";
+    tdDetail.textContent = row.detail[langKey];
+
+    tr.appendChild(tdFeature);
+    tr.appendChild(tdStatus);
+    tr.appendChild(tdDetail);
+    tbody.appendChild(tr);
+  }
+
+  table.appendChild(tbody);
+  elements.honestyTableContainer.appendChild(table);
 }
 
 // --- Fallback Catalog Definition ---

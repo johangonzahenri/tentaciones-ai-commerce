@@ -82,11 +82,15 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (17 Documentos Certificados)
+## 6. Documentación Canónica (21 Documentos Certificados)
 
+* [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md): Caso de estudio técnico completo (Problema, Solución, Pipeline 3D/AR, Seguridad, Invariantes).
+* [`docs/SHOWCASE_MEDIA.md`](docs/SHOWCASE_MEDIA.md): Inventario de activos visuales, diagramas técnicos SVG y modelos 3D binarios.
+* [`docs/SHOWCASE_ARCHITECTURE.md`](docs/SHOWCASE_ARCHITECTURE.md): Arquitectura multicapa de showcase y límites de integración de portafolio.
 * [`docs/WEBXR_AR_ARCHITECTURE.md`](docs/WEBXR_AR_ARCHITECTURE.md): Arquitectura de Realidad Aumentada WebXR y anclaje espacial Hit-Test.
 * [`docs/WEBXR_COMPATIBILITY.md`](docs/WEBXR_COMPATIBILITY.md): Matriz de compatibilidad de dispositivos y requerimientos de contexto seguro (HTTPS).
 * [`docs/AR_SESSION_GUIDE.md`](docs/AR_SESSION_GUIDE.md): Máquina de estados de la sesión AR y ciclo de vida de recursos.
+* [`docs/AR_EXPERIENCE.md`](docs/AR_EXPERIENCE.md): Especificación técnica de experiencia AR y calibración biomecánica.
 * [`docs/RELEASE_1_3_0.md`](docs/RELEASE_1_3_0.md): Registro de certificación y release v1.3.0.
 * [`docs/3D_ARCHITECTURE.md`](docs/3D_ARCHITECTURE.md): Arquitectura matemática del motor de proyección 3D Canvas.
 * [`docs/GLTF_ASSET_GUIDE.md`](docs/GLTF_ASSET_GUIDE.md): Especificación de modelos GLB/GLTF, licencias CC0 y presupuestos.
@@ -98,9 +102,9 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 * [`docs/AR_DEMO_GUIDE.md`](docs/AR_DEMO_GUIDE.md): Guía de uso del probador virtual y perfiles.
 * [`docs/SHOWCASE_CHECKLIST.md`](docs/SHOWCASE_CHECKLIST.md): Lista de verificación para demos en vivo.
 * [`docs/GITHUB_RELEASE.md`](docs/GITHUB_RELEASE.md): Política de repositorio privado.
-* [`docs/MULTICLIENT_ARCHITECTURE.md`](docs/MULTICLIENT_ARCHITECTURE.md): Contrato headless multicliente.
-* [`docs/DEPLOYMENT_STRATEGY.md`](docs/DEPLOYMENT_STRATEGY.md): Guía de despliegue.
-* [`docs/PORTFOLIO_SHOWCASE.md`](docs/PORTFOLIO_SHOWCASE.md): Presentación en portafolio de aplicaciones.
+* [`docs/MULTICLIENT_ARCHITECTURE.md`](docs/MULTICLIENT_ARCHITECTURE.md): Arquitectura multicliente desacoplada.
+* [`docs/PORTFOLIO_SHOWCASE.md`](docs/PORTFOLIO_SHOWCASE.md): Presentación del portafolio y límites arquitectónicos.
+* [`docs/DEPLOYMENT_STRATEGY.md`](docs/DEPLOYMENT_STRATEGY.md): Estrategia de despliegue seguro sin secretos.
 
 ---
 

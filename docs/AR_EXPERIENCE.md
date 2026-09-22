@@ -1,5 +1,11 @@
 # Especificación Técnica — Experiencia AR & Probador Virtual 3D
 
+CANONICAL DOCUMENT: docs/AR_EXPERIENCE.md  
+STATUS: CERTIFIED  
+VERSION: 1.5.0  
+APPLICATION: PROJ-01-TENTACIONES  
+PORTFOLIO: AI Operating Platform  
+
 ---
 
 ## 1. Arquitectura de Realidad Aumentada (AR Try-On)

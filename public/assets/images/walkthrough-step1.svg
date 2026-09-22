@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <rect width="600" height="340" rx="12" fill="#0b1120" stroke="#1e293b" stroke-width="2" />
+  <circle cx="300" cy="160" r="90" fill="rgba(56,189,248,0.06)" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4" />
+  <!-- 3D sneaker mesh -->
+  <g transform="translate(300, 160)" stroke="#38bdf8" stroke-width="2" fill="rgba(56,189,248,0.2)">
+    <polygon points="-60,20 -15,-35 45,-30 80,15 50,35 -35,35" />
+    <polygon points="-15,-35 20,-60 60,-40 45,-30" fill="rgba(236,72,153,0.3)" stroke="#ec4899" />
+    <line x1="-60" y1="20" x2="50" y2="35" stroke="#f43f5e" stroke-width="2" />
+    <line x1="0" y1="-45" x2="10" y2="10" stroke="#f59e0b" stroke-dasharray="2 2" />
+  </g>
+  <!-- UI overlay badges -->
+  <rect x="30" y="25" width="140" height="26" rx="13" fill="rgba(56,189,248,0.2)" stroke="#38bdf8" />
+  <text x="45" y="42" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="700">PASO 1: GLTF 3D</text>
+  <text x="30" y="305" fill="#94a3b8" font-family="sans-serif" font-size="13">✦ Carga binaria GLB 2.0 y control orbital 360° en Canvas WebGL</text>
+</svg>

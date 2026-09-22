@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 88 Complete)
-VERSION: v1.4.0
+STATUS: CERTIFIED (Phase 89 Complete)
+VERSION: v1.5.0
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -67,13 +67,24 @@ VERSION: v1.4.0
 
 ---
 
-### Fase 7: Clientes Nativos Mobile (iOS / Android / Flutter) (v1.5.0) — [PLANIFICADA]
+### Fase 7: Showcase Profesional, Media Assets & Walkthrough Interactivo del Probador AR (v1.5.0) — [IMPLEMENTED]
+* [x] Registro central de media assets y pasos interactivos en `src/domain/showcase-assets.ts`.
+* [x] Ilustraciones técnicas SVG vectoriales para portada hero y los 5 pasos del probador AR.
+* [x] Componente interactivo de AR Walkthrough con navegación de pasos, indicadores de progreso y lanzamiento directo a prueba en vivo.
+* [x] Matriz de Honestidad Técnica de Producto incorporada al showcase con desglose de funcionalidades implementadas vs fuera de alcance.
+* [x] Metadatos Open Graph, Twitter Cards y Favicon SVG para previsualización enriquecida en redes y portafolio.
+* [x] Creación de 3 documentos canónicos: `docs/CASE_STUDY.md`, `docs/SHOWCASE_MEDIA.md`, `docs/SHOWCASE_ARCHITECTURE.md` (Total 21 docs certificados).
+* [x] Verificación de 40 pruebas unitarias y de integración pasando al 100%.
+
+---
+
+### Fase 8: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 8: Conectividad Empresarial & ERP Sync (v2.0.0) — [BACKLOG]
+### Fase 9: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).

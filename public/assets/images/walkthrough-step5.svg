@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <rect width="600" height="340" rx="12" fill="#0b1120" stroke="#1e293b" stroke-width="2" />
+  
+  <!-- Fit Card Mockup -->
+  <rect x="70" y="65" width="220" height="200" rx="12" fill="#1e293b" stroke="#334155" />
+  <text x="90" y="95" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="700">Ajuste Biométrico</text>
+  <text x="90" y="120" fill="#94a3b8" font-family="sans-serif" font-size="12">Perfil: Nova (24.5 cm)</text>
+  <rect x="90" y="135" width="80" height="30" rx="6" fill="#38bdf8" />
+  <text x="110" y="155" fill="#0f172a" font-family="sans-serif" font-size="14" font-weight="800">Talla 39</text>
+  <text x="90" y="195" fill="#10b981" font-family="sans-serif" font-size="12">✔ 92% Confianza</text>
+  <rect x="90" y="215" width="180" height="34" rx="6" fill="#ec4899" />
+  <text x="125" y="237" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="700">Agregar al Carrito</text>
+
+  <!-- Arrow Transition -->
+  <path d="M310,165 L360,165 M345,150 L365,165 L345,180" stroke="#38bdf8" stroke-width="3" fill="none" />
+
+  <!-- Bag Card Mockup -->
+  <rect x="380" y="65" width="150" height="200" rx="12" fill="#0f172a" stroke="#ec4899" stroke-width="1.5" />
+  <circle cx="455" cy="115" r="28" fill="rgba(236,72,153,0.15)" stroke="#ec4899" stroke-width="2" />
+  <text x="445" y="122" fill="#ec4899" font-family="sans-serif" font-size="20">🛍️</text>
+  <text x="400" y="165" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="700">1 Item en Bolsa</text>
+  <text x="400" y="185" fill="#10b981" font-family="sans-serif" font-size="12">$119.990 CLP</text>
+  <rect x="395" y="215" width="120" height="34" rx="6" fill="#10b981" />
+  <text x="420" y="237" fill="#0f172a" font-family="sans-serif" font-size="12" font-weight="700">Pagar Demo</text>
+
+  <!-- Badge -->
+  <rect x="30" y="25" width="170" height="26" rx="13" fill="rgba(16,185,129,0.2)" stroke="#10b981" />
+  <text x="45" y="42" fill="#10b981" font-family="sans-serif" font-size="11" font-weight="700">PASO 5: BIOMETRÍA &amp; CHECKOUT</text>
+  <text x="30" y="305" fill="#94a3b8" font-family="sans-serif" font-size="13">✦ Validación de talla en vivo y handoff transparente al checkout seguro</text>
+</svg>
