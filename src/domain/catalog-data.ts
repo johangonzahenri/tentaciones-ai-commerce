@@ -2,7 +2,7 @@ import type { Product } from "./types.js";
 
 /**
  * Tentaciones AI Commerce — Reference Demo Catalog (DEMO DATA)
- * Real-world fashion, apparel, footwear and accessories inventory for demonstration.
+ * Real-world fashion, apparel, footwear and accessories inventory with 3D and AR capabilities.
  */
 export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
   {
@@ -19,6 +19,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["polera", "t-shirt", "algodon", "oversized", "blanca", "negra", "basico"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:polera-essential",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/polera-essential.glb",
+    model3DFormat: "glb",
     image: "/assets/products/polera-essential.svg",
     specifications: {
       material: "100% Algodón Orgánico 240g",
@@ -48,6 +51,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["camisa", "lino", "verano", "resort", "beige", "elegante", "fiesta"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:camisa-lino",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/camisa-lino.glb",
+    model3DFormat: "glb",
     image: "/assets/products/camisa-lino.svg",
     specifications: {
       material: "100% Lino Italiano",
@@ -76,6 +82,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["poleron", "hoodie", "abrigo", "streetwear", "gris", "invierno", "algodon"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:hoodie-heavyweight",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/hoodie-heavyweight.glb",
+    model3DFormat: "glb",
     image: "/assets/products/hoodie.svg",
     specifications: {
       material: "100% Algodón French Terry 450g",
@@ -103,6 +112,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["chaqueta", "impermeable", "running", "waterproof", "deporte", "negra", "outdoor"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:running-jacket-v2",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/running-jacket-v2.glb",
+    model3DFormat: "glb",
     image: "/assets/products/chaqueta-running.svg",
     specifications: {
       impermeabilidad: "20,000 mm",
@@ -130,6 +142,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["vestido", "seda", "elegante", "gala", "cena", "negro", "formal", "fiesta"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:silk-evening-dress",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/silk-evening-dress.glb",
+    model3DFormat: "glb",
     image: "/assets/products/vestido-seda.svg",
     specifications: {
       tejido: "100% Seda Mulberry",
@@ -156,6 +171,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["pantalon", "cargo", "techwear", "tactico", "negro", "urbano", "resistente"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:pantalon-cargo",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/pantalon-cargo.glb",
+    model3DFormat: "glb",
     image: "/assets/products/pantalon-cargo.svg",
     specifications: {
       material: "Ripstop Stretch DWR",
@@ -182,6 +200,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["falda", "plisada", "midi", "elegante", "champagne", "fiesta"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:falda-plisada",
+    has3D: true,
+    model3DUrl: "/assets/3d/apparel/falda-plisada.glb",
+    model3DFormat: "glb",
     image: "/assets/products/falda-plisada.svg",
     specifications: {
       material: "Poliéster Satinado Plisado",
@@ -207,6 +228,9 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     tags: ["calzado", "zapatillas", "running", "marathon", "carbon", "correr", "deporte", "negro"],
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:footwear:pro-carbon-racer",
+    has3D: true,
+    model3DUrl: "/assets/3d/footwear/pro-carbon-racer.glb",
+    model3DFormat: "glb",
     image: "/assets/products/carbon-racer.svg",
     specifications: {
       pesoGramos: 198,
@@ -235,6 +259,7 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     currency: "CLP",
     tags: ["calcetines", "accesorios", "running", "anti-ampollas", "deporte"],
     arAvailable: false,
+    has3D: false,
     image: "/assets/products/calcetines.svg",
     specifications: {
       material: "45% Lana Merino, 45% Poliamida, 10% Elastano",

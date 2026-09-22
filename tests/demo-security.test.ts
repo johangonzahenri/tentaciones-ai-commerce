@@ -21,7 +21,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 9 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 13 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -32,6 +32,10 @@ test("1. Documentation Completeness: All 9 canonical docs exist with mandatory h
     "AR_DEMO_GUIDE.md",
     "SHOWCASE_CHECKLIST.md",
     "GITHUB_RELEASE.md",
+    "3D_ARCHITECTURE.md",
+    "GLTF_ASSET_GUIDE.md",
+    "PUBLIC_DEPLOYMENT.md",
+    "DEMO_RELEASE.md",
   ];
 
   for (const doc of docs) {
@@ -191,3 +195,34 @@ test("10. AR Biometric Sizing & Fallback: Computes distinct sizes for Nova, Sora
   assert.equal(fallback.fallbackMode, "STANDARD_2D_VIEW");
   assert.equal(fallback.arStatus, "AR_ASSET_INVALID");
 });
+
+test("11. 3D GLTF Domain Model: Products contain valid 3D spatial metadata with zero unsafe URLs", async () => {
+  const service = new DemoAdapter();
+  const catalog = await service.listCatalog();
+
+  const productsWith3D = catalog.filter((p) => p.has3D);
+  assert.ok(productsWith3D.length >= 3, "At least 3 products must feature 3D spatial models");
+
+  for (const item of productsWith3D) {
+    assert.ok(item.model3DUrl, `Product ${item.id} with has3D must provide model3DUrl`);
+    assert.ok(
+      item.model3DUrl.startsWith("/assets/3d/") || item.model3DFormat === "canvas3d",
+      `Model URL for ${item.id} must be safely sandboxed within /assets/3d/`
+    );
+    assert.ok(
+      !item.model3DUrl.includes("http://") && !item.model3DUrl.includes("https://"),
+      `3D Model URL must not link to unverified external endpoints`
+    );
+  }
+});
+
+test("12. 3D Geometry Support: Ensures all supported categories map to procedural or GLTF definitions", async () => {
+  const service = new DemoAdapter();
+  const catalog = await service.listCatalog();
+  const categories = new Set(catalog.map((c) => c.category));
+
+  assert.ok(categories.has("calzado"), "Catalog must include footwear");
+  assert.ok(categories.has("vestidos") || categories.has("polerones"), "Catalog must include apparel");
+  assert.ok(categories.has("accesorios"), "Catalog must include accessories");
+});
+

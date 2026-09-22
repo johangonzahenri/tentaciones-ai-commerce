@@ -34,6 +34,9 @@ export interface Product {
   readonly variants: readonly ProductVariant[];
   readonly arAvailable: boolean;
   readonly defaultArUrn?: string | undefined;
+  readonly has3D?: boolean | undefined;
+  readonly model3DUrl?: string | undefined;
+  readonly model3DFormat?: "glb" | "gltf" | "canvas3d" | undefined;
   readonly image: string;
   readonly specifications: Readonly<Record<string, string | number | boolean>>;
 }

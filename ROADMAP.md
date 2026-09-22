@@ -2,7 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: UPDATED (Prompt 84 Certified)
+STATUS: CERTIFIED (Phase 86 Complete)
+VERSION: v1.2.0
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -29,20 +30,37 @@ STATUS: UPDATED (Prompt 84 Certified)
 
 ---
 
-### Fase 3: Pipeline WebXR & Modelos 3D GLTF Nativos (v1.2.0) — [PLANIFICADA]
-* [ ] Integración de renderizado Three.js y soporte GLTF/USDZ nativo en el probador virtual.
-* [ ] Proyección espacial AR en dispositivos móviles con cámara WebXR activa.
-* [ ] Mapeo dinámico de texturas y drapeado de telas en avatares paramétricos.
+### Fase 3: Hardening de Experiencia AR y Lanzamiento GitHub Privado (v1.1.5) — [COMPLETADA]
+* [x] Hardening de la experiencia de probador virtual 2D/AR.
+* [x] Prevención estricta de inyecciones DOM (0 `innerHTML`, 0 `outerHTML`).
+* [x] Creación de `docs/AR_DEMO_GUIDE.md`, `docs/SHOWCASE_CHECKLIST.md`, y `docs/GITHUB_RELEASE.md`.
+* [x] Repositorio configurado como estrictamente PRIVADO.
 
 ---
 
-### Fase 4: Clientes Nativos Mobile (iOS / Android / Flutter) (v1.5.0) — [PLANIFICADA]
+### Fase 4: Experiencia 3D GLTF & Despliegue Demo Público (v1.2.0) — [COMPLETADA]
+* [x] Motor de proyección y renderizado 3D Canvas con rotación orbital, zoom, auto-giro e iluminación Lambertiana.
+* [x] Soporte para metadatos de modelos 3D (`has3D`, `model3DUrl`, `model3DFormat`) en el catálogo sintético.
+* [x] Generación procedural de geometrías de calzado, vestidos, tops/hoodies y accesorios con 0 dependencias externas.
+* [x] Modal de visualización 3D interactivo con transición fluida al probador virtual AR.
+* [x] Creación de `docs/3D_ARCHITECTURE.md`, `docs/GLTF_ASSET_GUIDE.md`, `docs/PUBLIC_DEPLOYMENT.md`, `docs/DEMO_RELEASE.md`.
+* [x] Certificación de despliegue estático para Vercel / GitHub Pages / Netlify con Content Security Policy.
+
+---
+
+### Fase 5: Pipeline WebXR Inmersivo Avanzado (v1.3.0) — [PLANIFICADA]
+* [ ] Proyección espacial WebXR en dispositivos con cámara y sensores de profundidad activos.
+* [ ] Mapeo dinámico de texturas y drapeado de telas en avatares paramétricos en tiempo real.
+
+---
+
+### Fase 6: Clientes Nativos Mobile (iOS / Android / Flutter) (v1.5.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
-* [ ] Probador AR con ARKit (iOS) y ARCore (Android).
+* [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 5: Conectividad Empresarial & ERP Sync (v2.0.0) — [BACKLOG]
+### Fase 7: Conectividad Empresarial & ERP Sync (v2.0.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).

@@ -162,6 +162,54 @@
     </div>
   </div>
 
+  <!-- 3D GLTF Interactive Product Viewer Modal -->
+  <div class="modal-backdrop" id="viewer-3d-modal">
+    <div class="modal-card" style="max-width: 640px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <h2 id="viewer-3d-title" style="font-size: 1.25rem; font-weight: 800;">Visualizador 3D Interactivo</h2>
+            <span class="demo-badge-sm">DEMO 3D ASSET</span>
+          </div>
+          <p id="viewer-3d-product-name" style="font-size: 0.8125rem; color: var(--text-secondary);"></p>
+        </div>
+        <button class="btn btn-icon" id="btn-viewer-3d-close">✕</button>
+      </div>
+
+      <!-- 3D Interactive Canvas & Controls -->
+      <div class="viewer-3d-container" id="viewer-3d-container">
+        <canvas class="viewer-3d-canvas" id="canvas-3d" width="560" height="320"></canvas>
+        <div class="viewer-3d-overlay" id="viewer-3d-loading">
+          <div class="loading-spinner"></div>
+          <span style="font-size: 0.8125rem; font-weight: 600; margin-top: 0.5rem;" id="lbl-3d-loading">Cargando modelo 3D GLTF...</span>
+        </div>
+        <div class="viewer-3d-hint" id="viewer-3d-hint">
+          <span>🖱️ Arrastra para rotar • Rueda para zoom • Doble clic para resetear</span>
+        </div>
+      </div>
+
+      <!-- 3D Viewer Toolbar -->
+      <div class="viewer-3d-toolbar">
+        <button class="btn btn-secondary btn-sm" id="btn-3d-rotate-left" title="Rotar izquierda">↺ -45°</button>
+        <button class="btn btn-secondary btn-sm" id="btn-3d-rotate-right" title="Rotar derecha">↻ +45°</button>
+        <button class="btn btn-secondary btn-sm" id="btn-3d-zoom-in" title="Acercar">🔍 +</button>
+        <button class="btn btn-secondary btn-sm" id="btn-3d-zoom-out" title="Alejar">🔍 -</button>
+        <button class="btn btn-secondary btn-sm" id="btn-3d-reset" title="Restablecer">⟲ Reset</button>
+        <button class="btn btn-secondary btn-sm" id="btn-3d-auto-spin" title="Auto-rotación">⚡ Auto-Spin</button>
+      </div>
+
+      <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem; margin-top: 1rem; font-size: 0.75rem; color: var(--text-secondary);">
+        <strong style="color: var(--text-primary);">Formato:</strong> <span id="lbl-3d-format">GLTF/GLB Synthetic Wireframe + Solid Mesh</span> • 
+        <strong style="color: var(--text-primary);">Render:</strong> <span id="lbl-3d-render">Native WebGL / Canvas 3D Engine (0 External Dependencies)</span>
+      </div>
+
+      <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+        <button class="btn btn-primary" id="btn-3d-to-ar" style="flex: 1;">👓 Probar en Probador Virtual AR</button>
+        <button class="btn btn-secondary" id="btn-3d-return">Volver al Producto</button>
+      </div>
+    </div>
+  </div>
+
   <!-- AR Virtual Fitting Room Modal -->
   <div class="modal-backdrop" id="ar-modal">
     <div class="modal-card" style="max-width: 580px;">
