@@ -14,6 +14,7 @@ import {
   SecurityViolationError,
 } from "../src/security/demo-guardrails.js";
 import { recommendSize, resolveVirtualFitting } from "../src/domain/ar-fitting.js";
+import { MODEL_3D_ASSET_REGISTRY, resolve3DAssetForProduct } from "../src/domain/3d-assets.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +22,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 13 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 14 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -36,6 +37,7 @@ test("1. Documentation Completeness: All 13 canonical docs exist with mandatory 
     "GLTF_ASSET_GUIDE.md",
     "PUBLIC_DEPLOYMENT.md",
     "DEMO_RELEASE.md",
+    "RELEASE_1_3_0.md",
   ];
 
   for (const doc of docs) {
@@ -224,5 +226,67 @@ test("12. 3D Geometry Support: Ensures all supported categories map to procedura
   assert.ok(categories.has("calzado"), "Catalog must include footwear");
   assert.ok(categories.has("vestidos") || categories.has("polerones"), "Catalog must include apparel");
   assert.ok(categories.has("accesorios"), "Catalog must include accessories");
+});
+
+test("13. Real 3D Asset Registry & Physical Files: All registered 3D assets exist on disk with valid headers", () => {
+  assert.ok(MODEL_3D_ASSET_REGISTRY.length >= 4, "Must register at least 4 verified 3D assets");
+
+  for (const asset of MODEL_3D_ASSET_REGISTRY) {
+    const filePath = path.join(ROOT_DIR, "public", asset.path.replace(/^\//, ""));
+    assert.ok(fs.existsSync(filePath), `Physical file ${filePath} must exist`);
+    const stat = fs.statSync(filePath);
+    assert.ok(stat.size > 500, `File ${filePath} must have valid non-empty size`);
+    assert.ok(asset.license.includes("CC0") || asset.license.includes("Synthetic"), "License must be CC0/Synthetic");
+
+    if (asset.format === "glb") {
+      const buffer = fs.readFileSync(filePath);
+      const magic = buffer.readUInt32LE(0);
+      assert.equal(magic, 0x46546c67, `GLB asset ${asset.assetId} must start with 0x46546C67 ("glTF") magic header`);
+      const version = buffer.readUInt32LE(4);
+      assert.equal(version, 2, `GLB asset ${asset.assetId} must be glTF 2.0`);
+    } else if (asset.format === "gltf") {
+      const content = fs.readFileSync(filePath, "utf8");
+      const gltf = JSON.parse(content);
+      assert.equal(gltf.asset.version, "2.0", `GLTF asset ${asset.assetId} must specify version 2.0`);
+      assert.ok(gltf.meshes && gltf.meshes.length > 0, `GLTF asset ${asset.assetId} must define meshes`);
+    }
+  }
+});
+
+test("14. Product to 3D Asset Resolver: Correctly matches products with real 3D assets", () => {
+  const sneakerAsset = resolve3DAssetForProduct("pro-carbon-racer-marathon-shoes");
+  assert.ok(sneakerAsset, "Must find 3D asset for pro carbon racer");
+  assert.equal(sneakerAsset.format, "glb");
+  assert.equal(sneakerAsset.category, "calzado");
+
+  const poleraAsset = resolve3DAssetForProduct("polera-oversized-cotton-essential");
+  assert.ok(poleraAsset, "Must find 3D asset for polera essential");
+  assert.equal(poleraAsset.format, "gltf");
+
+  const nonExistent = resolve3DAssetForProduct("non-existent-product-slug");
+  assert.equal(nonExistent, undefined, "Returns undefined for unmapped product");
+});
+
+test("15. Static Build & Zero Secret Invariant: Public distribution files contain zero live keys or private hosts", () => {
+  const publicFiles = ["index.html", "app.js", "i18n.js", "styles.css"];
+  const forbiddenPatterns = [
+    "sk_live_",
+    "AIzaSy",
+    "ghp_",
+    "192.168.",
+    "internal.corp",
+    "production_secret",
+  ];
+
+  for (const file of publicFiles) {
+    const fullPath = path.join(ROOT_DIR, "public", file);
+    const content = fs.readFileSync(fullPath, "utf8");
+    for (const pattern of forbiddenPatterns) {
+      assert.ok(
+        !content.includes(pattern),
+        `Public static file ${file} must not contain sensitive pattern '${pattern}'`
+      );
+    }
+  }
 });
 

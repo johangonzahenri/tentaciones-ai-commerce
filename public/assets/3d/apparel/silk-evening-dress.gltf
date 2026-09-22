@@ -1,0 +1,104 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "Tentaciones AI Operating Platform GLTF Pipeline v1.2",
+    "copyright": "CC0-1.0 / Synthetic Project Asset"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "SilkEveningDress-Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "SilkEveningDress",
+      "mesh": 0
+    }
+  ],
+  "meshes": [
+    {
+      "name": "SilkEveningDress-Mesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1
+          },
+          "indices": 0,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "SilkEveningDress-Material",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.15,
+          0.1,
+          0.25,
+          1
+        ],
+        "metallicFactor": 0.1,
+        "roughnessFactor": 0.5
+      }
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 48,
+      "type": "SCALAR",
+      "max": [
+        11
+      ],
+      "min": [
+        0
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 12,
+      "type": "VEC3",
+      "max": [
+        55,
+        60,
+        30
+      ],
+      "min": [
+        -55,
+        -60,
+        -30
+      ]
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 96,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 96,
+      "byteLength": 144,
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 240,
+      "uri": "data:application/octet-stream;base64,AAABAAUAAAAFAAQAAQACAAYAAQAGAAUAAgADAAcAAgAHAAYAAwAAAAQAAwAEAAcABAAFAAkABAAJAAgABQAGAAoABQAKAAkABgAHAAsABgALAAoABwAEAAgABwAIAAsAAACgwQAAcMIAACDBAACgQQAAcMIAACDBAACgQQAAcMIAACBBAACgwQAAcMIAACBBAABwwQAAIMEAAHDBAABwQQAAIMEAAHDBAABwQQAAIMEAAHBBAABwwQAAIMEAAHBBAABcwgAAcEIAAPDBAABcQgAAcEIAAPDBAABcQgAAcEIAAPBBAABcwgAAcEIAAPBB"
+    }
+  ]
+}

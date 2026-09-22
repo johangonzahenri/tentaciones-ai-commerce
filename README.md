@@ -5,65 +5,47 @@
 [![Application ID: tentaciones-commerce](https://img.shields.io/badge/App%20ID-tentaciones--commerce-indigo.svg)](#)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-green.svg)](#)
 [![Zero Runtime Dependencies](https://img.shields.io/badge/Dependencies-0%20Runtime%20Deps-brightgreen.svg)](#)
+[![Source: Strictly Private](https://img.shields.io/badge/Source-Strictly%20Private-red.svg)](#)
 
 ---
 
 ## 1. Visión del Producto
 
-**Tentaciones AI Commerce** es la tienda insignia de moda, calzado y vestuario deportivo del ecosistema **AI Operating Platform**. Proporciona una experiencia de compra asistida por Inteligencia Artificial de alta conversión que integra:
+**Tentaciones AI Commerce** es la aplicación satélite insignia de moda, calzado y vestuario del ecosistema **AI Operating Platform**. Proporciona una experiencia de comercio conversacional y visual de alta conversión que integra:
 
-* 🛍️ **Descubrimiento Asistido con IA:** Comprensión de lenguaje natural en español para interpretar estilos, ocasiones y requerimientos técnicos de vestuario.
-* 👓 **Probador Virtual 3D / AR:** Simulación interactiva de ajuste y compatibilidad espacial (WebXR y modo 2D interactivo).
-* 📐 **Calibración Biométrica de Tallas:** Algoritmo paramétrico con perfiles de demostración (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
+* 🛍️ **Descubrimiento Asistido con IA:** Comprensión de lenguaje natural en español e inglés para interpretar ocasiones de uso, estilos y especificaciones técnicas de prendas.
+* 🧊 **Visualización 3D Interactiva con GLB/GLTF Real:** Carga de modelos espaciales binarios y JSON con rotación orbital de 60 FPS, zoom dinámico y auto-giro sin dependencias externas.
+* 👓 **Probador Virtual AR & Sizing Paramétrico:** Simulación espacial con perfiles biométricos (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
 * 🛒 **Bolsa de Compras Inteligente:** Cálculo en tiempo real del beneficio de despacho gratuito (\$30.000 CLP).
-* 💳 **Checkout Seguro Demo:** Pasarela de pago simulada (`WEBPAY_DEMO`) con control estricto de existencias y cero riesgo financiero.
+* 💳 **Checkout Seguro Demo:** Pasarela de pago simulada (`WEBPAY_DEMO`) con control de existencias antes de mutación y cero riesgo financiero.
 
 ---
 
-## 2. Experiencia de Demostración (Demo Flow)
+## 2. Acceso y Demostración Pública
+
+* **Demo Pública Estática:** [https://johangonzahenri.github.io/tentaciones-ai-commerce/](https://johangonzahenri.github.io/tentaciones-ai-commerce/) (o hosting estático Vercel / Netlify)
+* **Repositorio de Código Fuente:** **PRIVADO** (`https://github.com/johangonzahenri/tentaciones-ai-commerce.git`)
+
+---
+
+## 3. Experiencia de Demostración Progresiva
 
 ```text
-CATÁLOGO DE MODA
-       ↓
+CATÁLOGO DE PRODUCTOS
+        ↓
 BÚSQUEDA ASISTIDA POR IA ("zapatillas de running para maratón")
-       ↓
-FICHA DE PRODUCTO & VARIANTES
-       ↓
+        ↓
+DETALLE DEL PRODUCTO
+        ↓
+VISUALIZADOR 3D GLTF / GLB REAL
+        ↓
 PROBADOR VIRTUAL AR (Nova / Sora / Mateo)
-       ↓
+        ↓
 CALIBRACIÓN BIOMÉTRICA DE TALLA
-       ↓
-AÑADIR A LA BOLSA CON TALLA SUGERIDA
-       ↓
+        ↓
+AÑADIR A LA BOLSA
+        ↓
 CHECKOUT SIMULADO WEBPAY DEMO
-```
-
----
-
-## 3. Arquitectura Desacoplada & Polyrepo
-
-Tentaciones consume servicios expuestos por la plataforma central a través de contratos estrictos de TypeScript:
-
-```text
-┌─────────────────────────────────┐
-│ Storefront Web / Clientes       │
-└──────────────┬──────────────────┘
-               │
-┌──────────────▼──────────────────┐
-│ ITentacionesExperienceService   │
-└──────────────┬──────────────────┘
-               │
-┌──────────────▼──────────────────┐
-│ Platform Client SDK             │
-└──────────────┬──────────────────┘
-               │
-┌──────────────▼──────────────────┐
-│ Platform REST API Gateway       │
-└──────────────┬──────────────────┘
-               │
-┌──────────────▼──────────────────┐
-│ AI Operating Platform Core      │
-└─────────────────────────────────┘
 ```
 
 ---
@@ -78,10 +60,13 @@ Tentaciones consume servicios expuestos por la plataforma central a través de c
 # 1. Compilar TypeScript
 npm run build
 
-# 2. Ejecutar suite de pruebas
+# 2. Generar o verificar assets 3D GLB/GLTF
+node scripts/generate-3d-assets.mjs
+
+# 3. Ejecutar suite de pruebas
 npm test
 
-# 3. Iniciar servidor local
+# 4. Iniciar servidor local
 npm start
 ```
 
@@ -89,16 +74,21 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 5. Modos de Operación y Seguridad
+## 5. Modos de Operación y Seguridad Fail-Closed
 
-1. **`PUBLIC_DEMO` (Predeterminado):** Entorno 100% sintético, sin dependencias externas, sin llamadas a dominios corporativos y fail-closed ante tokens reales de pago.
-2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado a una instancia activa de AI Operating Platform mediante gateway autenticado.
-3. **`DEVELOPMENT`:** Modo local para iteración y pruebas de integración.
+1. **`PUBLIC_DEMO` (Predeterminado):** Entorno 100% sintético, sin dependencias externas, sin llamadas a dominios corporativos privados y con rechazo automático de credenciales reales.
+2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado a una instancia de AI Operating Platform mediante gateway autenticado.
+3. **`DEVELOPMENT`:** Modo local para desarrollo continuo y pruebas unitarias.
 
 ---
 
-## 6. Documentación Canónica
+## 6. Documentación Canónica (14 Documentos Certificados)
 
+* [`docs/RELEASE_1_3_0.md`](docs/RELEASE_1_3_0.md): Registro de certificación y release v1.3.0.
+* [`docs/3D_ARCHITECTURE.md`](docs/3D_ARCHITECTURE.md): Arquitectura matemática del motor de proyección 3D Canvas.
+* [`docs/GLTF_ASSET_GUIDE.md`](docs/GLTF_ASSET_GUIDE.md): Especificación de modelos GLB/GLTF, licencias CC0 y presupuestos.
+* [`docs/PUBLIC_DEPLOYMENT.md`](docs/PUBLIC_DEPLOYMENT.md): Guía de despliegue estático y Content Security Policy.
+* [`docs/DEMO_RELEASE.md`](docs/DEMO_RELEASE.md): Certificación de release v1.2.0 y política de privacidad.
 * [`docs/PUBLIC_DEMO.md`](docs/PUBLIC_DEMO.md): Aislamiento y especificación del modo público.
 * [`docs/DEMO_SECURITY.md`](docs/DEMO_SECURITY.md): Políticas de seguridad fail-closed y sanitización.
 * [`docs/IP_PROTECTION.md`](docs/IP_PROTECTION.md): Límites de propiedad intelectual.
@@ -107,6 +97,7 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 * [`docs/GITHUB_RELEASE.md`](docs/GITHUB_RELEASE.md): Política de repositorio privado.
 * [`docs/MULTICLIENT_ARCHITECTURE.md`](docs/MULTICLIENT_ARCHITECTURE.md): Contrato headless multicliente.
 * [`docs/DEPLOYMENT_STRATEGY.md`](docs/DEPLOYMENT_STRATEGY.md): Guía de despliegue.
+* [`docs/PORTFOLIO_SHOWCASE.md`](docs/PORTFOLIO_SHOWCASE.md): Presentación en portafolio de aplicaciones.
 
 ---
 

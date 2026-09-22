@@ -25,6 +25,8 @@ const state = {
     autoSpin: false,
     animFrameId: null,
     meshType: "polera",
+    currentLoadedAsset: null,
+    currentGeometry: null,
   },
 };
 
@@ -94,6 +96,8 @@ const elements = {
   btn3DAutoSpin: document.getElementById("btn-3d-auto-spin"),
   btn3DToAR: document.getElementById("btn-3d-to-ar"),
   btn3DReturn: document.getElementById("btn-3d-return"),
+  lbl3DFormat: document.getElementById("lbl-3d-format"),
+  lbl3DRender: document.getElementById("lbl-3d-render"),
   // AR elements
   arModal: document.getElementById("ar-modal"),
   arModalCloseBtn: document.getElementById("btn-ar-modal-close"),
@@ -643,20 +647,161 @@ function openProductDetailModal(product) {
   openModal(elements.productModal);
 }
 
-// --- 3D Interactive GLTF / Native WebGL Mesh Viewer ---
-function open3DViewer(product) {
+// --- 3D Interactive GLTF / GLB / Native WebGL Mesh Viewer ---
+async function open3DViewer(product) {
   state.selectedProductFor3D = product;
   state.viewer3D.meshType = product.category;
   elements.viewer3DProductName.textContent = `${product.name} (${product.brand})`;
 
   openModal(elements.viewer3DModal);
 
-  // Show loading indicator briefly to simulate streaming GLTF lazy load
+  // Show loading indicator
   elements.viewer3DLoading.classList.add("active");
-  setTimeout(() => {
+  elements.lbl3DFormat.textContent = t("viewer3d.loading_model");
+
+  try {
+    const assetUrl = product.model3DUrl;
+    if (assetUrl && (assetUrl.endsWith(".glb") || assetUrl.endsWith(".gltf"))) {
+      const parsedGeometry = await loadReal3DAsset(assetUrl, product.model3DFormat || "gltf");
+      state.viewer3D.currentGeometry = parsedGeometry;
+      state.viewer3D.currentLoadedAsset = assetUrl;
+      elements.lbl3DFormat.textContent = `${(product.model3DFormat || "GLB/GLTF").toUpperCase()} Binary/JSON Mesh (${parsedGeometry.vertices.length} vertices, ${parsedGeometry.faces.length} faces)`;
+      elements.lbl3DRender.textContent = "Hardware Canvas Projection (Verified Real Spatial Asset)";
+    } else {
+      // Use procedural geometry
+      state.viewer3D.currentGeometry = get3DGeometryForCategory(product.category);
+      state.viewer3D.currentLoadedAsset = "procedural";
+      elements.lbl3DFormat.textContent = "Procedural Synthetic Mesh (Local Fallback)";
+      elements.lbl3DRender.textContent = "Mathematical Geometry Projection";
+    }
+  } catch (err) {
+    // Fail-safe graceful fallback to procedural
+    state.viewer3D.currentGeometry = get3DGeometryForCategory(product.category);
+    state.viewer3D.currentLoadedAsset = "procedural_fallback";
+    elements.lbl3DFormat.textContent = "Procedural Synthetic Mesh (Asset Stream Fallback)";
+    elements.lbl3DRender.textContent = "Mathematical Geometry Projection (Safe Fallback)";
+  } finally {
     elements.viewer3DLoading.classList.remove("active");
     render3DMesh();
-  }, 250);
+  }
+}
+
+async function loadReal3DAsset(url, format) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch 3D asset: " + response.status);
+  }
+
+  if (url.endsWith(".glb") || format === "glb") {
+    const arrayBuffer = await response.arrayBuffer();
+    return parseGLBBuffer(arrayBuffer);
+  } else {
+    const gltfJson = await response.json();
+    return parseGLTFJson(gltfJson);
+  }
+}
+
+function parseGLTFJson(gltf) {
+  if (!gltf.meshes || gltf.meshes.length === 0) {
+    throw new Error("GLTF contains no meshes");
+  }
+  const mesh = gltf.meshes[0];
+  const primitive = mesh.primitives[0];
+  const posAccessorIdx = primitive.attributes.POSITION;
+  const indAccessorIdx = primitive.indices;
+
+  const posAccessor = gltf.accessors[posAccessorIdx];
+  const indAccessor = gltf.accessors[indAccessorIdx];
+
+  const posBufferView = gltf.bufferViews[posAccessor.bufferView];
+  const indBufferView = gltf.bufferViews[indAccessor.bufferView];
+
+  const buffer = gltf.buffers[0];
+  let rawBuffer;
+  if (buffer.uri.startsWith("data:")) {
+    const base64 = buffer.uri.split(",")[1];
+    const binaryStr = atob(base64);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) {
+      bytes[i] = binaryStr.charCodeAt(i);
+    }
+    rawBuffer = bytes.buffer;
+  } else {
+    throw new Error("External GLTF URI buffers require relative resolution");
+  }
+
+  // Extract indices
+  const indOffset = (indBufferView.byteOffset || 0) + (indAccessor.byteOffset || 0);
+  const indices = new Uint16Array(rawBuffer, indOffset, indAccessor.count);
+
+  // Extract vertices
+  const posOffset = (posBufferView.byteOffset || 0) + (posAccessor.byteOffset || 0);
+  const positions = new Float32Array(rawBuffer, posOffset, posAccessor.count * 3);
+
+  const vertices = [];
+  for (let i = 0; i < positions.length; i += 3) {
+    vertices.push([positions[i], positions[i + 1], positions[i + 2]]);
+  }
+
+  const faces = [];
+  for (let i = 0; i < indices.length; i += 3) {
+    faces.push([indices[i], indices[i + 1], indices[i + 2]]);
+  }
+
+  return { vertices, faces };
+}
+
+function parseGLBBuffer(arrayBuffer) {
+  const dataView = new DataView(arrayBuffer);
+  const magic = dataView.getUint32(0, true);
+  if (magic !== 0x46546c67) {
+    throw new Error("Invalid GLB Magic Header");
+  }
+  const version = dataView.getUint32(4, true);
+  const totalLength = dataView.getUint32(8, true);
+
+  // Chunk 0 (JSON)
+  const jsonChunkLength = dataView.getUint32(12, true);
+  const jsonChunkType = dataView.getUint32(16, true);
+  const jsonBytes = new Uint8Array(arrayBuffer, 20, jsonChunkLength);
+  const jsonStr = new TextDecoder("utf-8").decode(jsonBytes);
+  const gltf = JSON.parse(jsonStr.trim());
+
+  // Chunk 1 (BIN)
+  const binChunkOffset = 20 + jsonChunkLength;
+  const binChunkLength = dataView.getUint32(binChunkOffset, true);
+  const binDataOffset = binChunkOffset + 8;
+
+  const mesh = gltf.meshes[0];
+  const primitive = mesh.primitives[0];
+  const posAccessorIdx = primitive.attributes.POSITION;
+  const indAccessorIdx = primitive.indices;
+
+  const posAccessor = gltf.accessors[posAccessorIdx];
+  const indAccessor = gltf.accessors[indAccessorIdx];
+
+  const posBufferView = gltf.bufferViews[posAccessor.bufferView];
+  const indBufferView = gltf.bufferViews[indAccessor.bufferView];
+
+  // Extract indices
+  const indByteOffset = binDataOffset + (indBufferView.byteOffset || 0) + (indAccessor.byteOffset || 0);
+  const indices = new Uint16Array(arrayBuffer, indByteOffset, indAccessor.count);
+
+  // Extract positions
+  const posByteOffset = binDataOffset + (posBufferView.byteOffset || 0) + (posAccessor.byteOffset || 0);
+  const positions = new Float32Array(arrayBuffer, posByteOffset, posAccessor.count * 3);
+
+  const vertices = [];
+  for (let i = 0; i < positions.length; i += 3) {
+    vertices.push([positions[i], positions[i + 1], positions[i + 2]]);
+  }
+
+  const faces = [];
+  for (let i = 0; i < indices.length; i += 3) {
+    faces.push([indices[i], indices[i + 1], indices[i + 2]]);
+  }
+
+  return { vertices, faces };
 }
 
 function close3DViewer() {
@@ -747,8 +892,8 @@ function render3DMesh() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
-  // Generate 3D geometry vertices and faces based on product category
-  const geom = get3DGeometryForCategory(state.viewer3D.meshType);
+  // Use loaded real geometry or fallback procedural
+  const geom = state.viewer3D.currentGeometry || get3DGeometryForCategory(state.viewer3D.meshType);
   const radX = (state.viewer3D.rotX * Math.PI) / 180;
   const radY = (state.viewer3D.rotY * Math.PI) / 180;
   const zoom = state.viewer3D.zoom;

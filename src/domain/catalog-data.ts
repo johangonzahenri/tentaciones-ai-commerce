@@ -20,8 +20,8 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:polera-essential",
     has3D: true,
-    model3DUrl: "/assets/3d/apparel/polera-essential.glb",
-    model3DFormat: "glb",
+    model3DUrl: "/assets/3d/apparel/polera-essential.gltf",
+    model3DFormat: "gltf",
     image: "/assets/products/polera-essential.svg",
     specifications: {
       material: "100% Algodón Orgánico 240g",
@@ -143,8 +143,8 @@ export const TENTACIONES_DEMO_CATALOG: readonly Product[] = [
     arAvailable: true,
     defaultArUrn: "urn:tentaciones:ar:apparel:silk-evening-dress",
     has3D: true,
-    model3DUrl: "/assets/3d/apparel/silk-evening-dress.glb",
-    model3DFormat: "glb",
+    model3DUrl: "/assets/3d/apparel/silk-evening-dress.gltf",
+    model3DFormat: "gltf",
     image: "/assets/products/vestido-seda.svg",
     specifications: {
       tejido: "100% Seda Mulberry",

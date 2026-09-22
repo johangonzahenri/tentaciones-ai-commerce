@@ -22,6 +22,9 @@ const MIME_TYPES: Record<string, string> = {
   ".svg": "image/svg+xml",
   ".png": "image/png",
   ".ico": "image/x-icon",
+  ".gltf": "model/gltf+json",
+  ".glb": "model/gltf-binary",
+  ".bin": "application/octet-stream",
 };
 
 export function createServer(): http.Server {
