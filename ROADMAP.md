@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 92 Complete)
-VERSION: v1.6.2
+STATUS: CERTIFIED (Phase 93 Complete)
+VERSION: v1.6.3
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -100,20 +100,33 @@ VERSION: v1.6.2
 ### Fase 10: Auditoría del Primer Piloto Real & Matriz de Calidad VTO (v1.6.2) — [IMPLEMENTED]
 * [x] Clasificación de `tryon-max` como *Recommended Preview Model* y `tryon-v1.6` como *Stable Model*.
 * [x] Soporte tipado para `PoseError` en el clasificador de errores de inferencia.
-* [x] Creación de la matriz observacional de calidad `docs/VTO_FIRST_PILOT_EVALUATION.md` (Total 28 documentos canónicos certificados).
+* [x] Creación de la matriz observacional de calidad `docs/VTO_FIRST_PILOT_EVALUATION.md`.
 * [x] Verificación de aislamiento estricto `PUBLIC_DEMO` vs `PRIVATE_CONNECTED_DEMO`.
-* [x] Diagnóstico técnico honesto: `REAL PILOT = BLOCKED BY MISSING CREDENTIAL` (sin inventar resultados ni simular ejecuciones externas no ocurridas).
+* [x] Diagnóstico técnico honesto: `REAL PILOT = BLOCKED BY MISSING CREDENTIAL`.
 
 ---
 
-### Fase 11: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
+### Fase 11: VTO Image Pipeline & Input Quality Engine (v1.6.3) — [IMPLEMENTED]
+* [x] Creación de `TryOnImagePipeline` para validación, normalización y preparación de fotografías de usuarios y prendas.
+* [x] Auditoría binaria de cabeceras mágicas (JPEG `0xFFD8FF`, PNG `0x89504E47`, WebP `RIFF...WEBP`) contra ataques de MIME spoofing y polyglot.
+* [x] Taxonomía de calidad en 5 estados (`EXCELLENT`, `ACCEPTABLE`, `WARNING`, `REJECT`, `UNKNOWN`).
+* [x] Límites de resolución y payload justificados (Min 384x512, Max 4096x4096 / 16 MP / 10 MB, Floor 2 KB).
+* [x] Contratos desacoplados `PreparedUserImage` y `PreparedProductImage` con preservación de 0 fugas de memoria y destrucción efímera.
+* [x] Función automatizada de preparación de piloto real `isReadyForRealVTO()`.
+* [x] Paridad de internacionalización bilingüe `es-419` y `en` con llaves `imageQuality.*` y `tryon.image.*`.
+* [x] Creación de 3 nuevos documentos canónicos: `docs/VTO_IMAGE_PIPELINE.md`, `docs/VTO_INPUT_QUALITY.md`, `docs/VTO_REAL_PILOT_CHECKLIST.md` (Total 31 documentos certificados).
+* [x] Suite de 64 pruebas automatizadas pasando al 100%.
+
+---
+
+### Fase 12: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 12: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
+### Fase 13: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).
 

@@ -10,15 +10,24 @@ import type { OperationalModeConfig } from "../../contracts/operational-mode.js"
 import type { Product } from "../types.js";
 import { resolveVTOCapability, type VTOCapabilityDescriptor } from "./vto-capability-resolver.js";
 import { assertSafeVTOMode, sanitizeVTOResponse } from "../../security/vto-guardrails.js";
+import { TryOnImagePipeline } from "./vto-image-pipeline.js";
+import type {
+  ImageQualityAssessment,
+  PreparedUserImage,
+  PreparedProductImage,
+  PilotReadinessResult,
+} from "../../contracts/vto-image-pipeline-contract.js";
 
 export class VirtualTryOnService {
   private provider: IVirtualTryOnProvider;
   private modeConfig: OperationalModeConfig;
+  private imagePipeline: TryOnImagePipeline;
 
   constructor(provider: IVirtualTryOnProvider, modeConfig: OperationalModeConfig) {
     assertSafeVTOMode(modeConfig, provider.providerId);
     this.provider = provider;
     this.modeConfig = modeConfig;
+    this.imagePipeline = new TryOnImagePipeline();
   }
 
   public get activeProviderId(): string {
@@ -29,8 +38,46 @@ export class VirtualTryOnService {
     return this.provider.isSynthetic;
   }
 
-  public resolveCapability(product: Pick<Product, "id" | "category" | "name" | "slug"> | { category: string; id?: string; name?: string; slug?: string }): VTOCapabilityDescriptor {
+  public getImagePipeline(): TryOnImagePipeline {
+    return this.imagePipeline;
+  }
+
+  public resolveCapability(
+    product: Pick<Product, "id" | "category" | "name" | "slug"> | { category: string; id?: string; name?: string; slug?: string }
+  ): VTOCapabilityDescriptor {
     return resolveVTOCapability(product, this.provider.providerId);
+  }
+
+  public async assessUserImage(input: {
+    buffer?: Buffer;
+    base64?: string;
+    mimeType?: string;
+    isAvatar?: boolean;
+    avatarProfile?: "Nova" | "Sora" | "Mateo";
+    userConsentGranted?: boolean;
+    explicitDimensions?: { width: number; height: number };
+  }): Promise<{ assessment: ImageQualityAssessment; preparedUserImage?: PreparedUserImage }> {
+    return this.imagePipeline.assessUserImage(input);
+  }
+
+  public async assessProductImage(product: {
+    id: string;
+    slug: string;
+    name: string;
+    category: any;
+    imageUrl: string;
+    dimensions?: { width: number; height: number };
+  }): Promise<PreparedProductImage> {
+    return this.imagePipeline.assessProductImage(product);
+  }
+
+  public checkPilotReadiness(params: {
+    preparedUserImage?: PreparedUserImage;
+    preparedProductImage?: PreparedProductImage;
+    hasApiKey: boolean;
+    userConsentGranted: boolean;
+  }): PilotReadinessResult {
+    return this.imagePipeline.isReadyForRealVTO(params);
   }
 
   public async validateTryOn(input: TryOnInput): Promise<TryOnValidationResult> {

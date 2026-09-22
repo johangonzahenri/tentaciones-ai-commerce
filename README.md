@@ -83,8 +83,11 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (28 Documentos Certificados)
+## 6. Documentación Canónica (31 Documentos Certificados)
 
+* [`docs/VTO_IMAGE_PIPELINE.md`](docs/VTO_IMAGE_PIPELINE.md): Arquitectura de preprocesamiento, auditoría de cabeceras binarias y límites de imagen VTO.
+* [`docs/VTO_INPUT_QUALITY.md`](docs/VTO_INPUT_QUALITY.md): Taxonomía de 5 estados de calidad, dimensiones y reglas de honestidad técnica.
+* [`docs/VTO_REAL_PILOT_CHECKLIST.md`](docs/VTO_REAL_PILOT_CHECKLIST.md): Lista de verificación estricta de 10 puntos para ejecución segura de pilotos reales.
 * [`docs/VTO_FIRST_PILOT_EVALUATION.md`](docs/VTO_FIRST_PILOT_EVALUATION.md): Matriz de evaluación observacional de calidad visual y benchmark técnico del piloto VTO.
 * [`docs/VTO_FIRST_PILOT.md`](docs/VTO_FIRST_PILOT.md): Registro de evaluación del primer piloto VTO con FASHN AI y diagnóstico de ejecución.
 * [`docs/VTO_ENGINE_ARCHITECTURE.md`](docs/VTO_ENGINE_ARCHITECTURE.md): Arquitectura del motor de Virtual Try-On, abstracción de proveedores y máquina de estados.

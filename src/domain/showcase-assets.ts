@@ -50,7 +50,7 @@ export interface ProductHonestyEntry {
     es: string;
     en: string;
   };
-  status: "IMPLEMENTED" | "SIMULATED" | "FALLBACK_ONLY" | "NOT_IMPLEMENTED";
+  status: "IMPLEMENTED" | "SIMULATED" | "FALLBACK_ONLY" | "NOT_IMPLEMENTED" | "BLOCKED" | "PARTIAL" | "NOT_STARTED";
   implementationDetail: {
     es: string;
     en: string;
@@ -343,6 +343,54 @@ export const PRODUCT_HONESTY_MATRIX: readonly ProductHonestyEntry[] = [
     implementationDetail: {
       es: "Los modelos textiles son estáticos / semi-rígidos para garantizar 60 fps en móviles web estándar.",
       en: "Textile models are static / semi-rigid to ensure solid 60 fps on standard mobile browsers.",
+    },
+  },
+  {
+    featureId: "vto_engine",
+    featureName: {
+      es: "Motor de Virtual Try-On (AI VTO Architecture)",
+      en: "Virtual Try-On Engine (AI VTO Architecture)",
+    },
+    status: "IMPLEMENTED",
+    implementationDetail: {
+      es: "Abstracción desacoplada de proveedores con guardrails fail-closed y resolución de capacidades por prenda.",
+      en: "Decoupled provider abstraction with fail-closed guardrails and apparel capability resolution.",
+    },
+  },
+  {
+    featureId: "vto_image_pipeline",
+    featureName: {
+      es: "Pipeline de Calidad y Normalización de Imagen VTO",
+      en: "VTO Image Preparation & Input Quality Pipeline",
+    },
+    status: "IMPLEMENTED",
+    implementationDetail: {
+      es: "Auditoría de cabeceras binarias (JPEG/PNG/WebP), límites de resolución (384-4096px), y taxonomía de 5 estados.",
+      en: "Binary magic header audit (JPEG/PNG/WebP), resolution limits (384-4096px), and 5-state quality taxonomy.",
+    },
+  },
+  {
+    featureId: "fashn_adapter",
+    featureName: {
+      es: "Adaptador de Inferencia FASHN AI (tryon-max / tryon-v1.6)",
+      en: "FASHN AI Inference Adapter (tryon-max / tryon-v1.6)",
+    },
+    status: "IMPLEMENTED",
+    implementationDetail: {
+      es: "Conector tipado con soporte de Base64, dominios seguros y clasificación de errores de inferencia.",
+      en: "Typed connector with Base64 support, secure domain validation, and inference error classification.",
+    },
+  },
+  {
+    featureId: "fashn_real_pilot",
+    featureName: {
+      es: "Piloto Real de Inferencia FASHN",
+      en: "Real FASHN Pilot Execution",
+    },
+    status: "BLOCKED",
+    implementationDetail: {
+      es: "Bloqueado de forma honesta y segura por ausencia de FASHN_API_KEY en el entorno de desarrollo.",
+      en: "Blocked honestly and safely due to missing FASHN_API_KEY in development environment.",
     },
   },
   {

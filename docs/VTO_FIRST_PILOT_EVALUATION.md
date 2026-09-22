@@ -58,10 +58,21 @@ Este documento establece la matriz observacional y técnica para la evaluación 
 
 ---
 
-## 5. Protocolo de Reanudación con Credenciales en Vivo
+---
 
-Cuando se configure `FASHN_API_KEY` en el entorno seguro del servidor (`PRIVATE_CONNECTED_DEMO`):
-1. El backend invocará `POST https://api.fashn.ai/v1/run` con el payload de `tryon-max`.
-2. Se registrará la latencia por fase (`SUBMITTING` $\rightarrow$ `PROCESSING` $\rightarrow$ `RESULT_READY`).
-3. Se aplicará la matriz de calidad de este documento sobre la imagen generada.
-4. La foto del usuario será eliminada de la memoria volátil inmediatamente tras la entrega.
+## 6. Integración con el Pipeline de Calidad de Entrada (Input Quality)
+
+Con la implementación de `TryOnImagePipeline` (Fase 93), la evaluación de calidad visual se apoya en una validación previa estricta:
+
+```text
+USER IMAGE ──► TryOnImagePipeline ──► QualityState (EXCELLENT/ACCEPTABLE/WARNING)
+                     │
+                     ├─ Binary Header Audit (JPEG/PNG/WebP)
+                     ├─ Dimension Bounds (384px ≤ W, H ≤ 4096px, ≤ 16 MP)
+                     ├─ Payload Cap (2 KB ≤ Size ≤ 10 MB)
+                     └─ Aspect Ratio & Orientation (Portrait optimal)
+```
+
+1. **Garantía Técnica:** Solo imágenes con estados `EXCELLENT`, `ACCEPTABLE` o `WARNING` proceden a inferencia. Imágenes en `REJECT` son bloqueadas *fail-closed*.
+2. **Honestidad Transparente:** La calidad de entrada certifica viabilidad técnica mínima, sin garantizar de forma engañosa el ajuste de confección físico.
+3. **Checklist Pre-Ejecución:** Todo intento de ejecución real debe verificar los 10 puntos de [`docs/VTO_REAL_PILOT_CHECKLIST.md`](VTO_REAL_PILOT_CHECKLIST.md).
