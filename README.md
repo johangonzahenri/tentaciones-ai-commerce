@@ -83,8 +83,14 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (31 Documentos Certificados)
+## 6. Documentación Canónica (37 Documentos Certificados)
 
+* [`docs/VTO_EXECUTION_GATEWAY.md`](docs/VTO_EXECUTION_GATEWAY.md): Arquitectura del gateway de ejecución, orquestación, gobernanza y aislamiento de proveedores.
+* [`docs/VTO_PROVIDER_POLICY.md`](docs/VTO_PROVIDER_POLICY.md): Política determinista de enrutamiento y selección de proveedores VTO.
+* [`docs/VTO_POLLING_RETRY.md`](docs/VTO_POLLING_RETRY.md): Motor de sondeo acotado y matriz de reintentos con retroceso exponencial.
+* [`docs/VTO_RESULT_CONTRACT.md`](docs/VTO_RESULT_CONTRACT.md): Contrato neutral de resultado normalizado y validación estricta de dominios de salida.
+* [`docs/VTO_REAL_PILOT_RUNBOOK.md`](docs/VTO_REAL_PILOT_RUNBOOK.md): Manual de procedimientos operacionales y ejecución controlada CLI del piloto real.
+* [`docs/VTO_PRIVACY_EXECUTION.md`](docs/VTO_PRIVACY_EXECUTION.md): Especificación de transporte de datos y distinción de políticas de privacidad.
 * [`docs/VTO_IMAGE_PIPELINE.md`](docs/VTO_IMAGE_PIPELINE.md): Arquitectura de preprocesamiento, auditoría de cabeceras binarias y límites de imagen VTO.
 * [`docs/VTO_INPUT_QUALITY.md`](docs/VTO_INPUT_QUALITY.md): Taxonomía de 5 estados de calidad, dimensiones y reglas de honestidad técnica.
 * [`docs/VTO_REAL_PILOT_CHECKLIST.md`](docs/VTO_REAL_PILOT_CHECKLIST.md): Lista de verificación estricta de 10 puntos para ejecución segura de pilotos reales.

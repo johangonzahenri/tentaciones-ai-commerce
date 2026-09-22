@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 93 Complete)
-VERSION: v1.6.3
+STATUS: CERTIFIED (Phase 94 Complete)
+VERSION: v1.6.4
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -114,19 +114,30 @@ VERSION: v1.6.3
 * [x] Contratos desacoplados `PreparedUserImage` y `PreparedProductImage` con preservación de 0 fugas de memoria y destrucción efímera.
 * [x] Función automatizada de preparación de piloto real `isReadyForRealVTO()`.
 * [x] Paridad de internacionalización bilingüe `es-419` y `en` con llaves `imageQuality.*` y `tryon.image.*`.
-* [x] Creación de 3 nuevos documentos canónicos: `docs/VTO_IMAGE_PIPELINE.md`, `docs/VTO_INPUT_QUALITY.md`, `docs/VTO_REAL_PILOT_CHECKLIST.md` (Total 31 documentos certificados).
+* [x] Creación de 3 nuevos documentos canónicos: `docs/VTO_IMAGE_PIPELINE.md`, `docs/VTO_INPUT_QUALITY.md`, `docs/VTO_REAL_PILOT_CHECKLIST.md`.
 * [x] Suite de 64 pruebas automatizadas pasando al 100%.
 
 ---
 
-### Fase 12: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
+### Fase 12: VTO Execution Gateway & Real Pilot Readiness (v1.6.4) — [IMPLEMENTED]
+* [x] Implementación de `VTOExecutionGateway` para orquestación centralizada, control de idempotencia y aislamiento de proveedores.
+* [x] Motor de sondeo acotado `VtoPredictionPoller` y matriz de reintentos determinista con retroceso exponencial `VtoRetryPolicy`.
+* [x] Contratos de dominio neutrales `VirtualTryOnExecutionRequest` y `VirtualTryOnExecutionResult`.
+* [x] Validación estricta de dominios de salida (Data URI, `https://cdn.fashn.ai/`, `https://media.fashn.ai/`).
+* [x] Herramienta CLI de ejecución controlada `scripts/vto-pilot.mjs` con soporte para `CHECK`, `DRY_RUN` y `REAL_RUN` (Fail-Closed ante ausencia de credenciales).
+* [x] Creación de 6 nuevos documentos canónicos: `docs/VTO_EXECUTION_GATEWAY.md`, `docs/VTO_PROVIDER_POLICY.md`, `docs/VTO_POLLING_RETRY.md`, `docs/VTO_RESULT_CONTRACT.md`, `docs/VTO_REAL_PILOT_RUNBOOK.md`, `docs/VTO_PRIVACY_EXECUTION.md` (Total 37 documentos certificados).
+* [x] Suite de 72 pruebas automatizadas pasando al 100%.
+
+---
+
+### Fase 13: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 13: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
+### Fase 14: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).
 

@@ -35,7 +35,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 31 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 37 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -68,6 +68,12 @@ test("1. Documentation Completeness: All 31 canonical docs exist with mandatory 
     "VTO_IMAGE_PIPELINE.md",
     "VTO_INPUT_QUALITY.md",
     "VTO_REAL_PILOT_CHECKLIST.md",
+    "VTO_EXECUTION_GATEWAY.md",
+    "VTO_PROVIDER_POLICY.md",
+    "VTO_POLLING_RETRY.md",
+    "VTO_RESULT_CONTRACT.md",
+    "VTO_REAL_PILOT_RUNBOOK.md",
+    "VTO_PRIVACY_EXECUTION.md",
   ];
 
   for (const doc of docs) {

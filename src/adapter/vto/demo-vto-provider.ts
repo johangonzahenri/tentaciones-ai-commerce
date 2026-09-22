@@ -22,6 +22,7 @@ interface InternalDemoJob {
   status: "QUEUED" | "PROCESSING" | "COMPLETED" | "FAILED" | "CANCELLED";
   recommendedSize?: string;
   fitConfidence?: number;
+  pollCount?: number;
 }
 
 export class DemoVirtualTryOnProvider implements IVirtualTryOnProvider {
@@ -111,9 +112,10 @@ export class DemoVirtualTryOnProvider implements IVirtualTryOnProvider {
       };
     }
 
+    job.pollCount = (job.pollCount || 0) + 1;
     const elapsedMs = Date.now() - job.submittedAt;
 
-    if (elapsedMs < 600) {
+    if (elapsedMs < 600 && job.pollCount <= 1) {
       job.status = "QUEUED";
       return {
         jobId,
@@ -128,7 +130,7 @@ export class DemoVirtualTryOnProvider implements IVirtualTryOnProvider {
       };
     }
 
-    if (elapsedMs < 1500) {
+    if (elapsedMs < 1500 && job.pollCount <= 2) {
       job.status = "PROCESSING";
       return {
         jobId,
