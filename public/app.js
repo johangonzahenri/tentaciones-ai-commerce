@@ -11,7 +11,8 @@ const state = {
   selectedProductForDetail: null,
   selectedProductForAR: null,
   selectedARProfile: "Nova",
-  platformOnline: true,
+  arViewMode: "2D", // "2D" | "WEBXR"
+  webxrSupported: false,
 };
 
 function t(key, vars = {}) {
@@ -36,14 +37,17 @@ const elements = {
   themeIcon: document.getElementById("theme-icon"),
   langToggleBtn: document.getElementById("btn-lang-toggle"),
   langLabel: document.getElementById("lang-label"),
-  statusIndicator: document.getElementById("status-indicator"),
-  statusText: document.getElementById("status-text"),
   heroBadge: document.getElementById("hero-badge"),
   heroTitle: document.getElementById("hero-title"),
   heroSubtitle: document.getElementById("hero-subtitle"),
+  heroTryNowBtn: document.getElementById("btn-hero-try-now"),
+  heroExploreBtn: document.getElementById("btn-hero-explore"),
   searchForm: document.getElementById("search-form"),
   searchInput: document.getElementById("search-input"),
   searchBtn: document.getElementById("search-btn"),
+  searchFeedbackBox: document.getElementById("search-feedback-box"),
+  searchFeedbackIntent: document.getElementById("search-feedback-intent"),
+  searchFeedbackRationale: document.getElementById("search-feedback-rationale"),
   categoryContainer: document.getElementById("category-container"),
   productGrid: document.getElementById("product-grid"),
   cartCounter: document.getElementById("cart-counter"),
@@ -65,11 +69,18 @@ const elements = {
   arModal: document.getElementById("ar-modal"),
   arModalCloseBtn: document.getElementById("btn-ar-modal-close"),
   arModalProductName: document.getElementById("ar-modal-product-name"),
-  arProfileSelect: document.getElementById("ar-profile-select"),
+  arAvatarIcon: document.getElementById("ar-avatar-icon"),
+  arViewModeLabel: document.getElementById("ar-view-mode-label"),
+  arModePill: document.getElementById("ar-mode-pill"),
+  arUrnDisplay: document.getElementById("ar-urn-display"),
+  arProfileCardsContainer: document.getElementById("profile-cards-container"),
   arRecommendedSize: document.getElementById("ar-recommended-size"),
   arRationaleText: document.getElementById("ar-rationale-text"),
-  arUrnDisplay: document.getElementById("ar-urn-display"),
   arWebxrInfo: document.getElementById("ar-webxr-info"),
+  btnMode2D: document.getElementById("btn-mode-2d"),
+  btnModeWebXR: document.getElementById("btn-mode-webxr"),
+  btnArAddToCart: document.getElementById("btn-ar-add-to-cart"),
+  btnArCloseReturn: document.getElementById("btn-ar-close-return"),
   aiAssistantBtn: document.getElementById("btn-ai-assistant"),
   aiCloseBtn: document.getElementById("btn-ai-close"),
   aiDrawer: document.getElementById("ai-drawer"),
@@ -86,11 +97,10 @@ const elements = {
   showcaseBtn: document.getElementById("btn-showcase-open"),
   showcaseCloseBtn: document.getElementById("btn-showcase-close"),
   showcaseDrawer: document.getElementById("showcase-drawer"),
-  metricsBar: document.getElementById("metrics-bar"),
-  metricConversion: document.getElementById("metric-conversion"),
-  metricReturnReduction: document.getElementById("metric-return-reduction"),
-  metricArEngagement: document.getElementById("metric-ar-engagement"),
-  metricIsolation: document.getElementById("metric-isolation"),
+  metricProducts: document.getElementById("metric-products"),
+  metricFittings: document.getElementById("metric-fittings"),
+  metricRecommendations: document.getElementById("metric-recommendations"),
+  metricOrders: document.getElementById("metric-orders"),
 };
 
 // --- Initialization ---
@@ -101,7 +111,8 @@ async function initApp() {
   renderCategories();
   renderCatalog();
   renderCart();
-  addAIMessage("system", state.lang === "es-419" ? "¡Hola! Soy tu asistente de Tentaciones. ¿Buscas zapatillas para correr, ropa para fiesta o asistencia con tu talla?" : "Hello! I am your Tentaciones shopping assistant. Are you looking for running shoes, party apparel or size guidance?");
+  renderARProfiles();
+  addAIMessage("system", state.lang === "es-419" ? "¡Hola! Soy tu asistente de moda en Tentaciones. ¿Buscas zapatillas de running, un vestido elegante o asistencia con tu talla?" : "Hello! I am your fashion assistant at Tentaciones. Are you looking for running shoes, an elegant dress, or size advice?");
   checkWebXRSupport();
 }
 
@@ -113,6 +124,14 @@ function bindEvents() {
   elements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     handleSearch();
+  });
+
+  elements.heroTryNowBtn.addEventListener("click", () => {
+    // Open AR for the first AR-capable product in catalog
+    const firstArProd = state.products.find((p) => p.arAvailable) || state.products[0];
+    if (firstArProd) {
+      openARModal(firstArProd);
+    }
   });
 
   elements.cartOpenBtn.addEventListener("click", () => openDrawer(elements.cartDrawer));
@@ -130,11 +149,38 @@ function bindEvents() {
 
   elements.modalCloseBtn.addEventListener("click", () => closeModal(elements.productModal));
   elements.arModalCloseBtn.addEventListener("click", () => closeModal(elements.arModal));
+  elements.btnArCloseReturn.addEventListener("click", () => closeModal(elements.arModal));
   elements.checkoutCloseBtn.addEventListener("click", () => closeModal(elements.checkoutModal));
 
-  elements.arProfileSelect.addEventListener("change", (e) => {
-    state.selectedARProfile = e.target.value;
-    updateARRecommendation();
+  elements.btnMode2D.addEventListener("click", () => {
+    state.arViewMode = "2D";
+    elements.btnMode2D.className = "btn btn-secondary active-mode";
+    elements.btnModeWebXR.className = "btn btn-secondary";
+    elements.arModePill.textContent = "DEMO 2D SIMULATION";
+    elements.arViewModeLabel.textContent = "Simulación Espacial 2D Interactiva";
+  });
+
+  elements.btnModeWebXR.addEventListener("click", () => {
+    if (state.webxrSupported) {
+      state.arViewMode = "WEBXR";
+      elements.btnModeWebXR.className = "btn btn-secondary active-mode";
+      elements.btnMode2D.className = "btn btn-secondary";
+      elements.arModePill.textContent = "WEBXR IMMERSIVE";
+      elements.arViewModeLabel.textContent = "Proyección Espacial AR WebXR Activa";
+    } else {
+      alert(t("ar.webxr_unsupported"));
+    }
+  });
+
+  elements.btnArAddToCart.addEventListener("click", () => {
+    const product = state.selectedProductForAR;
+    if (product) {
+      const recSize = elements.arRecommendedSize.textContent;
+      const matchedVariant = product.variants.find((v) => String(v.size) === String(recSize)) || product.variants[0];
+      addToCart(product, matchedVariant);
+      closeModal(elements.arModal);
+      openDrawer(elements.cartDrawer);
+    }
   });
 
   elements.checkoutOpenBtn.addEventListener("click", () => {
@@ -176,31 +222,68 @@ function applyI18n() {
   elements.heroBadge.textContent = t("hero.badge");
   elements.heroTitle.textContent = t("hero.title");
   elements.heroSubtitle.textContent = t("hero.subtitle");
+  document.getElementById("hero-cta-try-text").textContent = t("hero.cta_try_now");
+  document.getElementById("hero-cta-explore-text").textContent = t("hero.cta_explore");
   elements.searchInput.placeholder = t("search.placeholder");
   elements.searchBtn.textContent = t("search.button");
+
   const navAi = document.getElementById("nav-ai-label");
   if (navAi) navAi.textContent = t("nav.ai_assistant");
   const navCart = document.getElementById("nav-cart-label");
   if (navCart) navCart.textContent = t("nav.cart");
   const navShowcase = document.getElementById("nav-showcase-label");
-  if (navShowcase) navShowcase.textContent = t("nav.showcase");
+  if (navShowcase) navShowcase.textContent = t("nav.portfolio");
+  const demoBadge = document.getElementById("demo-badge");
+  if (demoBadge) demoBadge.textContent = t("demo.badge");
   const demoDisc = document.getElementById("demo-disclosure-text");
-  if (demoDisc) demoDisc.textContent = t("demo.banner");
+  if (demoDisc) demoDisc.textContent = t("demo.disclosure");
   const brandBadge = document.getElementById("brand-badge-mode");
-  if (brandBadge) brandBadge.textContent = t("demo.mode_badge");
-  
-  const lblConv = document.getElementById("lbl-metric-conversion");
-  if (lblConv) lblConv.textContent = t("metrics.conversion_rate");
-  const lblRet = document.getElementById("lbl-metric-return");
-  if (lblRet) lblRet.textContent = t("metrics.return_reduction");
-  const lblAr = document.getElementById("lbl-metric-ar");
-  if (lblAr) lblAr.textContent = t("metrics.ar_engagement");
-  const lblIso = document.getElementById("lbl-metric-isolation");
-  if (lblIso) lblIso.textContent = t("metrics.demo_isolation");
+  if (brandBadge) brandBadge.textContent = t("demo.badge");
+
+  const lblProd = document.getElementById("lbl-metric-products");
+  if (lblProd) lblProd.textContent = t("metrics.products");
+  const lblFit = document.getElementById("lbl-metric-fittings");
+  if (lblFit) lblFit.textContent = t("metrics.fittings");
+  const lblRec = document.getElementById("lbl-metric-recommendations");
+  if (lblRec) lblRec.textContent = t("metrics.recommendations");
+  const lblOrd = document.getElementById("lbl-metric-orders");
+  if (lblOrd) lblOrd.textContent = t("metrics.orders");
+
+  // How it works
+  const howT = document.getElementById("how-title");
+  if (howT) howT.textContent = t("how_it_works.title");
+  const h1t = document.getElementById("how-step1-title");
+  if (h1t) h1t.textContent = t("how_it_works.step1_title");
+  const h1d = document.getElementById("how-step1-desc");
+  if (h1d) h1d.textContent = t("how_it_works.step1_desc");
+  const h2t = document.getElementById("how-step2-title");
+  if (h2t) h2t.textContent = t("how_it_works.step2_title");
+  const h2d = document.getElementById("how-step2-desc");
+  if (h2d) h2d.textContent = t("how_it_works.step2_desc");
+  const h3t = document.getElementById("how-step3-title");
+  if (h3t) h3t.textContent = t("how_it_works.step3_title");
+  const h3d = document.getElementById("how-step3-desc");
+  if (h3d) h3d.textContent = t("how_it_works.step3_desc");
+
+  // AR Modal Labels
+  const arTitle = document.getElementById("ar-modal-title");
+  if (arTitle) arTitle.textContent = t("ar.title");
+  const lblM2d = document.getElementById("lbl-mode-2d");
+  if (lblM2d) lblM2d.textContent = t("ar.mode_2d");
+  const lblMxr = document.getElementById("lbl-mode-webxr");
+  if (lblMxr) lblMxr.textContent = t("ar.mode_ar");
+  const arProfLbl = document.getElementById("ar-profile-label");
+  if (arProfLbl) arProfLbl.textContent = t("ar.profile_select");
+  const arRecT = document.getElementById("ar-rec-title");
+  if (arRecT) arRecT.textContent = t("ar.rec_size_title");
 
   renderCategories();
   renderCatalog();
   renderCart();
+  renderARProfiles();
+  if (state.selectedProductForAR) {
+    updateARRecommendation();
+  }
 }
 
 // --- Data Fetching ---
@@ -209,10 +292,10 @@ async function loadMetrics() {
     const res = await fetch("/api/metrics");
     if (res.ok) {
       const data = await res.json();
-      if (elements.metricConversion) elements.metricConversion.textContent = `${data.conversionRate}%`;
-      if (elements.metricReturnReduction) elements.metricReturnReduction.textContent = `${data.returnReductionPercent}%`;
-      if (elements.metricArEngagement) elements.metricArEngagement.textContent = `${data.arEngagementMinutes} min`;
-      if (elements.metricIsolation) elements.metricIsolation.textContent = `${data.demoSecurityIsolationPercent}%`;
+      if (elements.metricProducts) elements.metricProducts.textContent = String(data.totalProductsIndexed);
+      if (elements.metricFittings) elements.metricFittings.textContent = String(data.virtualFittingSessions);
+      if (elements.metricRecommendations) elements.metricRecommendations.textContent = String(data.recommendationsServed);
+      if (elements.metricOrders) elements.metricOrders.textContent = String(data.demoOrdersConfirmed);
     }
   } catch {
     // Keep defaults
@@ -228,7 +311,6 @@ async function loadCatalog() {
       throw new Error("Local API endpoint not found");
     }
   } catch {
-    // Fallback: embedded catalog if served as raw static page
     state.products = getFallbackCatalog();
   }
 }
@@ -296,14 +378,14 @@ function renderCatalog() {
     if (product.arAvailable) {
       const arBadge = document.createElement("span");
       arBadge.className = "ar-badge";
-      arBadge.textContent = "👓 3D / AR";
+      arBadge.textContent = t("product.ar_badge");
       imgContainer.appendChild(arBadge);
     }
 
     const body = document.createElement("div");
     body.className = "product-body";
 
-    const brand = document.createElement("div");
+    const brand = document.createElement("span");
     brand.className = "product-brand";
     brand.textContent = product.brand;
 
@@ -318,24 +400,34 @@ function renderCatalog() {
     const actions = document.createElement("div");
     actions.className = "product-actions";
 
+    const row1 = document.createElement("div");
+    row1.className = "product-action-row";
+
     const viewBtn = document.createElement("button");
     viewBtn.className = "btn btn-secondary";
     viewBtn.style.flex = "1";
     viewBtn.textContent = t("product.view_details");
     viewBtn.addEventListener("click", () => openProductDetailModal(product));
+    row1.appendChild(viewBtn);
+
+    if (product.arAvailable) {
+      const arBtn = document.createElement("button");
+      arBtn.className = "btn btn-secondary";
+      arBtn.textContent = "👓 " + t("product.try_on");
+      arBtn.addEventListener("click", () => openARModal(product));
+      row1.appendChild(arBtn);
+    }
 
     const addBtn = document.createElement("button");
     addBtn.className = "btn btn-primary";
-    addBtn.textContent = "🛒";
-    addBtn.title = t("product.add_to_cart");
+    addBtn.style.width = "100%";
+    addBtn.textContent = "🛒 " + t("product.add_to_cart");
     addBtn.addEventListener("click", () => {
-      const defaultVariant = product.variants[0];
-      if (defaultVariant) {
-        addToCart(product, defaultVariant);
-      }
+      addToCart(product, product.variants[0]);
+      openDrawer(elements.cartDrawer);
     });
 
-    actions.appendChild(viewBtn);
+    actions.appendChild(row1);
     actions.appendChild(addBtn);
 
     body.appendChild(brand);
@@ -345,6 +437,7 @@ function renderCatalog() {
 
     card.appendChild(imgContainer);
     card.appendChild(body);
+
     elements.productGrid.appendChild(card);
   }
 }
@@ -374,7 +467,6 @@ function openProductDetailModal(product) {
   priceEl.className = "product-price";
   priceEl.textContent = formatMoney(product.basePriceCLP, product.currency);
 
-  // Variant selector
   const varTitle = document.createElement("h4");
   varTitle.style.fontSize = "0.8125rem";
   varTitle.style.fontWeight = "700";
@@ -404,7 +496,6 @@ function openProductDetailModal(product) {
     variantContainer.appendChild(vBtn);
   }
 
-  // Buttons
   const actionRow = document.createElement("div");
   actionRow.style.display = "flex";
   actionRow.style.gap = "0.75rem";
@@ -443,11 +534,58 @@ function openProductDetailModal(product) {
   openModal(elements.productModal);
 }
 
-// --- AR Virtual Try-On ---
+// --- AR Virtual Try-On & Profiles ---
+function renderARProfiles() {
+  const profiles = [
+    { id: "Nova", name: "Nova", desc: "Atlético Femenino", height: "1.68m", icon: "👗" },
+    { id: "Sora", name: "Sora", desc: "Unisex Slim", height: "1.75m", icon: "🧥" },
+    { id: "Mateo", name: "Mateo", desc: "Deportivo Masculino", height: "1.82m", icon: "👕" },
+  ];
+
+  while (elements.arProfileCardsContainer.firstChild) {
+    elements.arProfileCardsContainer.removeChild(elements.arProfileCardsContainer.firstChild);
+  }
+
+  for (const p of profiles) {
+    const card = document.createElement("button");
+    card.className = `profile-card-btn ${state.selectedARProfile === p.id ? "active" : ""}`;
+    
+    const icon = document.createElement("div");
+    icon.style.fontSize = "1.25rem";
+    icon.textContent = p.icon;
+
+    const name = document.createElement("div");
+    name.style.fontWeight = "700";
+    name.style.fontSize = "0.8125rem";
+    name.textContent = p.name;
+
+    const sub = document.createElement("div");
+    sub.style.fontSize = "0.6875rem";
+    sub.style.color = "var(--text-secondary)";
+    sub.textContent = `${p.desc} (${p.height})`;
+
+    card.appendChild(icon);
+    card.appendChild(name);
+    card.appendChild(sub);
+
+    card.addEventListener("click", () => {
+      state.selectedARProfile = p.id;
+      for (const c of elements.arProfileCardsContainer.children) {
+        c.className = "profile-card-btn";
+      }
+      card.className = "profile-card-btn active";
+      updateARRecommendation();
+    });
+
+    elements.arProfileCardsContainer.appendChild(card);
+  }
+}
+
 function openARModal(product) {
   state.selectedProductForAR = product;
   elements.arModalProductName.textContent = `${product.name} (${product.brand})`;
   elements.arUrnDisplay.textContent = product.defaultArUrn || "urn:tentaciones:ar:apparel";
+  elements.arAvatarIcon.textContent = getProductCategoryIcon(product.category);
   updateARRecommendation();
   openModal(elements.arModal);
 }
@@ -462,13 +600,13 @@ function updateARRecommendation() {
 
   if (product.category === "calzado") {
     recommended = profile === "Mateo" ? "42" : profile === "Nova" ? "39" : "40";
-    rationale = `Ajuste biomecánico para calce deportivo de silueta ${profile}.`;
+    rationale = `Calce deportivo optimizado para silueta demo ${profile} con 8mm de holgura en puntera.`;
   } else if (product.category === "pantalones") {
     recommended = profile === "Mateo" ? "34" : profile === "Nova" ? "30" : "32";
-    rationale = `Contorno de cintura proporcional a perfil ${profile}.`;
+    rationale = `Contorno de cintura proporcional para ajuste standard en perfil demo ${profile}.`;
   } else {
     recommended = profile === "Mateo" ? "L" : profile === "Nova" ? "S" : "M";
-    rationale = `Holgura de pecho y hombros optimizada para perfil ${profile}.`;
+    rationale = `Holgura de torso y hombros calibrada para silueta ${profile} (ajuste óptimo 96%).`;
   }
 
   elements.arRecommendedSize.textContent = recommended;
@@ -478,11 +616,14 @@ function updateARRecommendation() {
 function checkWebXRSupport() {
   if (navigator.xr) {
     navigator.xr.isSessionSupported("immersive-ar").then((supported) => {
+      state.webxrSupported = supported;
       elements.arWebxrInfo.textContent = supported ? t("ar.webxr_supported") : t("ar.webxr_unsupported");
     }).catch(() => {
+      state.webxrSupported = false;
       elements.arWebxrInfo.textContent = t("ar.webxr_unsupported");
     });
   } else {
+    state.webxrSupported = false;
     elements.arWebxrInfo.textContent = t("ar.webxr_unsupported");
   }
 }
@@ -608,7 +749,6 @@ function renderCart() {
     }
   }
 
-  // Free shipping progress
   const progressPercent = Math.min(100, Math.round((state.cart.subtotal / state.cart.freeShippingThreshold) * 100));
   elements.shippingProgressFill.style.width = `${progressPercent}%`;
 
@@ -636,10 +776,14 @@ function handleSearch() {
   state.searchQuery = query;
   renderCatalog();
 
+  elements.searchFeedbackBox.style.display = "block";
+  elements.searchFeedbackIntent.textContent = `${t("search.intent_title")} "${query}"`;
+  elements.searchFeedbackRationale.textContent = t("search.intent_rationale");
+
   addAIMessage("user", query);
   const results = state.products.filter((p) => p.name.toLowerCase().includes(query.toLowerCase()) || p.tags.some((t) => t.includes(query.toLowerCase())));
   const responseText = results.length > 0
-    ? `Encontré ${results.length} producto(s) afines a tu búsqueda: "${query}".`
+    ? `Encontré ${results.length} producto(s) afines a tu búsqueda: "${query}". ${t("search.intent_rationale")}`
     : `No encontré coincidencias exactas para "${query}". Te muestro las opciones más destacadas de nuestro catálogo.`;
 
   addAIMessage("assistant", responseText);
@@ -700,49 +844,56 @@ function addAIMessage(sender, message) {
 
 // --- Checkout Simulation ---
 function openCheckoutModal() {
-  if (state.cart.items.length === 0) return;
+  if (state.cart.items.length === 0) {
+    alert(t("cart.empty"));
+    return;
+  }
   const shippingFee = state.cart.qualifiesForFreeShipping ? 0 : 3990;
   const total = state.cart.subtotal + shippingFee;
   elements.checkoutTotalVal.textContent = formatMoney(total, "CLP");
   openModal(elements.checkoutModal);
 }
 
-function processDemoCheckout() {
-  const orderId = `tentaciones-${Math.random().toString(36).substring(2, 10)}`;
+async function processDemoCheckout() {
+  const name = document.getElementById("checkout-cust-name").value;
+  const email = document.getElementById("checkout-cust-email").value;
+  const street = document.getElementById("checkout-cust-street").value;
+  const city = document.getElementById("checkout-cust-city").value;
+
+  const orderId = `tentaciones-demo-${Math.random().toString(36).substring(2, 9)}`;
+
   elements.checkoutForm.style.display = "none";
-  elements.checkoutSuccessOrderId.textContent = `Orden N° ${orderId}`;
+  elements.checkoutSuccessOrderId.textContent = `${t("checkout.order_id")} ${orderId}`;
   elements.checkoutSuccessBox.style.display = "block";
 
   // Clear cart
-  state.cart = {
-    ...state.cart,
-    items: [],
-    subtotal: 0,
-    qualifiesForFreeShipping: false,
-    missingForFreeShipping: state.cart.freeShippingThreshold,
-  };
+  state.cart.items = [];
+  state.cart.subtotal = 0;
+  state.cart.missingForFreeShipping = state.cart.freeShippingThreshold;
+  state.cart.qualifiesForFreeShipping = false;
   renderCart();
+  await loadMetrics();
 }
 
-// --- Modal & Drawer Helpers ---
-function openModal(el) {
-  el.classList.add("open");
+// --- Helpers ---
+function openModal(modalEl) {
+  modalEl.classList.add("open");
 }
 
-function closeModal(el) {
-  el.classList.remove("open");
+function closeModal(modalEl) {
+  modalEl.classList.remove("open");
 }
 
-function openDrawer(el) {
-  el.classList.add("open");
+function openDrawer(drawerEl) {
+  drawerEl.classList.add("open");
 }
 
-function closeDrawer(el) {
-  el.classList.remove("open");
+function closeDrawer(drawerEl) {
+  drawerEl.classList.remove("open");
 }
 
-function getProductCategoryIcon(cat) {
-  switch (cat) {
+function getProductCategoryIcon(category) {
+  switch (category) {
     case "poleras": return "👕";
     case "camisas": return "👔";
     case "polerones": return "🧥";

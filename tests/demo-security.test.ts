@@ -13,6 +13,7 @@ import {
   redactSensitivePayload,
   SecurityViolationError,
 } from "../src/security/demo-guardrails.js";
+import { recommendSize, resolveVirtualFitting } from "../src/domain/ar-fitting.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,7 +21,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 6 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 9 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -28,6 +29,9 @@ test("1. Documentation Completeness: All 6 canonical docs exist with mandatory h
     "MULTICLIENT_ARCHITECTURE.md",
     "PORTFOLIO_SHOWCASE.md",
     "DEPLOYMENT_STRATEGY.md",
+    "AR_DEMO_GUIDE.md",
+    "SHOWCASE_CHECKLIST.md",
+    "GITHUB_RELEASE.md",
   ];
 
   for (const doc of docs) {
@@ -112,7 +116,6 @@ test("5. Fail-Closed Payment Guardrail: assertNoProductionPayments blocks non-de
     }
   );
 
-  // Safe demo payment method must pass
   assert.doesNotThrow(() => {
     assertNoProductionPayments("WEBPAY_DEMO", demoConfig);
   });
@@ -175,4 +178,16 @@ test("9. Service Factory: Returns DemoAdapter for PUBLIC_DEMO mode", () => {
   });
   assert.ok(service instanceof DemoAdapter);
   assert.equal(service.operationalMode, "PUBLIC_DEMO");
+});
+
+test("10. AR Biometric Sizing & Fallback: Computes distinct sizes for Nova, Sora, and Mateo without WebXR crash", () => {
+  const novaFoot = recommendSize({ category: "calzado", profile: "Nova", footLengthCm: 24.5 });
+  const mateoFoot = recommendSize({ category: "calzado", profile: "Mateo", footLengthCm: 27.0 });
+  assert.equal(novaFoot.recommendedSize, 39);
+  assert.equal(mateoFoot.recommendedSize, 42);
+
+  // Invalid URN triggers safe 2D fallback
+  const fallback = resolveVirtualFitting("invalid:urn:schema", "Sora");
+  assert.equal(fallback.fallbackMode, "STANDARD_2D_VIEW");
+  assert.equal(fallback.arStatus, "AR_ASSET_INVALID");
 });

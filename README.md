@@ -1,5 +1,5 @@
 # Tentaciones AI Commerce (Project 01)
-## E-Commerce Inteligente de Moda & Calzado con Probador Virtual 3D/AR
+## Tienda de Moda Inteligente & Probador Virtual 3D/AR
 
 [![Platform: AI Operating Platform](https://img.shields.io/badge/Platform-AI%20Operating%20Platform%20v1.4.0-blue.svg)](https://github.com/johangonzahenri/ai-operating-platform)
 [![Application ID: tentaciones-commerce](https://img.shields.io/badge/App%20ID-tentaciones--commerce-indigo.svg)](#)
@@ -8,59 +8,80 @@
 
 ---
 
-## 1. Visión General
+## 1. Visión del Producto
 
-**Tentaciones AI Commerce** es la primera aplicación satélite standalone derivada del ecosistema **AI Operating Platform**. Constituye una solución integral de comercio electrónico para retail de vestuario, calzado y accesorios, diseñada para maximizar la conversión mediante:
+**Tentaciones AI Commerce** es la tienda insignia de moda, calzado y vestuario deportivo del ecosistema **AI Operating Platform**. Proporciona una experiencia de compra asistida por Inteligencia Artificial de alta conversión que integra:
 
-1. **Búsqueda Semántica en Lenguaje Natural**: Comprensión de intención en lenguaje natural (español) para identificar prendas, ocasiones de uso y preferencias estéticas.
-2. **Probador Virtual 3D / Realidad Aumentada (AR)**: Integración con WebXR, renderizado de siluetas tridimensionales y resolución determinista de identificadores de recursos `urn:tentaciones:ar:*`.
-3. **Calibración Biométrica de Tallas**: Algoritmo que correlaciona medidas corporales con perfiles demo (`Nova`, `Sora`, `Mateo`) para recomendar tallas precisas y reducir devoluciones.
-4. **Asistente de Carrito & Checkout Simulado**: Monitoreo dinámico del umbral de despacho gratuito (\$30.000 CLP) y simulación comercial con pasarela `WEBPAY_DEMO`.
-5. **Tolerancia a Fallos y Fallback Automático**: Si la plataforma padre no está disponible, la tienda continúa operando sin interrupción conmutando a `LOCAL_FALLBACK`.
+* 🛍️ **Descubrimiento Asistido con IA:** Comprensión de lenguaje natural en español para interpretar estilos, ocasiones y requerimientos técnicos de vestuario.
+* 👓 **Probador Virtual 3D / AR:** Simulación interactiva de ajuste y compatibilidad espacial (WebXR y modo 2D interactivo).
+* 📐 **Calibración Biométrica de Tallas:** Algoritmo paramétrico con perfiles de demostración (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
+* 🛒 **Bolsa de Compras Inteligente:** Cálculo en tiempo real del beneficio de despacho gratuito (\$30.000 CLP).
+* 💳 **Checkout Seguro Demo:** Pasarela de pago simulada (`WEBPAY_DEMO`) con control estricto de existencias y cero riesgo financiero.
 
 ---
 
-## 2. Relación Padre → Hijo con AI Operating Platform
+## 2. Experiencia de Demostración (Demo Flow)
 
 ```text
-========================================================================================
-                          AI OPERATING PLATFORM (PARENT / PLATFORM)
-                 Motor Central • Persistencia WAL • Gobernanza • API REST
-========================================================================================
-                                           │
-                                           ▼ (/api/v1/*)
-┌──────────────────────────────────────────────────────────────────────────────────────┐
-│                   TentacionesPlatformAdapter / PlatformClient                        │
-└──────────────────────────────────────────────────────────────────────────────────────┘
-                                           │
-                                           ▼
-┌──────────────────────────────────────────────────────────────────────────────────────┐
-│                   Tentaciones AI Commerce (Standalone Storefront)                     │
-│               Catálogo • Carrito • Probador AR 3D • Checkout Demo                     │
-└──────────────────────────────────────────────────────────────────────────────────────┘
+CATÁLOGO DE MODA
+       ↓
+BÚSQUEDA ASISTIDA POR IA ("zapatillas de running para maratón")
+       ↓
+FICHA DE PRODUCTO & VARIANTES
+       ↓
+PROBADOR VIRTUAL AR (Nova / Sora / Mateo)
+       ↓
+CALIBRACIÓN BIOMÉTRICA DE TALLA
+       ↓
+AÑADIR A LA BOLSA CON TALLA SUGERIDA
+       ↓
+CHECKOUT SIMULADO WEBPAY DEMO
 ```
 
 ---
 
-## 3. Inicio Rápido
+## 3. Arquitectura Desacoplada & Polyrepo
 
-### Requisitos Previos:
+Tentaciones consume servicios expuestos por la plataforma central a través de contratos estrictos de TypeScript:
+
+```text
+┌─────────────────────────────────┐
+│ Storefront Web / Clientes       │
+└──────────────┬──────────────────┘
+               │
+┌──────────────▼──────────────────┐
+│ ITentacionesExperienceService   │
+└──────────────┬──────────────────┘
+               │
+┌──────────────▼──────────────────┐
+│ Platform Client SDK             │
+└──────────────┬──────────────────┘
+               │
+┌──────────────▼──────────────────┐
+│ Platform REST API Gateway       │
+└──────────────┬──────────────────┘
+               │
+┌──────────────▼──────────────────┐
+│ AI Operating Platform Core      │
+└─────────────────────────────────┘
+```
+
+---
+
+## 4. Inicio Rápido y Desarrollo Local
+
+### Requisitos:
 * Node.js $\ge 22.0.0$
-* Conexión opcional a una instancia de **AI Operating Platform** en `http://127.0.0.1:3000/api/v1` (si la plataforma no está activa, la tienda opera automáticamente en modo `LOCAL_FALLBACK`).
 
-### Instalación y Ejecución:
+### Comandos:
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/johangonzahenri/tentaciones-ai-commerce.git
-cd tentaciones-ai-commerce
-
-# 2. Compilar TypeScript
+# 1. Compilar TypeScript
 npm run build
 
-# 3. Ejecutar suite de pruebas unitarias
+# 2. Ejecutar suite de pruebas
 npm test
 
-# 4. Iniciar servidor web de la tienda
+# 3. Iniciar servidor local
 npm start
 ```
 
@@ -68,61 +89,27 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 4. Estructura del Proyecto
+## 5. Modos de Operación y Seguridad
 
-```text
-tentaciones-ai-commerce/
-├── docs/                       # Documentación canónica certificada
-│   ├── PUBLIC_DEMO.md          # Especificación y aislamiento del modo Demo Público
-│   ├── DEMO_SECURITY.md        # Políticas fail-closed y sanitización de datos
-│   ├── IP_PROTECTION.md        # Límites de propiedad intelectual y arquitectura polyrepo
-│   ├── MULTICLIENT_ARCHITECTURE.md # Contrato headless multi-cliente (Web/Mobile/Kiosk)
-│   ├── PORTFOLIO_SHOWCASE.md   # Guía comercial y métricas de demostración
-│   └── DEPLOYMENT_STRATEGY.md  # Topología de despliegue y hardening
-├── public/                     # Storefront Web SPA Accesible
-│   ├── index.html              # Layout HTML semántico con banner de demo segura
-│   ├── styles.css              # Sistema de diseño, métricas y drawer showcase
-│   ├── app.js                  # Controlador DOM seguro (0 innerHTML)
-│   └── i18n.js                 # Diccionario bilingüe (es-419 / en)
-├── src/
-│   ├── contracts/              # Contratos de experiencia desacoplados
-│   │   ├── experience-contract.ts # ITentacionesExperienceService
-│   │   └── operational-mode.ts    # Resolvedor de modos operativos
-│   ├── domain/                 # Entidades y lógica de negocio
-│   │   ├── types.ts            # Tipos e interfaces de dominio
-│   │   ├── catalog-data.ts     # Catálogo sintético de moda y calzado
-│   │   └── ar-fitting.ts       # Calibración biométrica y URNs AR
-│   ├── security/               # Invariantes de seguridad fail-closed
-│   │   └── demo-guardrails.ts  # Gatekeeper, sanitización y redaction
-│   ├── adapter/                # Implementaciones del contrato
-│   │   ├── demo-adapter.ts     # Adaptador sintético para demo público
-│   │   ├── platform-client.ts  # Cliente HTTP REST para Platform API
-│   │   ├── tentaciones-platform-adapter.ts # Adaptador conectado con fallback
-│   │   └── tentaciones-service-factory.ts  # Fábrica del servicio según modo
-│   ├── engine/
-│   │   └── commerce-engine.ts  # Motor de búsqueda, carrito y checkout
-│   └── server.ts               # Servidor HTTP nativo con cabeceras de seguridad
-├── tests/
-│   ├── tentaciones.test.ts     # Suite de pruebas automatizadas
-│   └── demo-security.test.ts   # Pruebas de seguridad fail-closed y multicliente
-├── README.md                   # Presentación del proyecto
-├── ARCHITECTURE.md             # Especificación arquitectónica detallada
-├── INTEGRATION.md              # Contrato de integración con la plataforma
-├── DEVELOPMENT.md              # Guía para desarrolladores y setup
-├── ROADMAP.md                  # Hitos de desarrollo
-└── .env.example                # Plantilla de variables de entorno
-```
+1. **`PUBLIC_DEMO` (Predeterminado):** Entorno 100% sintético, sin dependencias externas, sin llamadas a dominios corporativos y fail-closed ante tokens reales de pago.
+2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado a una instancia activa de AI Operating Platform mediante gateway autenticado.
+3. **`DEVELOPMENT`:** Modo local para iteración y pruebas de integración.
 
 ---
 
-## 5. Modos de Operación y Seguridad Fail-Closed
+## 6. Documentación Canónica
 
-1. **`PUBLIC_DEMO` (Por Defecto):** Aislamiento 100% sintético. Cero secretos en bundle, sin llamadas salientes a dominios corporativos internos, y rechazo inmediato de tokens de pago reales.
-2. **`PRIVATE_CONNECTED_DEMO`:** Modo conectado de demostración para clientes autorizados mediante gateway seguro a AI Operating Platform.
-3. **`DEVELOPMENT`:** Modo local para pruebas de desarrollo e integración.
+* [`docs/PUBLIC_DEMO.md`](docs/PUBLIC_DEMO.md): Aislamiento y especificación del modo público.
+* [`docs/DEMO_SECURITY.md`](docs/DEMO_SECURITY.md): Políticas de seguridad fail-closed y sanitización.
+* [`docs/IP_PROTECTION.md`](docs/IP_PROTECTION.md): Límites de propiedad intelectual.
+* [`docs/AR_DEMO_GUIDE.md`](docs/AR_DEMO_GUIDE.md): Guía de uso del probador virtual y perfiles.
+* [`docs/SHOWCASE_CHECKLIST.md`](docs/SHOWCASE_CHECKLIST.md): Lista de verificación para demos en vivo.
+* [`docs/GITHUB_RELEASE.md`](docs/GITHUB_RELEASE.md): Política de repositorio privado.
+* [`docs/MULTICLIENT_ARCHITECTURE.md`](docs/MULTICLIENT_ARCHITECTURE.md): Contrato headless multicliente.
+* [`docs/DEPLOYMENT_STRATEGY.md`](docs/DEPLOYMENT_STRATEGY.md): Guía de despliegue.
 
 ---
 
-## 6. Licencia
+## 7. Licencia
 
 Desarrollado bajo licencia **Apache-2.0**.

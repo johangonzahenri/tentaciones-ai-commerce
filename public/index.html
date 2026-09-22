@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TENTACIONES — AI Smart Commerce & Virtual Try-On</title>
+  <title>TENTACIONES — AI Fashion Commerce & Virtual Try-On</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,10 +11,10 @@
   <!-- Top System Status Bar & Demo Security Disclosure -->
   <aside class="demo-banner" id="demo-banner" aria-label="Demo Safety Disclosure">
     <div class="demo-banner-content">
-      <span class="demo-badge">PUBLIC DEMO</span>
-      <span id="demo-disclosure-text">Modo Demostración Pública Aislada • Datos 100% Sintéticos • Cero Secretos Expuestos</span>
-      <button class="btn btn-xs btn-outline-light" id="btn-showcase-open" style="margin-left: 0.75rem; padding: 0.15rem 0.6rem; font-size: 0.7rem; border-radius: var(--radius-full);">
-        <span id="nav-showcase-label">Ver Arquitectura & Showcase</span> 🏛️
+      <span class="demo-badge" id="demo-badge">MODO DEMO</span>
+      <span id="demo-disclosure-text">Datos sintéticos · Sin transacciones reales · Demostración comercial segura</span>
+      <button class="btn btn-xs btn-outline-light" id="btn-showcase-open" style="margin-left: 0.75rem; padding: 0.2rem 0.65rem; font-size: 0.7rem; border-radius: var(--radius-full);">
+        <span id="nav-showcase-label">Arquitectura</span> 🏛️
       </button>
     </div>
   </aside>
@@ -29,7 +29,7 @@
             <span class="brand-title">TENTACIONES</span>
             <span class="brand-badge" id="brand-badge-mode">Public Demo</span>
           </div>
-          <span style="font-size: 0.75rem; color: var(--text-secondary);" id="brand-tagline">AI Smart Commerce & Virtual Try-On</span>
+          <span style="font-size: 0.75rem; color: var(--text-secondary);" id="brand-tagline">AI Fashion Commerce & Virtual Try-On</span>
         </div>
       </a>
 
@@ -61,28 +61,39 @@
     <div class="hero-container">
       <div class="hero-pill">
         <span>⚡</span>
-        <span id="hero-badge">Moda & Calzado Impulsado por AI Operating Platform</span>
+        <span id="hero-badge">AI Fashion Commerce · Proyecto 01</span>
       </div>
-      <h1 class="hero-title" id="hero-title">Tu Estilo, Perfeccionado por Inteligencia Artificial</h1>
-      <p class="hero-subtitle" id="hero-subtitle">Prueba prendas y calzado en Realidad Aumentada 3D, recibe recomendaciones biométricas y disfruta de una experiencia de compra fluida.</p>
+      <h1 class="hero-title" id="hero-title">Compra. Descubre. Pruébate virtualmente.</h1>
+      <p class="hero-subtitle" id="hero-subtitle">Una experiencia de comercio de moda asistida por Inteligencia Artificial con probador virtual AR interactivo y calibración biométrica.</p>
 
-      <!-- Commercial Demo Metrics Live Bar -->
+      <div class="hero-cta-group">
+        <button class="btn btn-primary btn-lg" id="btn-hero-try-now">
+          <span>👓</span>
+          <span id="hero-cta-try-text">PROBAR AHORA</span>
+        </button>
+        <a href="#catalog-section" class="btn btn-secondary btn-lg" id="btn-hero-explore">
+          <span>🛍️</span>
+          <span id="hero-cta-explore-text">EXPLORAR COLECCIÓN</span>
+        </a>
+      </div>
+
+      <!-- Live Verifiable Demo Metrics Bar -->
       <div class="metrics-bar" id="metrics-bar">
         <div class="metric-card">
-          <div class="metric-val" id="metric-conversion">14.2%</div>
-          <div class="metric-label" id="lbl-metric-conversion">Conversión Demo</div>
+          <div class="metric-val" id="metric-products">7</div>
+          <div class="metric-label" id="lbl-metric-products">Productos en Catálogo Demo</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" id="metric-return-reduction">-38.5%</div>
-          <div class="metric-label" id="lbl-metric-return">Reducción Devoluciones</div>
+          <div class="metric-val" id="metric-fittings">42</div>
+          <div class="metric-label" id="lbl-metric-fittings">Sesiones de Fitting Demo</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" id="metric-ar-engagement">4.2 min</div>
-          <div class="metric-label" id="lbl-metric-ar">Engagement AR</div>
+          <div class="metric-val" id="metric-recommendations">156</div>
+          <div class="metric-label" id="lbl-metric-recommendations">Recomendaciones Servidas</div>
         </div>
         <div class="metric-card">
-          <div class="metric-val" id="metric-isolation">100%</div>
-          <div class="metric-label" id="lbl-metric-isolation">Aislamiento Seguro</div>
+          <div class="metric-val" id="metric-orders">18</div>
+          <div class="metric-label" id="lbl-metric-orders">Órdenes Demo Confirmadas</div>
         </div>
       </div>
 
@@ -91,12 +102,20 @@
         <input type="text" class="search-input" id="search-input" placeholder="Ej: 'zapatillas de running para maratón', 'vestido de gala negro'..." autocomplete="off">
         <button type="submit" class="btn btn-primary" id="search-btn">Buscar con IA</button>
       </form>
+
+      <!-- AI Search Feedback Box -->
+      <div class="search-feedback-box" id="search-feedback-box" style="display: none;">
+        <div style="font-weight: 700; font-size: 0.8125rem; color: var(--primary);" id="search-feedback-intent"></div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;" id="search-feedback-rationale"></div>
+      </div>
     </div>
   </section>
 
   <!-- Category Filter Bar -->
-  <div class="category-nav" id="category-container" role="tablist">
-    <!-- Category tabs rendered dynamically via app.js -->
+  <div class="category-nav-wrapper" id="catalog-section">
+    <div class="category-nav" id="category-container" role="tablist">
+      <!-- Category tabs rendered dynamically via app.js -->
+    </div>
   </div>
 
   <!-- Main Product Catalog -->
@@ -105,6 +124,30 @@
       <!-- Product cards rendered dynamically via app.js -->
     </div>
   </main>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="how-it-works-container">
+      <h2 class="how-title" id="how-title">¿Cómo Funciona Tentaciones AI Commerce?</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-icon">🔍</div>
+          <h3 class="how-card-title" id="how-step1-title">1. Descubrimiento Asistido</h3>
+          <p class="how-card-desc" id="how-step1-desc">Busca prendas con lenguaje natural; la IA interpreta tu estilo, ocasión de uso y clima.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon">👓</div>
+          <h3 class="how-card-title" id="how-step2-title">2. Fitting Biométrico 3D/AR</h3>
+          <p class="how-card-desc" id="how-step2-desc">Prueba virtualmente con perfiles biométricos para calcular tu talla ideal con alta precisión.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon">💳</div>
+          <h3 class="how-card-title" id="how-step3-title">3. Checkout Seguro Demo</h3>
+          <p class="how-card-desc" id="how-step3-desc">Valida existencias en tiempo real y completa la compra en un flujo simulado sin riesgos financieros.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Product Detail Modal -->
   <div class="modal-backdrop" id="product-modal">
@@ -121,40 +164,62 @@
 
   <!-- AR Virtual Fitting Room Modal -->
   <div class="modal-backdrop" id="ar-modal">
-    <div class="modal-card" style="max-width: 540px;">
+    <div class="modal-card" style="max-width: 580px;">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
         <div>
-          <h2 id="ar-modal-title" style="font-size: 1.25rem; font-weight: 800;">Probador Virtual 3D / AR</h2>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <h2 id="ar-modal-title" style="font-size: 1.25rem; font-weight: 800;">Probador Virtual AR (Modo Demo)</h2>
+            <span class="demo-badge-sm">SIMULACIÓN AR</span>
+          </div>
           <p id="ar-modal-product-name" style="font-size: 0.8125rem; color: var(--text-secondary);"></p>
         </div>
         <button class="btn btn-icon" id="btn-ar-modal-close">✕</button>
       </div>
 
+      <!-- AR Canvas & Interactive Fitting Visualizer -->
       <div class="ar-preview-canvas" id="ar-canvas-container">
+        <div class="ar-mode-badge-top" id="ar-mode-pill">DEMO 2D SIMULATION</div>
         <div class="ar-avatar-silhouette" id="ar-avatar-icon">👗</div>
         <div style="margin-top: 0.5rem; font-weight: 700; font-size: 0.9375rem;" id="ar-view-mode-label">Simulación Espacial AR / 3D</div>
         <div style="font-size: 0.75rem; opacity: 0.8;" id="ar-urn-display">urn:tentaciones:ar:apparel</div>
       </div>
 
-      <div style="margin-bottom: 1rem;">
-        <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.35rem;" id="ar-profile-label">Seleccionar Perfil Biométrico Demo:</label>
-        <select class="btn btn-secondary" style="width: 100%; padding: 0.5rem;" id="ar-profile-select">
-          <option value="Nova">Nova (Atlético Femenino - 1.68m)</option>
-          <option value="Sora">Sora (Unisex Slim - 1.75m)</option>
-          <option value="Mateo">Mateo (Deportivo Masculino - 1.82m)</option>
-        </select>
+      <!-- Mode Selector (WebXR vs 2D Demo) -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+        <button class="btn btn-secondary active-mode" id="btn-mode-2d">
+          <span>🖼️</span> <span id="lbl-mode-2d">Demo 2D Interactivo</span>
+        </button>
+        <button class="btn btn-secondary" id="btn-mode-webxr">
+          <span>👓</span> <span id="lbl-mode-webxr">WebXR Espacial</span>
+        </button>
       </div>
 
+      <!-- Biometric Profile Selection -->
+      <div style="margin-bottom: 1rem;">
+        <label style="font-size: 0.8125rem; font-weight: 700; display: block; margin-bottom: 0.35rem;" id="ar-profile-label">Seleccionar Perfil Biométrico Demo:</label>
+        <div class="profile-cards-grid" id="profile-cards-container">
+          <!-- Dynamic profile cards injected safely in app.js -->
+        </div>
+      </div>
+
+      <!-- Sizing & AI Recommendation Box -->
       <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.875rem; margin-bottom: 1rem;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 0.8125rem; font-weight: 700;" id="ar-rec-title">Talla Recomendada por IA:</span>
-          <span style="font-size: 1.125rem; font-weight: 800; color: var(--primary);" id="ar-recommended-size">M</span>
+          <span style="font-size: 0.8125rem; font-weight: 700;" id="ar-rec-title">Talla Sugerida por Calibrador IA:</span>
+          <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);" id="ar-recommended-size">M</span>
         </div>
         <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;" id="ar-rationale-text">Calculado en base a proporciones de silueta.</p>
       </div>
 
+      <!-- WebXR Device Status Message -->
       <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border); padding-top: 0.75rem;" id="ar-webxr-info">
-        WebXR no detectado en este dispositivo. Activando Modo 2D Interactivo de Alta Fidelidad.
+        WebXR no detectado en este dispositivo. Puedes continuar con el modo de demostración interactivo 2D de alta fidelidad.
+      </div>
+
+      <!-- Actions in AR Modal -->
+      <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+        <button class="btn btn-primary" id="btn-ar-add-to-cart" style="flex: 1;">Añadir al Carrito con Talla Recomendada</button>
+        <button class="btn btn-secondary" id="btn-ar-close-return">Volver al Catálogo</button>
       </div>
     </div>
   </div>
@@ -197,7 +262,7 @@
         <span id="cart-total-label">Total</span>
         <span id="cart-total-val" style="color: var(--primary);">$0 CLP</span>
       </div>
-      <button class="btn btn-primary" style="width: 100%;" id="btn-checkout-open">Proceder al Pago (Demo)</button>
+      <button class="btn btn-primary" style="width: 100%;" id="btn-checkout-open">Proceder al Checkout (Demo)</button>
     </div>
   </aside>
 
@@ -220,7 +285,7 @@
 
     <div class="drawer-footer">
       <form id="ai-chat-form" style="display: flex; gap: 0.5rem;" onsubmit="return false;">
-        <input type="text" class="search-input" id="ai-chat-input" placeholder="Pregúntame sobre tallas, carritos o ropa..." style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md);">
+        <input type="text" class="search-input" id="ai-chat-input" placeholder="Pregúntame sobre prendas, tallas o tu carrito..." style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md);">
         <button type="submit" class="btn btn-primary" id="ai-chat-send">Enviar</button>
       </form>
     </div>
@@ -238,7 +303,7 @@
       </div>
 
       <div style="background-color: var(--primary-light); color: var(--primary); padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem;" id="checkout-notice">
-        Esta es una simulación comercial segura conectada a AI Operating Platform. Cero cargos reales.
+        DEMO CHECKOUT · NO REAL PAYMENT · Simulación comercial segura sobre AI Operating Platform. Cero cargos reales.
       </div>
 
       <form id="checkout-form" style="display: flex; flex-direction: column; gap: 0.75rem;">
@@ -260,17 +325,17 @@
         </div>
 
         <div style="border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.75rem; display: flex; justify-content: space-between; font-weight: 800;">
-          <span>Total a Pagar:</span>
+          <span>Total a Pagar (Demo):</span>
           <span id="checkout-total-val" style="color: var(--primary);">$0 CLP</span>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;" id="btn-submit-payment">Pagar con Webpay Demo</button>
+        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;" id="btn-submit-payment">Confirmar Pago Demo</button>
       </form>
 
       <div id="checkout-success-box" style="display: none; text-align: center; padding: 1.5rem 0;">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
         <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--success); margin-bottom: 0.25rem;" id="checkout-success-title">¡Compra Confirmada Exitosamente!</h3>
-        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;" id="checkout-success-order-id">Orden N° tentaciones-a1b2c3d4</p>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;" id="checkout-success-order-id">Orden Demo N° tentaciones-a1b2c3d4</p>
         <button class="btn btn-secondary" id="btn-checkout-success-done" style="width: 100%;">Continuar Comprando</button>
       </div>
     </div>
@@ -300,30 +365,32 @@
           <li>🔒 <strong>Zero Runtime Secrets:</strong> Ninguna API key ni token de producción en el bundle cliente.</li>
           <li>🛡️ <strong>Zero Core Platform Exposure:</strong> Los kernels de orquestación, gobernanza y ontología permanecen en repositorios privados.</li>
           <li>⚡ <strong>Fail-Closed Gatekeeper:</strong> Detección instantánea de tokens reales o URLs internas con bloqueo preventivo.</li>
-          <li>📱 <strong>Multiclient Ready:</strong> Soporte desacoplado para Storefront Web, Mobile Apps (React Native/Flutter) y Kiosks.</li>
+          <li>📱 <strong>Multiclient Ready:</strong> Soporte desacoplado para Storefront Web, Mobile Apps y Kioskos.</li>
         </ul>
       </div>
 
       <div style="background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem;">
-        <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem;">🏗️ Ecosistema Polyrepo</h3>
-        <div style="font-family: monospace; font-size: 0.75rem; background: var(--bg-muted); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--text-primary);">
-AI OPERATING PLATFORM (Parent Platform)<br>
-&nbsp;&nbsp;├── REST API Gateway<br>
-&nbsp;&nbsp;└── PlatformClient SDK<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>PROJ-01: Tentaciones AI Commerce</strong> (Satélite)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <code>ITentacionesExperienceService</code><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <code>DemoAdapter</code> (Public Showcase)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <code>ConnectedAdapter</code> (Private Connected)
-        </div>
-      </div>
-
-      <div style="background-color: var(--primary-light); border: 1px solid var(--primary); border-radius: var(--radius-md); padding: 1rem; color: var(--primary);">
-        <h4 style="font-size: 0.8125rem; font-weight: 700;">💼 Indicadores Comerciales Auditados</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; font-size: 0.75rem;">
-          <div><strong>Conversión Catálogo:</strong> +14.2%</div>
-          <div><strong>Reducción Retornos:</strong> -38.5%</div>
-          <div><strong>Tiempo en Fitting AR:</strong> 4.2 min</div>
-          <div><strong>Fidelidad Determinística:</strong> 100%</div>
+        <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem;">🏗️ Arquitectura Pública Simplificada</h3>
+        <div style="font-family: monospace; font-size: 0.75rem; background: var(--bg-muted); padding: 0.75rem; border-radius: var(--radius-sm); color: var(--text-primary); line-height: 1.5;">
+┌─────────────────────────────────┐<br>
+│ Tentaciones Web (Storefront)    │<br>
+└──────────────┬──────────────────┘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+┌──────────────▼──────────────────┐<br>
+│ ITentacionesExperienceService   │<br>
+└──────────────┬──────────────────┘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+┌──────────────▼──────────────────┐<br>
+│ Platform Client SDK             │<br>
+└──────────────┬──────────────────┘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+┌──────────────▼──────────────────┐<br>
+│ Platform REST API               │<br>
+└──────────────┬──────────────────┘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+┌──────────────▼──────────────────┐<br>
+│ AI Operating Platform           │<br>
+└─────────────────────────────────┘
         </div>
       </div>
     </div>
@@ -332,7 +399,7 @@ AI OPERATING PLATFORM (Parent Platform)<br>
   <!-- Footer -->
   <footer class="footer">
     <p>© 2026 Tentaciones AI Commerce — Proyecto 01 del Portafolio de Aplicaciones de AI Operating Platform.</p>
-    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-muted);">Zero Runtime Dependencies • 100% Native Architecture • Autonomous AI E-Commerce</p>
+    <p style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-muted);">Zero Runtime Dependencies • 100% Native Architecture • Autonomous AI Fashion E-Commerce</p>
   </footer>
 
   <script type="module" src="app.js"></script>
