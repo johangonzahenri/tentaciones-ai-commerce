@@ -1,5 +1,5 @@
 # 3D GLTF / GLB Asset Specification & Pipeline Guide
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/GLTF_ASSET_GUIDE.md

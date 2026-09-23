@@ -32,7 +32,7 @@ test("1. Project Structure: Contains all mandatory standalone directories and fi
 test("2. Application Identity: Adheres to PROJ-01-TENTACIONES and tentaciones-commerce naming", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, "package.json"), "utf8"));
   assert.equal(pkg.name, "tentaciones-ai-commerce");
-  assert.equal(pkg.version, "1.0.0");
+  assert.equal(pkg.version, "1.8.1");
 });
 
 test("3. Platform Client Configuration: Configures endpoint URL, application ID, and tenant", () => {
@@ -46,7 +46,7 @@ test("3. Platform Client Configuration: Configures endpoint URL, application ID,
 
 test("4. Product Discovery: Extracts natural language intent and matches catalog items", () => {
   const engine = new TentacionesCommerceEngine();
-  const res = engine.searchProductsNaturalLanguage("zapatillas de running para maratón");
+  const res = engine.searchProductsNaturalLanguage("zapatillas de running para maratÃ³n");
   assert.equal(res.status, "COMPLETED");
   assert.equal(res.intent.category, "calzado");
   assert.ok(res.matches.length > 0);

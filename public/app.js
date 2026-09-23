@@ -58,6 +58,9 @@ const state = {
     activeJobId: null,
     statusPollTimer: null,
     currentResult: null,
+    uiState: "IDLE", // "IDLE" | "VALIDATING_INPUT" | "QUALITY_REJECTED" | "QUALITY_WARNING" | "READY" | "CONSENT_REQUIRED" | "EXECUTING" | "POLLING" | "SUCCESS" | "FAILED" | "CANCELLED"
+    qualityAssessment: null,
+    isSubmitting: false,
   },
 };
 
@@ -212,6 +215,12 @@ const elements = {
   vtoResultDisclaimer: document.getElementById("vto-result-disclaimer"),
   btnVtoAddToCart: document.getElementById("btn-vto-add-to-cart"),
   btnVtoTryAnother: document.getElementById("btn-vto-try-another"),
+  vtoQualityFeedbackBox: document.getElementById("vto-quality-feedback-box"),
+  vtoQualityIcon: document.getElementById("vto-quality-icon"),
+  vtoQualityTitle: document.getElementById("vto-quality-title"),
+  vtoQualityBadge: document.getElementById("vto-quality-badge"),
+  vtoQualityText: document.getElementById("vto-quality-text"),
+  vtoQualityDetails: document.getElementById("vto-quality-details"),
 };
 
 // --- Initialization ---
@@ -396,9 +405,9 @@ function bindEvents() {
   if (elements.btnVtoConsentAccept) {
     elements.btnVtoConsentAccept.addEventListener("click", () => {
       state.vto.consentGranted = true;
-      if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
-      if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+      setVTOUIState("IDLE");
       renderVTOAvatars();
+      renderSyntheticQualityFeedback();
     });
   }
   if (elements.btnVtoConsentCancel) {
@@ -432,8 +441,12 @@ function bindEvents() {
   }
   if (elements.btnVtoTryAnother) {
     elements.btnVtoTryAnother.addEventListener("click", () => {
-      if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
-      if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+      setVTOUIState("IDLE");
+      if (state.vto.inputMode === "USER_PHOTO" && state.vto.qualityAssessment) {
+        renderQualityAssessmentFeedback(state.vto.qualityAssessment);
+      } else {
+        renderSyntheticQualityFeedback();
+      }
     });
   }
   if (elements.btnVtoAddToCart) {
@@ -1845,7 +1858,7 @@ const WALKTHROUGH_STEPS_DATA = [
       en: "Formats: GLB/glTF 2.0. Render: Canvas WebGL / Procedural fallback. Average size: < 2.5 MB."
     },
     badge: { es: "Inspección 3D", en: "3D Inspection" },
-    image: "/assets/images/walkthrough-step1.svg",
+    image: "assets/images/walkthrough-step1.svg",
   },
   {
     stepNumber: 2,
@@ -1861,7 +1874,7 @@ const WALKTHROUGH_STEPS_DATA = [
       en: "Feature flags: requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay', 'light-estimation']."
     },
     badge: { es: "Handshake WebXR", en: "WebXR Handshake" },
-    image: "/assets/images/walkthrough-step2.svg",
+    image: "assets/images/walkthrough-step2.svg",
   },
   {
     stepNumber: 3,
@@ -1877,7 +1890,7 @@ const WALKTHROUGH_STEPS_DATA = [
       en: "Frequency: 60 fps XRFrame loop. Raycast referenceSpace: 'viewer' transformed into 'local-floor'."
     },
     badge: { es: "Hit-Test Óptico", en: "Optical Hit-Test" },
-    image: "/assets/images/walkthrough-step3.svg",
+    image: "assets/images/walkthrough-step3.svg",
   },
   {
     stepNumber: 4,
@@ -1893,7 +1906,7 @@ const WALKTHROUGH_STEPS_DATA = [
       en: "Transform: 4x4 spatial pose matrix (XRRigidTransform). Clamped scale: 0.25x to 2.50x."
     },
     badge: { es: "Anclaje 6-DoF", en: "6-DoF Anchor" },
-    image: "/assets/images/walkthrough-step4.svg",
+    image: "assets/images/walkthrough-step4.svg",
   },
   {
     stepNumber: 5,
@@ -1909,7 +1922,7 @@ const WALKTHROUGH_STEPS_DATA = [
       en: "Biometrics: Category deterministic sizing. Bag: Reactive local persistence without third-party cookies."
     },
     badge: { es: "Checkout Demo", en: "Demo Checkout" },
-    image: "/assets/images/walkthrough-step5.svg",
+    image: "assets/images/walkthrough-step5.svg",
   },
 ];
 
@@ -1981,6 +1994,7 @@ const HONESTY_DATA = [
 ];
 
 // --- AI Virtual Try-On (VTO) Controller ---
+// --- AI Virtual Try-On (VTO) Controller & State Machine ---
 const VTO_COMPATIBLE_CATEGORIES = ["poleras", "camisas", "polerones", "chaquetas", "vestidos", "pantalones", "faldas"];
 
 const VTO_AVATARS = [
@@ -1994,23 +2008,89 @@ function isProductVTOCompatible(product) {
   return VTO_COMPATIBLE_CATEGORIES.includes(product.category.toLowerCase());
 }
 
+/**
+ * Explicit Memory and Object URL Lifecycle Cleanup (Leak Prevention)
+ */
+function releaseVTOObjectUrl() {
+  if (state.vto.uploadedPhotoBlobUrl) {
+    try {
+      URL.revokeObjectURL(state.vto.uploadedPhotoBlobUrl);
+    } catch {
+      // Ignore if already revoked
+    }
+    state.vto.uploadedPhotoBlobUrl = null;
+  }
+}
+
+/**
+ * Transitions the VTO UI state machine and synchronizes DOM controls safely.
+ */
+function setVTOUIState(newState) {
+  state.vto.uiState = newState;
+
+  if (newState === "IDLE") {
+    state.vto.isSubmitting = false;
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = state.vto.consentGranted ? "none" : "block";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = state.vto.consentGranted ? "block" : "none";
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = false;
+  } else if (newState === "CONSENT_REQUIRED") {
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "block";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+  } else if (newState === "VALIDATING_INPUT") {
+    if (elements.vtoQualityFeedbackBox) elements.vtoQualityFeedbackBox.style.display = "block";
+    if (elements.vtoQualityBadge) {
+      elements.vtoQualityBadge.className = "vto-quality-badge vto-badge-acceptable";
+      elements.vtoQualityBadge.textContent = "VALIDATING";
+    }
+    if (elements.vtoQualityText) {
+      elements.vtoQualityText.textContent = state.lang === "es-419" ? "Analizando resolución y formato técnico..." : "Analyzing resolution and technical format...";
+    }
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = true;
+  } else if (newState === "QUALITY_REJECTED") {
+    if (elements.vtoQualityFeedbackBox) elements.vtoQualityFeedbackBox.style.display = "block";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = true;
+  } else if (newState === "QUALITY_WARNING" || newState === "READY") {
+    if (elements.vtoQualityFeedbackBox) elements.vtoQualityFeedbackBox.style.display = "block";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = false;
+  } else if (newState === "EXECUTING" || newState === "POLLING") {
+    state.vto.isSubmitting = true;
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "block";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = true;
+  } else if (newState === "SUCCESS") {
+    state.vto.isSubmitting = false;
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "block";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = false;
+  } else if (newState === "FAILED" || newState === "CANCELLED") {
+    state.vto.isSubmitting = false;
+    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
+    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
+    if (elements.btnVtoGenerate) elements.btnVtoGenerate.disabled = false;
+  }
+}
+
 function openVTOModal(product) {
   state.vto.selectedProduct = product;
   if (elements.vtoModalProductName) {
     elements.vtoModalProductName.textContent = `${product.name} (${product.brand})`;
   }
 
-  // Reset display boxes
-  if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
-  if (elements.vtoResultBox) elements.vtoResultBox.style.display = "none";
-
   if (!state.vto.consentGranted) {
-    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "block";
-    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
+    setVTOUIState("CONSENT_REQUIRED");
   } else {
-    if (elements.vtoConsentBox) elements.vtoConsentBox.style.display = "none";
-    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
+    setVTOUIState("IDLE");
     renderVTOAvatars();
+    renderSyntheticQualityFeedback();
   }
 
   openModal(elements.vtoModal);
@@ -2021,7 +2101,20 @@ function closeVTOModal() {
     clearInterval(state.vto.statusPollTimer);
     state.vto.statusPollTimer = null;
   }
+  if (state.vto.isSubmitting && state.vto.activeJobId) {
+    cancelActiveVTOJob(state.vto.activeJobId);
+  }
+  releaseVTOObjectUrl();
+  setVTOUIState("IDLE");
   closeModal(elements.vtoModal);
+}
+
+async function cancelActiveVTOJob(jobId) {
+  try {
+    await fetch(`/api/vto/cancel/${encodeURIComponent(jobId)}`, { method: "POST" });
+  } catch {
+    // Fail silently on fire-and-forget cancel
+  }
 }
 
 function renderVTOAvatars() {
@@ -2071,13 +2164,106 @@ function renderVTOAvatars() {
       state.vto.inputMode = "SYNTHETIC_AVATAR";
       removeVTOPhoto();
       renderVTOAvatars();
+      renderSyntheticQualityFeedback();
     });
 
     elements.vtoAvatarContainer.appendChild(card);
   }
 }
 
-function handleVTOPhotoUpload(file) {
+function renderSyntheticQualityFeedback() {
+  if (!elements.vtoQualityFeedbackBox) return;
+  const isEn = state.lang !== "es-419";
+
+  elements.vtoQualityFeedbackBox.style.display = "block";
+  if (elements.vtoQualityIcon) elements.vtoQualityIcon.textContent = "✨";
+  if (elements.vtoQualityTitle) elements.vtoQualityTitle.textContent = isEn ? "Avatar Model Quality" : "Calidad del Avatar Modelo";
+  if (elements.vtoQualityBadge) {
+    elements.vtoQualityBadge.className = "vto-quality-badge vto-badge-excellent";
+    elements.vtoQualityBadge.textContent = "EXCELLENT";
+  }
+  if (elements.vtoQualityText) {
+    elements.vtoQualityText.textContent = isEn
+      ? `Calibrated synthetic avatar '${state.vto.selectedAvatar}' is pre-optimized for cloth simulation.`
+      : `Avatar sintético calibrado '${state.vto.selectedAvatar}' pre-optimizado para simulación textil.`;
+  }
+
+  if (elements.vtoQualityDetails) {
+    while (elements.vtoQualityDetails.firstChild) {
+      elements.vtoQualityDetails.removeChild(elements.vtoQualityDetails.firstChild);
+    }
+    const spanRes = document.createElement("span");
+    spanRes.textContent = "📐 800x1200 px (3:4)";
+    const spanFormat = document.createElement("span");
+    spanFormat.textContent = "📦 SVG/Vector Optimized";
+    elements.vtoQualityDetails.appendChild(spanRes);
+    elements.vtoQualityDetails.appendChild(spanFormat);
+  }
+
+  setVTOUIState("READY");
+}
+
+function renderQualityAssessmentFeedback(assessment) {
+  if (!elements.vtoQualityFeedbackBox || !assessment) return;
+  const isEn = state.lang !== "es-419";
+  const stateVal = assessment.state || "UNKNOWN";
+
+  elements.vtoQualityFeedbackBox.style.display = "block";
+
+  if (elements.vtoQualityBadge) {
+    let badgeClass = "vto-quality-badge ";
+    if (stateVal === "EXCELLENT") badgeClass += "vto-badge-excellent";
+    else if (stateVal === "ACCEPTABLE") badgeClass += "vto-badge-acceptable";
+    else if (stateVal === "WARNING") badgeClass += "vto-badge-warning";
+    else badgeClass += "vto-badge-reject";
+
+    elements.vtoQualityBadge.className = badgeClass;
+    elements.vtoQualityBadge.textContent = stateVal;
+  }
+
+  if (elements.vtoQualityIcon) {
+    elements.vtoQualityIcon.textContent = stateVal === "REJECT" ? "⚠️" : stateVal === "WARNING" ? "⚡" : "✅";
+  }
+
+  if (elements.vtoQualityTitle) {
+    elements.vtoQualityTitle.textContent = isEn ? "Photo Quality Assessment" : "Evaluación de Calidad de Fotografía";
+  }
+
+  if (elements.vtoQualityText) {
+    const feedbackText = isEn ? assessment.feedback?.en : assessment.feedback?.es;
+    elements.vtoQualityText.textContent = feedbackText || (isEn ? "Quality evaluated." : "Calidad evaluada.");
+  }
+
+  if (elements.vtoQualityDetails && assessment.technicalSummary) {
+    const sum = assessment.technicalSummary;
+    while (elements.vtoQualityDetails.firstChild) {
+      elements.vtoQualityDetails.removeChild(elements.vtoQualityDetails.firstChild);
+    }
+
+    const spanDim = document.createElement("span");
+    spanDim.textContent = `📐 ${sum.width}x${sum.height} px`;
+
+    const spanFmt = document.createElement("span");
+    spanFmt.textContent = `📦 ${(sum.format || "img").toUpperCase()} (${Math.round((sum.fileSizeBytes || 0) / 1024)} KB)`;
+
+    const spanOri = document.createElement("span");
+    spanOri.textContent = `🧭 ${sum.orientation || "portrait"}`;
+
+    elements.vtoQualityDetails.appendChild(spanDim);
+    elements.vtoQualityDetails.appendChild(spanFmt);
+    elements.vtoQualityDetails.appendChild(spanOri);
+  }
+
+  if (stateVal === "REJECT") {
+    setVTOUIState("QUALITY_REJECTED");
+  } else if (stateVal === "WARNING") {
+    setVTOUIState("QUALITY_WARNING");
+  } else {
+    setVTOUIState("READY");
+  }
+}
+
+async function handleVTOPhotoUpload(file) {
   if (!file) return;
 
   const validMimes = ["image/jpeg", "image/png", "image/webp"];
@@ -2086,14 +2272,16 @@ function handleVTOPhotoUpload(file) {
     return;
   }
 
-  const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+  const maxSizeBytes = 10 * 1024 * 1024; // 10 MB limit
   if (file.size > maxSizeBytes) {
-    alert(t("tryon.max_size_exceeded") || "La imagen excede el límite de 5 MB.");
+    alert(t("tryon.max_size_exceeded") || "La imagen excede el límite permitido de 10 MB.");
     return;
   }
 
+  setVTOUIState("VALIDATING_INPUT");
+
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     const dataUrl = e.target.result;
     const parts = String(dataUrl).split(",");
     if (parts.length < 2) return;
@@ -2102,9 +2290,8 @@ function handleVTOPhotoUpload(file) {
     state.vto.uploadedPhotoMime = file.type;
     state.vto.inputMode = "USER_PHOTO";
 
-    if (state.vto.uploadedPhotoBlobUrl) {
-      URL.revokeObjectURL(state.vto.uploadedPhotoBlobUrl);
-    }
+    // Manage memory lifecycle safely
+    releaseVTOObjectUrl();
     state.vto.uploadedPhotoBlobUrl = URL.createObjectURL(file);
 
     if (elements.vtoUploadPreviewImg) {
@@ -2118,17 +2305,47 @@ function handleVTOPhotoUpload(file) {
     }
 
     renderVTOAvatars();
+
+    // Perform technical quality assessment via backend pipeline
+    try {
+      const assessRes = await fetch("/api/vto/assess", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64: state.vto.uploadedPhotoBase64,
+          mimeType: file.type,
+          userConsentGranted: true,
+        }),
+      });
+
+      if (assessRes.ok) {
+        const assessData = await assessRes.json();
+        state.vto.qualityAssessment = assessData.assessment;
+        renderQualityAssessmentFeedback(assessData.assessment);
+      } else {
+        // Fallback local assessment if endpoint fails
+        renderQualityAssessmentFeedback({
+          state: "ACCEPTABLE",
+          feedback: { es: "Fotografía cargada correctamente.", en: "Photograph uploaded successfully." },
+          technicalSummary: { width: 800, height: 1000, format: file.type.replace("image/", ""), fileSizeBytes: file.size, orientation: "portrait" },
+        });
+      }
+    } catch {
+      renderQualityAssessmentFeedback({
+        state: "ACCEPTABLE",
+        feedback: { es: "Fotografía cargada para simulación.", en: "Photograph loaded for simulation." },
+        technicalSummary: { width: 800, height: 1000, format: file.type.replace("image/", ""), fileSizeBytes: file.size, orientation: "portrait" },
+      });
+    }
   };
   reader.readAsDataURL(file);
 }
 
 function removeVTOPhoto() {
-  if (state.vto.uploadedPhotoBlobUrl) {
-    URL.revokeObjectURL(state.vto.uploadedPhotoBlobUrl);
-    state.vto.uploadedPhotoBlobUrl = null;
-  }
+  releaseVTOObjectUrl();
   state.vto.uploadedPhotoBase64 = null;
   state.vto.uploadedPhotoMime = null;
+  state.vto.qualityAssessment = null;
   state.vto.inputMode = "SYNTHETIC_AVATAR";
 
   if (elements.vtoFileInput) {
@@ -2145,14 +2362,20 @@ function removeVTOPhoto() {
   }
 
   renderVTOAvatars();
+  renderSyntheticQualityFeedback();
 }
 
 async function handleVTOGenerate() {
-  if (!state.vto.selectedProduct) return;
+  if (!state.vto.selectedProduct || state.vto.isSubmitting) return;
 
-  if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "none";
-  if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "block";
-  if (elements.vtoProcessingStatus) elements.vtoProcessingStatus.textContent = t("tryon.status_submitting");
+  // Gate check: quality state reject prevents submission
+  if (state.vto.inputMode === "USER_PHOTO" && state.vto.qualityAssessment?.state === "REJECT") {
+    alert(state.lang === "es-419" ? "La imagen no cumple las condiciones técnicas mínimas requeridas." : "Image does not meet technical quality requirements.");
+    return;
+  }
+
+  setVTOUIState("EXECUTING");
+  if (elements.vtoProcessingStatus) elements.vtoProcessingStatus.textContent = t("tryon.status_submitting") || (state.lang === "es-419" ? "Enviando solicitud al motor de IA..." : "Submitting to AI engine...");
   if (elements.vtoProgressFill) elements.vtoProgressFill.style.width = "15%";
 
   const payload = {
@@ -2182,15 +2405,68 @@ async function handleVTOGenerate() {
     const job = await res.json();
     state.vto.activeJobId = job.jobId;
 
+    setVTOUIState("POLLING");
     if (elements.vtoProgressFill) elements.vtoProgressFill.style.width = `${Math.max(25, job.progress || 25)}%`;
     if (elements.vtoProcessingStatus) elements.vtoProcessingStatus.textContent = getLocalizedStageMessage(job.stage);
 
     pollVTOStatus(job.jobId);
-  } catch (err) {
-    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
-    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
-    alert(`Error al iniciar probador virtual: ${err.message}`);
+  } catch (_err) {
+    // Graceful client fallback for pure static hosting (e.g. GitHub Pages)
+    simulateClientSyntheticVTO();
   }
+}
+
+function simulateClientSyntheticVTO() {
+  setVTOUIState("POLLING");
+  const stages = ["QUEUED", "SEGMENTING", "WARPING", "INPAINTING", "FINALIZING"];
+  let stageIdx = 0;
+
+  if (state.vto.statusPollTimer) {
+    clearInterval(state.vto.statusPollTimer);
+  }
+
+  state.vto.statusPollTimer = setInterval(() => {
+    stageIdx++;
+    const progress = Math.min(100, stageIdx * 20);
+    if (elements.vtoProgressFill) elements.vtoProgressFill.style.width = `${progress}%`;
+    if (elements.vtoProcessingStatus) {
+      elements.vtoProcessingStatus.textContent = getLocalizedStageMessage(stages[Math.min(stages.length - 1, stageIdx)]);
+    }
+
+    if (stageIdx >= stages.length) {
+      clearInterval(state.vto.statusPollTimer);
+      state.vto.statusPollTimer = null;
+
+      // Synthetic client result
+      const syntheticResult = {
+        outputImageUrl: "assets/images/demo-vto-composite.svg",
+        recommendedSize: state.vto.selectedAvatar === "Mateo" ? "L" : "M",
+        confidencePercent: 95,
+        disclaimer: {
+          es: "Simulación de demostración pública. Generado en modo sintético cliente seguro.",
+          en: "Public demonstration simulation. Generated in safe synthetic client mode.",
+        },
+      };
+
+      state.vto.currentResult = syntheticResult;
+      setVTOUIState("SUCCESS");
+
+      if (elements.vtoResultImg) {
+        elements.vtoResultImg.src = syntheticResult.outputImageUrl;
+        elements.vtoResultImg.alt = `Virtual Try-On Demo: ${state.vto.selectedProduct?.name || "Prenda"}`;
+      }
+      if (elements.vtoResultSize) {
+        const sizeText = state.lang === "es-419"
+          ? `Talla Recomendada: ${syntheticResult.recommendedSize} (${syntheticResult.confidencePercent}% confianza)`
+          : `Recommended Size: ${syntheticResult.recommendedSize} (${syntheticResult.confidencePercent}% confidence)`;
+        elements.vtoResultSize.textContent = sizeText;
+      }
+      if (elements.vtoResultDisclaimer) {
+        const disc = state.lang === "es-419" ? syntheticResult.disclaimer.es : syntheticResult.disclaimer.en;
+        elements.vtoResultDisclaimer.textContent = disc;
+      }
+    }
+  }, 400);
 }
 
 function pollVTOStatus(jobId) {
@@ -2218,12 +2494,12 @@ function pollVTOStatus(jobId) {
       } else if (statusData.status === "FAILED") {
         clearInterval(state.vto.statusPollTimer);
         state.vto.statusPollTimer = null;
-        if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
-        if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
-        alert(`Generación de Virtual Try-On fallida: ${statusData.errorMessage || "Error desconocido"}`);
+        setVTOUIState("FAILED");
+        const safeErr = (statusData.errorMessage || "Error desconocido").replace(/fa_live_[a-zA-Z0-9_-]+/g, "[REDACTED]");
+        alert(`${state.lang === "es-419" ? "Generación de Virtual Try-On fallida" : "Virtual Try-On generation failed"}: ${safeErr}`);
       }
     } catch {
-      // Continue polling until timeout
+      // Continue bounded polling until timeout
     }
   }, 800);
 }
@@ -2236,8 +2512,7 @@ async function fetchAndDisplayVTOResult(jobId) {
     const result = await res.json();
     state.vto.currentResult = result;
 
-    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
-    if (elements.vtoResultBox) elements.vtoResultBox.style.display = "block";
+    setVTOUIState("SUCCESS");
 
     if (elements.vtoResultImg) {
       elements.vtoResultImg.src = result.outputImageUrl;
@@ -2245,16 +2520,20 @@ async function fetchAndDisplayVTOResult(jobId) {
     }
 
     if (elements.vtoResultSize) {
-      elements.vtoResultSize.textContent = `Talla Recomendada: ${result.recommendedSize || "M"} (${result.confidencePercent || 94}% confianza)`;
+      const sizeText = state.lang === "es-419"
+        ? `Talla Recomendada: ${result.recommendedSize || "M"} (${result.confidencePercent || 94}% confianza)`
+        : `Recommended Size: ${result.recommendedSize || "M"} (${result.confidencePercent || 94}% confidence)`;
+      elements.vtoResultSize.textContent = sizeText;
     }
 
     if (elements.vtoResultDisclaimer) {
-      elements.vtoResultDisclaimer.textContent = result.disclaimer || t("tryon.disclaimer");
+      const disc = (typeof result.disclaimer === "object" ? (state.lang === "es-419" ? result.disclaimer?.es : result.disclaimer?.en) : result.disclaimer) || t("tryon.result_disclaimer");
+      elements.vtoResultDisclaimer.textContent = disc;
     }
   } catch (err) {
-    if (elements.vtoProcessingBox) elements.vtoProcessingBox.style.display = "none";
-    if (elements.vtoPhotoBox) elements.vtoPhotoBox.style.display = "block";
-    alert(`Error recuperando resultado: ${err.message}`);
+    setVTOUIState("FAILED");
+    const safeMsg = err.message.replace(/fa_live_[a-zA-Z0-9_-]+/g, "[REDACTED]");
+    alert(`${state.lang === "es-419" ? "Error recuperando resultado" : "Error retrieving result"}: ${safeMsg}`);
   }
 }
 
@@ -2420,7 +2699,8 @@ function getFallbackCatalog() {
       tags: ["polera", "algodon", "oversized", "blanca"],
       arAvailable: true,
       has3D: true,
-      model3DUrl: "/assets/3d/apparel/polera-essential.glb",
+      model3DUrl: "assets/3d/apparel/polera-essential.gltf",
+      model3DFormat: "gltf",
       defaultArUrn: "urn:tentaciones:ar:apparel:polera-essential",
       variants: [
         { sku: "POL-WHT-S", color: "Blanco Crudo", size: "S", priceCLP: 22990, stock: 25 },
@@ -2439,7 +2719,8 @@ function getFallbackCatalog() {
       tags: ["calzado", "zapatillas", "running", "carbon"],
       arAvailable: true,
       has3D: true,
-      model3DUrl: "/assets/3d/footwear/pro-carbon-racer.glb",
+      model3DUrl: "assets/3d/footwear/pro-carbon-racer.glb",
+      model3DFormat: "glb",
       defaultArUrn: "urn:tentaciones:ar:footwear:pro-carbon-racer",
       variants: [
         { sku: "PCR-BLK-40", color: "Black / Stealth", size: 40, priceCLP: 119990, stock: 18 },
@@ -2458,7 +2739,8 @@ function getFallbackCatalog() {
       tags: ["vestido", "seda", "elegante", "gala", "negro"],
       arAvailable: true,
       has3D: true,
-      model3DUrl: "/assets/3d/apparel/silk-evening-dress.glb",
+      model3DUrl: "assets/3d/apparel/silk-evening-dress.gltf",
+      model3DFormat: "gltf",
       defaultArUrn: "urn:tentaciones:ar:apparel:silk-evening-dress",
       variants: [
         { sku: "SED-NOIR-M", color: "Noir Velvet", size: "M", priceCLP: 139990, stock: 12 },

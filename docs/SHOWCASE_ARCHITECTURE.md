@@ -1,10 +1,10 @@
 # SHOWCASE ARCHITECTURE & PORTFOLIO INTEGRATION
 
-CANONICAL DOCUMENT: docs/SHOWCASE_ARCHITECTURE.md  
-STATUS: CERTIFIED  
-VERSION: 1.5.0  
-APPLICATION: PROJ-01-TENTACIONES  
-PORTFOLIO: AI Operating Platform  
+CANONICAL DOCUMENT: docs/SHOWCASE_ARCHITECTURE.md
+STATUS: CERTIFIED
+VERSION: 1.5.0
+APPLICATION: PROJ-01-TENTACIONES
+PORTFOLIO: AI Operating Platform
 
 ---
 
@@ -17,31 +17,31 @@ Tentaciones AI Commerce acts as a **flagship showcase application** for the broa
 ## 2. Multi-Tier Boundary Model
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                    PUBLIC SHOWCASE TIER                     │
-│  - Static zero-secret bundle (HTML5/CSS3/ESM)               │
-│  - Real GLB/glTF 2.0 3D spatial models                      │
-│  - WebXR spatial hit-test & procedural fitting fallbacks   │
-│  - Simulated Webpay demo checkout                           │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    PUBLIC SHOWCASE TIER                     â”‚
+â”‚  - Static zero-secret bundle (HTML5/CSS3/ESM)               â”‚
+â”‚  - Real GLB/glTF 2.0 3D spatial models                      â”‚
+â”‚  - WebXR spatial hit-test & procedural fitting fallbacks   â”‚
+â”‚  - Simulated Webpay demo checkout                           â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                               â”‚
             [Fail-Closed Boundary & Demo Guardrails]
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                    EXPERIENCE ADAPTER TIER                  │
-│  - ITentacionesExperienceService contract                   │
-│  - DemoAdapter: Deterministic synthetic business logic      │
-│  - TentacionesPlatformAdapter: Connected platform bridge    │
-└──────────────────────────────┬──────────────────────────────┘
-                               │
+                               â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    EXPERIENCE ADAPTER TIER                  â”‚
+â”‚  - ITentacionesExperienceService contract                   â”‚
+â”‚  - DemoAdapter: Deterministic synthetic business logic      â”‚
+â”‚  - TentacionesPlatformAdapter: Connected platform bridge    â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                               â”‚
              [Enterprise Authentication & REST API]
-                               │
-┌──────────────────────────────▼──────────────────────────────┐
-│                AI OPERATING PLATFORM CORE                   │
-│  - Multi-Enterprise Governance & Mandate Reconciliation     │
-│  - Distributed Task Orchestration & Ontology Engines        │
-│  - Strict Private Repositories & Enterprise WAL DB          │
-└─────────────────────────────────────────────────────────────┘
+                               â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                AI OPERATING PLATFORM CORE                   â”‚
+â”‚  - Multi-Enterprise Governance & Mandate Reconciliation     â”‚
+â”‚  - Distributed Task Orchestration & Ontology Engines        â”‚
+â”‚  - Strict Private Repositories & Enterprise WAL DB          â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---

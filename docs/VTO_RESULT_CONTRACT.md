@@ -7,9 +7,9 @@ OWNER: Principal Frontend Architect & Integration Engineer
 
 ---
 
-## 1. PROPÓSITO DEL CONTRATO DE RESULTADO
+## 1. PROPÃ“SITO DEL CONTRATO DE RESULTADO
 
-El contrato `VirtualTryOnExecutionResult` normaliza de manera neutral la salida de cualquier motor de inferencia, garantizando que el frontend de Tentaciones reciba un esquema uniforme independientemente de si la ejecución se produjo en el entorno sintético de demostración (`demo-synthetic`) o en la nube de FASHN AI (`fashn-pilot`).
+El contrato `VirtualTryOnExecutionResult` normaliza de manera neutral la salida de cualquier motor de inferencia, garantizando que el frontend de Tentaciones reciba un esquema uniforme independientemente de si la ejecuciÃ³n se produjo en el entorno sintÃ©tico de demostraciÃ³n (`demo-synthetic`) o en la nube de FASHN AI (`fashn-pilot`).
 
 ---
 
@@ -49,10 +49,10 @@ export interface VirtualTryOnExecutionResult {
 
 ---
 
-## 3. VALIDACIÓN DE DOMINIOS Y FORMATOS DE SALIDA
+## 3. VALIDACIÃ“N DE DOMINIOS Y FORMATOS DE SALIDA
 
-Para mitigar riesgos de *Cross-Site Scripting* (XSS) o suplantación de activos, el gateway valida estrictamente que `resultImageUrl`:
-1. Sea un esquema seguro `data:image/` (Data URI Base64 efímero).
+Para mitigar riesgos de *Cross-Site Scripting* (XSS) o suplantaciÃ³n de activos, el gateway valida estrictamente que `resultImageUrl`:
+1. Sea un esquema seguro `data:image/` (Data URI Base64 efÃ­mero).
 2. O provenga de la lista blanca de dominios CDN autorizados:
    - `https://cdn.fashn.ai/`
    - `https://media.fashn.ai/`

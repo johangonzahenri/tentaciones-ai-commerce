@@ -14,7 +14,7 @@
 **Tentaciones AI Commerce** es la aplicación satélite insignia de moda, calzado y vestuario del ecosistema **AI Operating Platform**. Proporciona una experiencia de comercio conversacional y visual de alta conversión que integra:
 
 * 🛍️ **Descubrimiento Asistido con IA:** Comprensión de lenguaje natural en español e inglés para interpretar ocasiones de uso, estilos y especificaciones técnicas de prendas.
-* 🧊 **Visualización 3D Interactiva con GLB/GLTF Real:** Carga de modelos espaciales binarios y JSON con rotación orbital de 60 FPS, zoom dinámico y auto-giro sin dependencias externas.
+* 🧊 **Visualización 3D Interactiva con GLB/GLTF Real:** Carga de modelos espaciales binarios y JSON con renderizado 3D interactivo, zoom dinámico y auto-giro sin dependencias externas.
 * 👓 **Probador Virtual AR & Sizing Paramétrico:** Simulación espacial WebXR con hit-test de superficie y perfiles biométricos (`Nova`, `Sora`, `Mateo`) para calcular la talla óptima.
 * ✨ **AI Virtual Try-On (VTO Engine):** Motor provider-agnostic de probador virtual con síntesis neuronal fotorrealista de prendas en fotos de usuario y avatares calibrados, conector FASHN AI y modo demo determinista.
 * 🛒 **Bolsa de Compras Inteligente:** Cálculo en tiempo real del beneficio de despacho gratuito ($30.000 CLP).
@@ -83,8 +83,24 @@ Abrir en el navegador: [http://127.0.0.1:4000](http://127.0.0.1:4000)
 
 ---
 
-## 6. Documentación Canónica (37 Documentos Certificados)
+## 6. Documentación Canónica (53 Documentos Certificados)
 
+* [`docs/PUBLIC_RELEASE_TREE.md`](docs/PUBLIC_RELEASE_TREE.md): Especificación del árbol de release público, activos incluidos, exclusiones y compatibilidad GitHub Pages.
+* [`docs/PORTFOLIO_PROJECT_CARD.md`](docs/PORTFOLIO_PROJECT_CARD.md): Ficha técnica de portafolio profesional, arquitectura e integración.
+* [`docs/PUBLIC_DEMO_DEPLOYMENT.md`](docs/PUBLIC_DEMO_DEPLOYMENT.md): Guía de despliegue estático, compatibilidad GitHub Pages y requerimientos de runtime.
+* [`docs/RELEASE_MANIFEST.md`](docs/RELEASE_MANIFEST.md): Manifiesto oficial de release v1.8.1, alcance y gobernanza.
+* [`docs/PUBLIC_DEMO_ARCHITECTURE.md`](docs/PUBLIC_DEMO_ARCHITECTURE.md): Arquitectura del demo público, aislamiento y límites de infraestructura.
+* [`docs/PUBLIC_DEMO_RELEASE_CHECKLIST.md`](docs/PUBLIC_DEMO_RELEASE_CHECKLIST.md): Lista de verificación y certificación integral del demo público.
+* [`docs/VTO_DEMO_RELEASE_CHECKLIST.md`](docs/VTO_DEMO_RELEASE_CHECKLIST.md): Lista de control de release demo y certificación de producción storefront VTO.
+* [`docs/FASHN_CONTRACT_CONFORMANCE.md`](docs/FASHN_CONTRACT_CONFORMANCE.md): Matriz de conformidad contractual FASHN API v1, pruebas y verificación de esquemas.
+* [`docs/FASHN_PROVIDER_CONTRACT.md`](docs/FASHN_PROVIDER_CONTRACT.md): Especificación de contrato de proveedor FASHN API v1, modelos Try-On Max y v1.6.
+* [`docs/VTO_OPERATIONAL_GUARDRAILS.md`](docs/VTO_OPERATIONAL_GUARDRAILS.md): Guardrails operacionales, presupuestos de costo, disyuntor de fallos y límites de concurrencia.
+* [`docs/VTO_OBSERVABILITY.md`](docs/VTO_OBSERVABILITY.md): Arquitectura de observabilidad, telemetría estructurada, correlación y métricas operacionales.
+* [`docs/VTO_REAL_PILOT_EVIDENCE.md`](docs/VTO_REAL_PILOT_EVIDENCE.md): Registro oficial de evidencia de piloto real, preflight audit y validación fail-closed.
+* [`docs/VTO_EVIDENCE_REGISTER.md`](docs/VTO_EVIDENCE_REGISTER.md): Registro oficial de evidencia técnica, taxonomía y matriz de reproducibilidad VTO.
+* [`docs/VTO_REAL_PILOT_PREFLIGHT.md`](docs/VTO_REAL_PILOT_PREFLIGHT.md): Especificación de diagnóstico de preflight, prerrequisitos y seguridad de piloto real.
+* [`docs/VTO_STOREFRONT_INTEGRATION.md`](docs/VTO_STOREFRONT_INTEGRATION.md): Integración de experiencia Storefront UI, máquina de estados y ciclo de vida de memoria.
+* [`docs/VTO_STOREFRONT_UI_BENCHMARK.md`](docs/VTO_STOREFRONT_UI_BENCHMARK.md): Benchmark de rendimiento UI, tiempos de respuesta, higiene DOM y UX Scorecard.
 * [`docs/VTO_EXECUTION_GATEWAY.md`](docs/VTO_EXECUTION_GATEWAY.md): Arquitectura del gateway de ejecución, orquestación, gobernanza y aislamiento de proveedores.
 * [`docs/VTO_PROVIDER_POLICY.md`](docs/VTO_PROVIDER_POLICY.md): Política determinista de enrutamiento y selección de proveedores VTO.
 * [`docs/VTO_POLLING_RETRY.md`](docs/VTO_POLLING_RETRY.md): Motor de sondeo acotado y matriz de reintentos con retroceso exponencial.

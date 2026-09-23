@@ -2,8 +2,8 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: CERTIFIED (Phase 94 Complete)
-VERSION: v1.6.4
+STATUS: FINAL RELEASE PACKAGE READY (Phase 108 Complete)
+VERSION: v1.8.1
 ============================================================
 
 ## 1. Hitos del Proyecto
@@ -130,14 +130,110 @@ VERSION: v1.6.4
 
 ---
 
-### Fase 13: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
+### Fase 13: VTO Storefront Experience Integration & UI Benchmark (v1.6.5) — [IMPLEMENTED]
+* [x] Integración de máquina de estados determinista en UI (`IDLE`, `VALIDATING_INPUT`, `QUALITY_REJECTED`, `QUALITY_WARNING`, `READY`, `CONSENT_REQUIRED`, `EXECUTING`, `POLLING`, `SUCCESS`, `FAILED`, `CANCELLED`).
+* [x] Gestión de ciclo de vida de memoria y revocación explícita de `URL.createObjectURL` (`releaseVTOObjectUrl`).
+* [x] Endpoint de validación técnica preventiva en tiempo real `/api/vto/assess` conectado con `TryOnImagePipeline`.
+* [x] Badges de calidad visual (`EXCELLENT`, `ACCEPTABLE`, `WARNING`, `REJECT`) con feedback detallado de dimensiones, formato y orientación.
+* [x] Sanitización estricta y redacción de credenciales en errores de cliente (`[REDACTED]`).
+* [x] Higiene DOM estricta: 0 `innerHTML`, 0 `outerHTML`, 0 `eval`, 0 `document.write`.
+* [x] Creación de 2 nuevos documentos canónicos: `docs/VTO_STOREFRONT_INTEGRATION.md`, `docs/VTO_STOREFRONT_UI_BENCHMARK.md` (Total 39 documentos certificados).
+* [x] Suite de 77 pruebas automatizadas pasando al 100%.
+
+---
+
+### Fase 14: VTO Evidence Hardening & Real Pilot Preflight (v1.6.6) — [IMPLEMENTED]
+* [x] Auditoría integral de claims técnicos y reclasificación formal (`VERIFIED`, `PARTIAL`, `NOT MEASURED`, `BLOCKED`, `NOT_APPLICABLE`).
+* [x] Reclasificación semántica de métricas de rendimiento en UI Benchmark distinguiendo Targets SLA de mediciones reales.
+* [x] Sustitución de claim sobre memoria por verificación estricta de ciclo de vida `URL.revokeObjectURL()`.
+* [x] Creación del Registro Canónico de Evidencia Técnica `docs/VTO_EVIDENCE_REGISTER.md`.
+* [x] Creación de la Especificación de Diagnóstico y Preflight de Piloto Real `docs/VTO_REAL_PILOT_PREFLIGHT.md`.
+* [x] Verificación de suite de pruebas automatizadas y compilación TypeScript limpia (Total 41 documentos certificados).
+
+---
+
+### Fase 15: Controlled Real FASHN Pilot & VTO Production Evidence (v1.6.7) — [IMPLEMENTED]
+* [x] Protocolo de ejecución controlada con intercepción Fail-Closed verificado vía CLI `scripts/vto-pilot.mjs`.
+* [x] Preflight Check verificado: Estado de credenciales reportado de manera determinista (`BLOCKED (MISSING CREDENTIAL)`).
+* [x] Dry-run gateway validado exitosamente (`status: COMPLETED`, `providerId: demo-synthetic`).
+* [x] Intento de ejecución real bloqueado antes de invocar red externa con código de salida 1 (`FAIL-CLOSED (EXPECTED)`).
+* [x] Creación del documento canónico `docs/VTO_REAL_PILOT_EVIDENCE.md` con matriz de reproducibilidad EV-01 a EV-15.
+* [x] Actualización de matriz de evidencia en `docs/VTO_EVIDENCE_REGISTER.md` y actualización de suite de seguridad (Total 42 documentos certificados).
+* [x] 78 tests pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 16: VTO Operational Hardening, Cost Guardrails & Observability (v1.6.8) — [IMPLEMENTED]
+* [x] Guardrails de costo estrictos con verificación determinista (`numImages === 1`, tech ceilings en retries, polling y timeout).
+* [x] Gestor de concurrencia in-memory con bloqueo por sesión (`VTO_CONCURRENCY_LIMIT`) y caché de idempotencia con TTL.
+* [x] Disyuntor de fallos de proveedor `VTOProviderCircuitBreaker` (anticascada con apertura tras 5 fallos y cooldown de 30s).
+* [x] Rate limiting deslizante por sesión / IP para prevención de abuso y llamadas involuntarias en bucle.
+* [x] Módulo de observabilidad `VTOLogger` y `VTOMetricsCollector` con registro estructurado, identificadores de correlación y cero fugas de secretos o imágenes.
+* [x] Endpoint de métricas en tiempo real `/api/vto/metrics` con separación inequívoca de métricas de Demo vs Real.
+* [x] Protección contra resultados tardíos o callbacks obsoletos (`VTO_STALE_EXECUTION`) ante cancelación o expiración de tiempo.
+* [x] Creación de 2 nuevos documentos canónicos: `docs/VTO_OPERATIONAL_GUARDRAILS.md` y `docs/VTO_OBSERVABILITY.md` (Total 44 documentos certificados).
+* [x] Suite ampliada de 87 pruebas automatizadas pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 17: Final Pilot Gate & Cost-Safe Real FASHN Smoke Test Profile (v1.7.3) — [IMPLEMENTED]
+* [x] Congelamiento del perfil de smoke test técnico de mínimo coste `FASHN_FIRST_REAL_SMOKE_TEST` (`tryon-max`, `generation_mode: fast`, `resolution: 1k`, `num_images: 1`, `return_base64: true`).
+* [x] Eliminación de la suposición de "tryon-max + quality + 1k = 1 crédito", estableciendo la configuración `fast + 1k + 1 img` para consumo mínimo controlado.
+* [x] Priorización de privacidad mediante `return_base64 = true` para transporte de inferencia en memoria RAM hacia el Storefront.
+* [x] Preflight y compuerta de activación `FashnRealPilotActivationGate` evaluados deterministamente: `PILOT BLOCKED (FAIL-CLOSED)` ante la ausencia de `FASHN_API_KEY`.
+* [x] Actualización de documentos canónicos `docs/FASHN_PROVIDER_CONTRACT.md`, `docs/FASHN_CONTRACT_CONFORMANCE.md`, `docs/VTO_EVIDENCE_REGISTER.md` y `docs/VTO_REAL_PILOT_EVIDENCE.md` (Total 46 documentos certificados).
+* [x] Suite completa de 97 pruebas automatizadas pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 18: VTO Release Closure, Demo E2E & Storefront Production Certification (v1.7.5) — [IMPLEMENTED]
+* [x] Certificación de experiencia VTO de extremo a extremo en Storefront en modo Demo (`DemoVirtualTryOnProvider`).
+* [x] Corrección semántica estricta del Gate: Estado `BLOCKED (FAIL-CLOSED)` consistente cuando falta `FASHN_API_KEY`.
+* [x] Verificación de ciclo de vida de memoria (`URL.revokeObjectURL`), prevención de peticiones duplicadas y mitigación de fugas.
+* [x] Creación de la suite de pruebas `tests/vto-demo-e2e.test.ts` garantizando invariante `REAL ≠ DEMO` sin fallback silencioso.
+* [x] Creación de `docs/VTO_DEMO_RELEASE_CHECKLIST.md` con 20 secciones de certificación (Total 47 documentos certificados).
+* [x] Suite ampliada de 105 pruebas automatizadas pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 19: Release Candidate & Public Demo Hardening (v1.8.0) — [IMPLEMENTED]
+* [x] Definición formal de límites y política de release (`src/config/demo-release-policy.ts`).
+* [x] Creación del script de auditoría de release `scripts/release-check.mjs`.
+* [x] Creación de la suite de pruebas de release público `tests/public-demo-release.test.ts`.
+* [x] Creación de `docs/RELEASE_MANIFEST.md`, `docs/PUBLIC_DEMO_ARCHITECTURE.md` y `docs/PUBLIC_DEMO_RELEASE_CHECKLIST.md` (Total 50 documentos certificados).
+* [x] Suite ampliada de 110 pruebas automatizadas pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 20: Publication Readiness Audit & Portfolio Card (v1.8.1) — [IMPLEMENTED]
+* [x] Corrección estricta de claims no fundamentados (60 FPS $\rightarrow$ renderizado interactivo, eliminación de afirmaciones de riesgo cero, cualificación de accesibilidad).
+* [x] Auditoría integral de almacenamiento cliente (0 usos de `localStorage`, `sessionStorage`, `IndexedDB` o cookies para datos sensibles).
+* [x] Creación del script de auditoría de publicación `scripts/publication-check.mjs` con clasificación `PASS / FAIL / MANUAL_VERIFICATION_REQUIRED`.
+* [x] Creación de la suite de pruebas de publicación `tests/publication-readiness.test.ts`.
+* [x] Creación de `docs/PUBLIC_DEMO_DEPLOYMENT.md` y `docs/PORTFOLIO_PROJECT_CARD.md`.
+* [x] Suite ampliada de 115 pruebas automatizadas pasando al 100% con 0 errores TypeScript.
+
+---
+
+### Fase 21: Final Release Package & GitHub Pages Preparation (v1.8.1) — [IMPLEMENTED]
+* [x] Delimitación formal del artefacto estático de publicación (`docs/PUBLIC_RELEASE_TREE.md`).
+* [x] Normalización de rutas de activos relativas en `public/index.html` y `public/app.js` para compatibilidad con subrutas GitHub Pages.
+* [x] Implementación de fallback sintético de VTO en cliente en `public/app.js` para hosting estático puro sin servidor Node.js.
+* [x] Creación del workflow de CI/CD para GitHub Pages `.github/workflows/deploy-public-demo.yml`.
+* [x] Creación del script de inventario reproducible de release `scripts/release-inventory.mjs`.
+* [x] Sincronización canónica de versiones (`v1.8.1`) en `package.json`, `ROADMAP.md`, `RELEASE_MANIFEST.md` y `PORTFOLIO_PROJECT_CARD.md`.
+* [x] Ampliación de la suite `tests/publication-readiness.test.ts` (117 pruebas automatizadas totales).
+* [x] Conteo exacto de 53 documentos canónicos verificado en disco.
+
+---
+
+### Fase 22: Clientes Nativos Mobile (iOS / Android / Flutter) (v2.0.0) — [PLANIFICADA]
 * [ ] Implementación de cliente móvil Flutter consumiendo `ITentacionesExperienceService` vía REST.
 * [ ] Probador AR nativo con ARKit (iOS) y ARCore (Android).
 * [ ] Notificaciones push contextuales sobre carrito y promociones personalizadas.
 
 ---
 
-### Fase 14: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
+### Fase 23: Conectividad Empresarial & ERP Sync (v2.1.0) — [BACKLOG]
 * [ ] Integración de pasarela de pago real Webpay Plus Transbank / Stripe vía Gateway seguro en `PRIVATE_CONNECTED_DEMO`.
 * [ ] Sincronización bidireccional de inventario con catálogos externos (Shopify/WooCommerce).
-

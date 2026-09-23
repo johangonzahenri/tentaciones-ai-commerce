@@ -35,7 +35,7 @@ const ROOT_DIR = __dirname.includes("dist")
   ? path.resolve(__dirname, "../..")
   : path.resolve(__dirname, "..");
 
-test("1. Documentation Completeness: All 37 canonical docs exist with mandatory headings", () => {
+test("1. Documentation Completeness: All 45 canonical docs exist with mandatory headings", () => {
   const docs = [
     "PUBLIC_DEMO.md",
     "DEMO_SECURITY.md",
@@ -74,6 +74,15 @@ test("1. Documentation Completeness: All 37 canonical docs exist with mandatory 
     "VTO_RESULT_CONTRACT.md",
     "VTO_REAL_PILOT_RUNBOOK.md",
     "VTO_PRIVACY_EXECUTION.md",
+    "VTO_STOREFRONT_INTEGRATION.md",
+    "VTO_STOREFRONT_UI_BENCHMARK.md",
+    "VTO_EVIDENCE_REGISTER.md",
+    "VTO_REAL_PILOT_PREFLIGHT.md",
+    "VTO_REAL_PILOT_EVIDENCE.md",
+    "VTO_OPERATIONAL_GUARDRAILS.md",
+    "VTO_OBSERVABILITY.md",
+    "FASHN_PROVIDER_CONTRACT.md",
+    "FASHN_CONTRACT_CONFORMANCE.md",
   ];
 
   for (const doc of docs) {
@@ -81,7 +90,10 @@ test("1. Documentation Completeness: All 37 canonical docs exist with mandatory 
     assert.ok(fs.existsSync(fullPath), `Document docs/${doc} must exist`);
     const content = fs.readFileSync(fullPath, "utf8");
     assert.ok(content.includes("CANONICAL DOCUMENT:"), `docs/${doc} must have CANONICAL DOCUMENT marker`);
-    assert.ok(content.includes("STATUS: CERTIFIED"), `docs/${doc} must have STATUS: CERTIFIED marker`);
+    assert.ok(
+      content.includes("STATUS: CERTIFIED") || content.includes("STATUS: CONTRACT VERIFIED"),
+      `docs/${doc} must have STATUS: CERTIFIED or STATUS: CONTRACT VERIFIED marker`
+    );
   }
 });
 
@@ -444,6 +456,3 @@ test("22. DOM Hygiene & Security Invariant: Zero unsafe DOM manipulation APIs in
     }
   }
 });
-
-
-

@@ -1,6 +1,6 @@
 {
   "name": "tentaciones-ai-commerce",
-  "version": "1.0.0",
+  "version": "1.8.1",
   "description": "Tentaciones AI Commerce — Intelligent Fashion & Footwear E-Commerce with 3D/AR Virtual Try-On, powered by AI Operating Platform",
   "type": "module",
   "main": "dist/src/index.js",

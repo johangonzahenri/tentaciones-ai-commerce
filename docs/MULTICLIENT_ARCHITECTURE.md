@@ -1,4 +1,4 @@
-# TENTACIONES AI COMMERCE — MULTICLIENT ARCHITECTURE & EXPERIENCE CONTRACT
+# TENTACIONES AI COMMERCE â€” MULTICLIENT ARCHITECTURE & EXPERIENCE CONTRACT
 
 ============================================================
 CANONICAL DOCUMENT: docs/MULTICLIENT_ARCHITECTURE.md
@@ -14,19 +14,19 @@ Tentaciones AI Commerce is engineered from the ground up as a **headless, multi-
 The single source of truth for all client surfaces is the **Multiclient Experience Contract** (`ITentacionesExperienceService`).
 
 ```
-                              ┌───────────────────────────────────┐
-                              │ ITentacionesExperienceService     │
-                              │ (src/contracts/experience-        │
-                              │  contract.ts)                     │
-                              └─────────────────┬─────────────────┘
-                                                │
-                 ┌──────────────────────────────┼──────────────────────────────┐
-                 │                              │                              │
-                 ▼                              ▼                              ▼
-      ┌────────────────────┐         ┌────────────────────┐         ┌────────────────────┐
-      │ Storefront Web App │         │ Mobile App (iOS /  │         │ In-Store AR Kiosk  │
-      │ (HTML5 / Vanilla)  │         │ Android / Flutter) │         │ (Point of Sale)    │
-      └────────────────────┘         └────────────────────┘         └────────────────────┘
+                              â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                              â”‚ ITentacionesExperienceService     â”‚
+                              â”‚ (src/contracts/experience-        â”‚
+                              â”‚  contract.ts)                     â”‚
+                              â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                                â”‚
+                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                 â”‚                              â”‚                              â”‚
+                 â–¼                              â–¼                              â–¼
+      â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+      â”‚ Storefront Web App â”‚         â”‚ Mobile App (iOS /  â”‚         â”‚ In-Store AR Kiosk  â”‚
+      â”‚ (HTML5 / Vanilla)  â”‚         â”‚ Android / Flutter) â”‚         â”‚ (Point of Sale)    â”‚
+      â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---

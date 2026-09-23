@@ -1,4 +1,4 @@
-# TENTACIONES AI COMMERCE — INTELLECTUAL PROPERTY PROTECTION & REPO BOUNDARIES
+# TENTACIONES AI COMMERCE â€” INTELLECTUAL PROPERTY PROTECTION & REPO BOUNDARIES
 
 ============================================================
 CANONICAL DOCUMENT: docs/IP_PROTECTION.md
@@ -20,31 +20,31 @@ Tentaciones AI Commerce implements an airtight **Polyrepo Intellectual Property 
 ## 2. Polyrepo Architectural Hierarchy
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    PRIVATE CORE (Proprietary Asset)                         │
-│                                                                             │
-│   AI OPERATING PLATFORM (Parent Platform)                                  │
-│   - Multi-Agent Orchestration Kernels                                       │
-│   - Enterprise Governance & Mandate Reconciliation                          │
-│   - Cryptographic Audit Ledger & Memory Graphs                              │
-│   - Self-Healing Infrastructure Controllers                                 │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ (Exposes Public REST API & SDK Contract)
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    PUBLIC BOUNDARY (Public Showcase)                        │
-│                                                                             │
-│   PLATFORM CLIENT SDK (Public Contract)                                     │
-│   - Standard HTTP/REST Request Dispatchers                                  │
-│   - Standard DTO Schemas & Type Definitions                                 │
-│                                      │
-│                                      ▼
-│   PROJ-01-TENTACIONES (Public Repository)                                   │
-│   - Storefront UI (HTML5, Native Vanilla JS, Modern CSS)                    │
-│   - Multiclient Experience Contract (ITentacionesExperienceService)         │
-│   - Demo Adapter (Purely Synthetic Engine, 0 Secrets)                       │
-│   - Connected Adapter (Optional Proxy via Private Gateway)                  │
-└─────────────────────────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    PRIVATE CORE (Proprietary Asset)                         â”‚
+â”‚                                                                             â”‚
+â”‚   AI OPERATING PLATFORM (Parent Platform)                                  â”‚
+â”‚   - Multi-Agent Orchestration Kernels                                       â”‚
+â”‚   - Enterprise Governance & Mandate Reconciliation                          â”‚
+â”‚   - Cryptographic Audit Ledger & Memory Graphs                              â”‚
+â”‚   - Self-Healing Infrastructure Controllers                                 â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                       â”‚ (Exposes Public REST API & SDK Contract)
+                                       â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    PUBLIC BOUNDARY (Public Showcase)                        â”‚
+â”‚                                                                             â”‚
+â”‚   PLATFORM CLIENT SDK (Public Contract)                                     â”‚
+â”‚   - Standard HTTP/REST Request Dispatchers                                  â”‚
+â”‚   - Standard DTO Schemas & Type Definitions                                 â”‚
+â”‚                                      â”‚
+â”‚                                      â–¼
+â”‚   PROJ-01-TENTACIONES (Public Repository)                                   â”‚
+â”‚   - Storefront UI (HTML5, Native Vanilla JS, Modern CSS)                    â”‚
+â”‚   - Multiclient Experience Contract (ITentacionesExperienceService)         â”‚
+â”‚   - Demo Adapter (Purely Synthetic Engine, 0 Secrets)                       â”‚
+â”‚   - Connected Adapter (Optional Proxy via Private Gateway)                  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---

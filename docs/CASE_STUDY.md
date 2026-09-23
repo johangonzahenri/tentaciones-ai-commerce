@@ -1,10 +1,10 @@
-# CASE STUDY: TENTACIONES AI COMMERCE — IMMERSIVE 3D/AR RETAIL PLATFORM
+# CASE STUDY: TENTACIONES AI COMMERCE â€” IMMERSIVE 3D/AR RETAIL PLATFORM
 
-CANONICAL DOCUMENT: docs/CASE_STUDY.md  
-STATUS: CERTIFIED  
-VERSION: 1.6.1  
-APPLICATION: PROJ-01-TENTACIONES  
-PORTFOLIO: AI Operating Platform  
+CANONICAL DOCUMENT: docs/CASE_STUDY.md
+STATUS: CERTIFIED
+VERSION: 1.6.1
+APPLICATION: PROJ-01-TENTACIONES
+PORTFOLIO: AI Operating Platform
 
 ---
 
@@ -33,28 +33,28 @@ Tentaciones delivers a **zero-install, in-browser spatial try-on experience** op
 ## 3. System Architecture & Boundaries
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│                    Storefront Tier                      │
-│   (HTML5, CSS3, Vanilla ESM JavaScript, WebGL Canvas)   │
-└───────────────────────────┬─────────────────────────────┘
-                            │
-┌───────────────────────────▼─────────────────────────────┐
-│             Experience Contract (Adapter)               │
-│               ITentacionesExperienceService             │
-└─────────────┬─────────────────────────────┬─────────────┘
-              │                             │
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    Storefront Tier                      â”‚
+â”‚   (HTML5, CSS3, Vanilla ESM JavaScript, WebGL Canvas)   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                            â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚             Experience Contract (Adapter)               â”‚
+â”‚               ITentacionesExperienceService             â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+              â”‚                             â”‚
     [PUBLIC_DEMO Mode]           [PRIVATE_CONNECTED Mode]
-              │                             │
-┌─────────────▼─────────────┐ ┌─────────────▼─────────────┐
-│       DemoAdapter         │ │   TentacionesPlatform     │
-│  (Deterministic Synthetic │ │         Adapter           │
-│   Catalog & Sizing Engine)│ │ (PlatformClient REST SDK) │
-└───────────────────────────┘ └─────────────┬─────────────┘
-                                            │
-                              ┌─────────────▼─────────────┐
-                              │    Platform REST API      │
-                              │ (AI Operating Platform)   │
-                              └───────────────────────────┘
+              â”‚                             â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚       DemoAdapter         â”‚ â”‚   TentacionesPlatform     â”‚
+â”‚  (Deterministic Synthetic â”‚ â”‚         Adapter           â”‚
+â”‚   Catalog & Sizing Engine)â”‚ â”‚ (PlatformClient REST SDK) â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                            â”‚
+                              â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                              â”‚    Platform REST API      â”‚
+                              â”‚ (AI Operating Platform)   â”‚
+                              â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### Architectural Highlights
@@ -69,21 +69,21 @@ Tentaciones delivers a **zero-install, in-browser spatial try-on experience** op
 The 3D/AR subsystem implements a graceful 3-tier cascade:
 
 ```text
-┌────────────────────────────────────────────────────────┐
-│             Device Capability Handshake                │
-│    navigator.xr.isSessionSupported('immersive-ar')     │
-└───────────┬────────────────────────────────┬───────────┘
-            │ Supported                      │ Unsupported
-┌───────────▼───────────┐        ┌───────────▼───────────┐
-│  Tier 1: WebXR Spatial│        │  Tier 2: Real GLB     │
-│   Hit-Test & Placement│        │   Interactive Viewer  │
-│  (6-DoF World Anchor) │        │ (360° Orbit & Zoom)   │
-└───────────────────────┘        └───────────┬───────────┘
-                                             │ Fallback
-                                 ┌───────────▼───────────┐
-                                 │  Tier 3: Procedural   │
-                                 │     3D Mesh Canvas    │
-                                 └───────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚             Device Capability Handshake                â”‚
+â”‚    navigator.xr.isSessionSupported('immersive-ar')     â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+            â”‚ Supported                      â”‚ Unsupported
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Tier 1: WebXR Spatialâ”‚        â”‚  Tier 2: Real GLB     â”‚
+â”‚   Hit-Test & Placementâ”‚        â”‚   Interactive Viewer  â”‚
+â”‚  (6-DoF World Anchor) â”‚        â”‚ (360Â° Orbit & Zoom)   â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜        â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                                             â”‚ Fallback
+                                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+                                 â”‚  Tier 3: Procedural   â”‚
+                                 â”‚     3D Mesh Canvas    â”‚
+                                 â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### 1. WebXR Spatial AR (`Tier 1`)

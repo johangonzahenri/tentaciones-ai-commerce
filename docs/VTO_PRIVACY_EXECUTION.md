@@ -7,34 +7,34 @@ OWNER: Principal Privacy & Compliance Architect
 
 ---
 
-## 1. DISTINCIÓN ENTRE POLÍTICAS DE PRIVACIDAD
+## 1. DISTINCIÃ“N ENTRE POLÃTICAS DE PRIVACIDAD
 
-Es fundamental distinguir con total precisión técnica las dos políticas de retención involucradas en el flujo:
+Es fundamental distinguir con total precisiÃ³n tÃ©cnica las dos polÃ­ticas de retenciÃ³n involucradas en el flujo:
 
 ```text
-┌───────────────────────────────────────┐       ┌───────────────────────────────────────┐
-│     TENTACIONES COMMERCE PLATFORM     │       │            FASHN AI CLOUD             │
-├───────────────────────────────────────┤       ├───────────────────────────────────────┤
-│ • 0 Persistencia en disco o BD        │       │ • Outputs Base64: hasta 60 minutos    │
-│ • Buffer RAM efímero (destrucción)    │  ──►  │ • URLs CDN: retención de 3 días       │
-│ • 0 Carpetas uploads/ ni historiales  │       │ • Historial de requests en servidor   │
-│ • 0 Registro de imágenes en logs      │       │ • Recomienda URLs firmadas temporales │
-└───────────────────────────────────────┘       └───────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”       â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚     TENTACIONES COMMERCE PLATFORM     â”‚       â”‚            FASHN AI CLOUD             â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤       â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚ â€¢ 0 Persistencia en disco o BD        â”‚       â”‚ â€¢ Outputs Base64: hasta 60 minutos    â”‚
+â”‚ â€¢ Buffer RAM efÃ­mero (destrucciÃ³n)    â”‚  â”€â”€â–º  â”‚ â€¢ URLs CDN: retenciÃ³n de 3 dÃ­as       â”‚
+â”‚ â€¢ 0 Carpetas uploads/ ni historiales  â”‚       â”‚ â€¢ Historial de requests en servidor   â”‚
+â”‚ â€¢ 0 Registro de imÃ¡genes en logs      â”‚       â”‚ â€¢ Recomienda URLs firmadas temporales â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜       â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---
 
-## 2. POLÍTICA DE TENTACIONES (EPHEMERAL RAM ONLY)
+## 2. POLÃTICA DE TENTACIONES (EPHEMERAL RAM ONLY)
 
-- **Frontend:** La fotografía cargada se almacena en memoria volátil de la pestaña activa mediante `Blob` / `DataURI`. Al cerrar el modal o cambiar de página, se liberan referencias mediante `URL.revokeObjectURL()`.
-- **Backend / Gateway:** Los tensores y cadenas Base64 existen exclusivamente durante la duración de la petición HTTP y son eliminados inmediatamente tras la entrega de la respuesta.
-- **Auditoría de Logs:** Los interceptores de telemetría filtran explícitamente cualquier campo con imágenes en bruto, tokens de autorización y datos personales biométricos.
+- **Frontend:** La fotografÃ­a cargada se almacena en memoria volÃ¡til de la pestaÃ±a activa mediante `Blob` / `DataURI`. Al cerrar el modal o cambiar de pÃ¡gina, se liberan referencias mediante `URL.revokeObjectURL()`.
+- **Backend / Gateway:** Los tensores y cadenas Base64 existen exclusivamente durante la duraciÃ³n de la peticiÃ³n HTTP y son eliminados inmediatamente tras la entrega de la respuesta.
+- **AuditorÃ­a de Logs:** Los interceptores de telemetrÃ­a filtran explÃ­citamente cualquier campo con imÃ¡genes en bruto, tokens de autorizaciÃ³n y datos personales biomÃ©tricos.
 
 ---
 
-## 3. POLÍTICA DEL PROVEEDOR EXTERNO (FASHN AI)
+## 3. POLÃTICA DEL PROVEEDOR EXTERNO (FASHN AI)
 
 - FASHN AI documenta que almacena metadatos de solicitud e historial de inferencia en su plataforma.
-- Cuando se utiliza `return_base64: true`, los artefactos están disponibles temporalmente hasta por **60 minutos**.
-- Cuando se utilizan enlaces CDN estándar (`cdn.fashn.ai`), la ventana de disponibilidad es de **3 días**.
-- Tentaciones utiliza prioritariamente el modo Base64 efímero para minimizar la exposición en CDNs públicas.
+- Cuando se utiliza `return_base64: true`, los artefactos estÃ¡n disponibles temporalmente hasta por **60 minutos**.
+- Cuando se utilizan enlaces CDN estÃ¡ndar (`cdn.fashn.ai`), la ventana de disponibilidad es de **3 dÃ­as**.
+- Tentaciones utiliza prioritariamente el modo Base64 efÃ­mero para minimizar la exposiciÃ³n en CDNs pÃºblicas.

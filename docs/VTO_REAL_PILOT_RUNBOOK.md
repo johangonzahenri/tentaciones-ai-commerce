@@ -13,18 +13,18 @@ Este runbook detalla los pasos reproducibles para auditar, simular y ejecutar un
 
 ---
 
-## 2. MODOS DE OPERACIÓN DEL RUNNER
+## 2. MODOS DE OPERACIÃ“N DEL RUNNER
 
-El CLI soporta 3 modos de operación:
+El CLI soporta 3 modos de operaciÃ³n:
 
 ```bash
-# 1. Modo Auditoría y Chequeo de Prerrequisitos (CHECK)
+# 1. Modo AuditorÃ­a y Chequeo de Prerrequisitos (CHECK)
 node scripts/vto-pilot.mjs check
 
-# 2. Modo Simulación sin Inferencia Externa (DRY_RUN)
+# 2. Modo SimulaciÃ³n sin Inferencia Externa (DRY_RUN)
 node scripts/vto-pilot.mjs dry-run
 
-# 3. Modo Ejecución Real contra FASHN API (REAL_RUN)
+# 3. Modo EjecuciÃ³n Real contra FASHN API (REAL_RUN)
 # (Requiere FASHN_API_KEY configurada en variables de entorno seguras)
 FASHN_API_KEY="fa_live_..." node scripts/vto-pilot.mjs real-run
 ```
@@ -37,13 +37,13 @@ Si se invoca `real-run` sin la variable `FASHN_API_KEY`, el runner aborta inmedi
 
 ```text
 ============================================================
-  TENTACIONES AI COMMERCE — VTO PILOT RUNNER CLI
+  TENTACIONES AI COMMERCE â€” VTO PILOT RUNNER CLI
 ============================================================
 Command Mode:    REAL-RUN
 FASHN_API_KEY:   NOT CONFIGURED (Missing)
 Runtime:         Node.js v22.x
 ------------------------------------------------------------
-❌ ERROR: REAL PILOT EXECUTION BLOCKED (FAIL-CLOSED)
+âŒ ERROR: REAL PILOT EXECUTION BLOCKED (FAIL-CLOSED)
 Reason: FASHN_API_KEY is not configured in the environment.
 Honesty Invariant: No fake pilot calls or synthetic tokens will be emitted.
 ```
@@ -52,6 +52,6 @@ Honesty Invariant: No fake pilot calls or synthetic tokens will be emitted.
 
 ## 4. INVENTARIO DE SEGURIDAD OPERACIONAL
 
-- **Zero Secret Output:** El CLI jamás imprime en pantalla o en logs la clave de API ni tokens Bearer.
+- **Zero Secret Output:** El CLI jamÃ¡s imprime en pantalla o en logs la clave de API ni tokens Bearer.
 - **Zero Raw Image Dump:** Las fotos de usuario o prendas no se vuelcan al disco ni se persisten en archivos locales.
-- **Idempotencia:** Cada ejecución genera un `requestId` único e irrepetible.
+- **Idempotencia:** Cada ejecuciÃ³n genera un `requestId` Ãºnico e irrepetible.

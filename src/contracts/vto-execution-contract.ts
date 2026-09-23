@@ -14,21 +14,29 @@ export type VTOExecutionStatus =
   | "COMPLETED"
   | "FAILED"
   | "CANCELLED"
-  | "TIMEOUT";
+  | "TIMEOUT"
+  | "STALE";
 
 export type VTOErrorCode =
   | "VTO_AUTH_ERROR"
   | "VTO_INPUT_INVALID"
   | "VTO_IMAGE_UNREADABLE"
+  | "VTO_CONSENT_REQUIRED"
+  | "VTO_PAYLOAD_TOO_LARGE"
   | "VTO_PROVIDER_RATE_LIMIT"
   | "VTO_PROVIDER_UNAVAILABLE"
   | "VTO_PROVIDER_FAILED"
+  | "VTO_CIRCUIT_OPEN"
   | "VTO_CONTENT_BLOCKED"
+  | "VTO_COST_LIMIT_EXCEEDED"
   | "VTO_TIMEOUT"
   | "VTO_CANCELLED"
   | "VTO_MISSING_CREDENTIAL"
   | "VTO_RESULT_INVALID"
-  | "VTO_DUPLICATE_REQUEST";
+  | "VTO_DUPLICATE_REQUEST"
+  | "VTO_CONCURRENCY_LIMIT"
+  | "VTO_STALE_EXECUTION"
+  | "VTO_UNAUTHORIZED_ACCESS";
 
 export interface VTOPilotProfile {
   provider: "demo-synthetic" | "fashn-pilot";
@@ -40,6 +48,7 @@ export interface VTOPilotProfile {
   pollIntervalMs: number;
   maxPollAttempts: number;
   maxRetries: number;
+  maxPollingDurationMs?: number;
 }
 
 export const DEFAULT_PILOT_PROFILE: VTOPilotProfile = {
@@ -52,6 +61,7 @@ export const DEFAULT_PILOT_PROFILE: VTOPilotProfile = {
   pollIntervalMs: 1500,
   maxPollAttempts: 25,
   maxRetries: 2,
+  maxPollingDurationMs: 60000,
 };
 
 export interface VirtualTryOnExecutionRequest {
@@ -64,6 +74,7 @@ export interface VirtualTryOnExecutionRequest {
   userConsentGranted: boolean;
   demoMode: boolean;
   locale?: string;
+  clientSessionId?: string;
   metadata?: {
     clientSessionId?: string;
     avatarProfile?: "Nova" | "Sora" | "Mateo";
@@ -74,15 +85,20 @@ export interface VirtualTryOnExecutionRequest {
 export interface VirtualTryOnExecutionResult {
   requestId: string;
   jobId: string;
+  executionId?: string;
+  clientSessionId?: string;
   providerId: string;
   modelName: string;
   status: VTOExecutionStatus;
   resultImageUrl?: string;
   isSyntheticDemo: boolean;
+  metricsSource: "DEMO_SYNTHETIC" | "REAL_PROVIDER";
   category: TryOnCategory;
   recommendedSize?: string;
   fitConfidence?: number;
   processingTimeMs: number;
+  inferenceLatencyMs?: number;
+  totalDurationMs?: number;
   completedAt: string;
   disclaimer: {
     es: string;
@@ -95,6 +111,8 @@ export interface VirtualTryOnExecutionResult {
   };
   metadata: {
     attempts: number;
+    pollCount?: number;
+    retryCount?: number;
     sourceType: "USER_PHOTO" | "SYNTHETIC_AVATAR";
     sanitizedMimeType: string;
     evaluatedResolution: string;

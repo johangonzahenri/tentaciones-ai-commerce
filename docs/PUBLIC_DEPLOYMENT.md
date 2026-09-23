@@ -1,5 +1,5 @@
 # Public Demo Deployment & Hosting Architecture
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/PUBLIC_DEPLOYMENT.md
@@ -17,13 +17,13 @@ Tentaciones AI Commerce in `PUBLIC_DEMO` mode is completely standalone, client-r
 ### Directory Structure of Distributable Artifact:
 ```text
 dist-public/ (or public/)
-├── index.html       # Single-Page Storefront Entrypoint
-├── styles.css       # Complete UI/AR/3D Stylesheet
-├── app.js           # Core Commerce, 3D Engine & AR Adapter
-├── i18n.js          # Bilingual Dictionary (es-419 / en)
-└── assets/
-    ├── 3d/          # 3D Spatial Meshes & Previews
-    └── images/      # Product Imagery
+â”œâ”€â”€ index.html       # Single-Page Storefront Entrypoint
+â”œâ”€â”€ styles.css       # Complete UI/AR/3D Stylesheet
+â”œâ”€â”€ app.js           # Core Commerce, 3D Engine & AR Adapter
+â”œâ”€â”€ i18n.js          # Bilingual Dictionary (es-419 / en)
+â””â”€â”€ assets/
+    â”œâ”€â”€ 3d/          # 3D Spatial Meshes & Previews
+    â””â”€â”€ images/      # Product Imagery
 ```
 
 ---

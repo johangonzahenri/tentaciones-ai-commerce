@@ -10,11 +10,11 @@
   <meta property="og:title" content="TENTACIONES — AI Fashion Commerce & Virtual Try-On">
   <meta property="og:description" content="Experience autonomous AI-assisted shopping with real GLB/glTF 3D inspection and WebXR spatial AR placement.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/assets/images/hero-cover.svg">
+  <meta property="og:image" content="assets/images/hero-cover.svg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="TENTACIONES — AI Fashion Commerce & Virtual Try-On">
   <meta name="twitter:description" content="AI fashion commerce with WebXR 3D spatial fitting and biometric calibration.">
-  <meta name="twitter:image" content="/assets/images/hero-cover.svg">
+  <meta name="twitter:image" content="assets/images/hero-cover.svg">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
   
   <link rel="stylesheet" href="styles.css">
@@ -406,6 +406,21 @@
           </div>
         </div>
 
+        <!-- Real-Time Input Quality & Readiness Feedback Box -->
+        <div id="vto-quality-feedback-box" style="display: none; background-color: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.875rem; margin-top: 0.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span id="vto-quality-icon" style="font-size: 1.1rem;">🔍</span>
+              <span id="vto-quality-title" style="font-size: 0.8125rem; font-weight: 700;">Calidad de Fotografía</span>
+            </div>
+            <span id="vto-quality-badge" class="vto-quality-badge vto-badge-excellent">EXCELLENT</span>
+          </div>
+          <p id="vto-quality-text" style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.25rem;">
+            Imagen lista para la prueba virtual.
+          </p>
+          <div id="vto-quality-details" style="font-size: 0.7rem; color: var(--text-muted); display: flex; gap: 0.75rem; flex-wrap: wrap;"></div>
+        </div>
+
         <button class="btn btn-primary" id="btn-vto-generate" style="width: 100%; margin-top: 0.5rem;">✨ Generar Prueba Virtual con IA</button>
       </div>
 
@@ -422,7 +437,7 @@
       <!-- Step 4: Result Display -->
       <div id="vto-result-box" style="display: none; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
         <div class="vto-result-image-wrapper" style="text-align: center; background: #0b1120; border-radius: var(--radius-md); padding: 1rem; position: relative;">
-          <img id="vto-result-img" src="/assets/images/demo-vto-composite.svg" style="max-width: 100%; max-height: 360px; border-radius: var(--radius-sm);" alt="Virtual Try-On Result">
+          <img id="vto-result-img" src="assets/images/demo-vto-composite.svg" style="max-width: 100%; max-height: 360px; border-radius: var(--radius-sm);" alt="Virtual Try-On Result">
         </div>
 
         <div style="background-color: var(--bg-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.875rem;">

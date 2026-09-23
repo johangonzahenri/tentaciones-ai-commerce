@@ -1,5 +1,5 @@
 # WebXR AR Spatial Experience & Hit-Test Architecture
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/WEBXR_AR_ARCHITECTURE.md
@@ -16,7 +16,7 @@ This document defines the spatial Augmented Reality architecture for **Tentacion
 
 > [!IMPORTANT]
 > **Product Honesty & Capabilities Boundary**:
-> * **CURRENT IN-SCOPE CAPABILITIES**: WebXR `immersive-ar` session initialization, Raycast/Hit-Test surface anchoring, 3D GLB/GLTF spatial placement, 60 FPS orbital transformation (scale 0.25x - 2.5x, 45° rotation), and multi-tier graceful degradation.
+> * **CURRENT IN-SCOPE CAPABILITIES**: WebXR `immersive-ar` session initialization, Raycast/Hit-Test surface anchoring, 3D GLB/GLTF spatial placement, 60 FPS orbital transformation (scale 0.25x - 2.5x, 45Â° rotation), and multi-tier graceful degradation.
 > * **EXPLICITLY OUT OF SCOPE**: Human pose estimation, body tracking landmarks, body segmentation, parametric garment cloth deformation, and biometric depth reconstruction. (Reserved for future specialized phases).
 
 ---
@@ -26,29 +26,29 @@ This document defines the spatial Augmented Reality architecture for **Tentacion
 The application guarantees that every user, regardless of hardware capabilities, experiences a functional and rich product interaction:
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│ LEVEL 1: WebXR Immersive AR (Camera + Hit-Test Anchor)  │
-└────────────────────────────┬────────────────────────────┘
-                             │ (If WebXR / Camera Unavailable)
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ LEVEL 2: 3D Real GLB / GLTF Spatial Model Viewer        │
-└────────────────────────────┬────────────────────────────┘
-                             │ (If Binary Load Fails)
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ LEVEL 3: Procedural Mathematical Canvas 3D Mesh         │
-└────────────────────────────┬────────────────────────────┘
-                             │ (If User Requests Sizing)
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ LEVEL 4: 2D Biometric Fitting Simulation (Nova/Sora/Mateo)│
-└────────────────────────────┬────────────────────────────┘
-                             │ (Static Lowest Tier)
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│ LEVEL 5: High-Fidelity Static SVG / Image View          │
-└─────────────────────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ LEVEL 1: WebXR Immersive AR (Camera + Hit-Test Anchor)  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                             â”‚ (If WebXR / Camera Unavailable)
+                             â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ LEVEL 2: 3D Real GLB / GLTF Spatial Model Viewer        â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                             â”‚ (If Binary Load Fails)
+                             â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ LEVEL 3: Procedural Mathematical Canvas 3D Mesh         â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                             â”‚ (If User Requests Sizing)
+                             â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ LEVEL 4: 2D Biometric Fitting Simulation (Nova/Sora/Mateo)â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                             â”‚ (Static Lowest Tier)
+                             â–¼
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ LEVEL 5: High-Fidelity Static SVG / Image View          â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---
@@ -57,40 +57,40 @@ The application guarantees that every user, regardless of hardware capabilities,
 
 ```text
 Idle / Storefront
-       │
-       ▼
+       â”‚
+       â–¼
 User Clicks "WebXR Espacial"
-       │
-       ├── Request navigator.xr.isSessionSupported("immersive-ar")
-       │     ├── Succeeded → Request session ({ optionalFeatures: ["hit-test", "local-floor"] })
-       │     └── Denied/Unsupported → Degrade to Level 2/4 Fallback
-       │
-       ▼
+       â”‚
+       â”œâ”€â”€ Request navigator.xr.isSessionSupported("immersive-ar")
+       â”‚     â”œâ”€â”€ Succeeded â†’ Request session ({ optionalFeatures: ["hit-test", "local-floor"] })
+       â”‚     â””â”€â”€ Denied/Unsupported â†’ Degrade to Level 2/4 Fallback
+       â”‚
+       â–¼
 Session Initialization (AR_INITIALIZING)
-       │
-       ├── Request Reference Space ("local-floor" / "local")
-       ├── Request Hit-Test Source (requestHitTestSource)
-       └── Start renderLoop (requestAnimationFrame)
-       │
-       ▼
+       â”‚
+       â”œâ”€â”€ Request Reference Space ("local-floor" / "local")
+       â”œâ”€â”€ Request Hit-Test Source (requestHitTestSource)
+       â””â”€â”€ Start renderLoop (requestAnimationFrame)
+       â”‚
+       â–¼
 Surface Scanning (AR_SCANNING_SURFACE)
-       │
-       ├── Reticle Ring Pulses at Screen Center
-       └── Hit-Test Finds Surface Matrix → AR_SURFACE_DETECTED
-       │
-       ▼
+       â”‚
+       â”œâ”€â”€ Reticle Ring Pulses at Screen Center
+       â””â”€â”€ Hit-Test Finds Surface Matrix â†’ AR_SURFACE_DETECTED
+       â”‚
+       â–¼
 Object Placement (AR_PLACED)
-       │
-       ├── Render Model (GLB/GLTF/Procedural) at World Transform
-       └── Display Spatial HUD Controls (Scale, Rotate, Remove)
-       │
-       ▼
+       â”‚
+       â”œâ”€â”€ Render Model (GLB/GLTF/Procedural) at World Transform
+       â””â”€â”€ Display Spatial HUD Controls (Scale, Rotate, Remove)
+       â”‚
+       â–¼
 Session Exit / Cleanup (AR_EXITED)
-       │
-       ├── Cancel Hit-Test Source
-       ├── Cancel Animation Frames
-       ├── End XR Session
-       └── Restore 2D Viewport State
+       â”‚
+       â”œâ”€â”€ Cancel Hit-Test Source
+       â”œâ”€â”€ Cancel Animation Frames
+       â”œâ”€â”€ End XR Session
+       â””â”€â”€ Restore 2D Viewport State
 ```
 
 ---

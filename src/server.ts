@@ -133,17 +133,67 @@ export function createServer(): http.Server {
         }
 
         // --- AI Virtual Try-On (VTO) Endpoints ---
+        const MAX_POST_BYTES = 12 * 1024 * 1024; // 12 MB safety ceiling for raw JSON/Base64 payloads
+
+        if (req.method === "GET" && pathname === "/api/vto/metrics") {
+          const { VTOMetricsCollector } = await import("./domain/vto/vto-observability.js");
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(VTOMetricsCollector.getMetricsSummary()));
+          return;
+        }
+
+        if (req.method === "POST" && pathname === "/api/vto/assess") {
+          let body = "";
+          let exceeded = false;
+          req.on("data", (chunk) => {
+            body += chunk;
+            if (body.length > MAX_POST_BYTES) {
+              exceeded = true;
+              req.destroy();
+            }
+          });
+          req.on("end", async () => {
+            if (exceeded) {
+              res.writeHead(413, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Payload Too Large: VTO request exceeds maximum allowed size (12 MB)." }));
+              return;
+            }
+            try {
+              const data = JSON.parse(body || "{}");
+              const result = await vtoService.assessUserImage(data);
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end(JSON.stringify(result));
+            } catch (err) {
+              res.writeHead(400, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
+            }
+          });
+          return;
+        }
+
         if (req.method === "POST" && pathname === "/api/vto/validate") {
           let body = "";
-          req.on("data", (chunk) => { body += chunk; });
+          let exceeded = false;
+          req.on("data", (chunk) => {
+            body += chunk;
+            if (body.length > MAX_POST_BYTES) {
+              exceeded = true;
+              req.destroy();
+            }
+          });
           req.on("end", async () => {
+            if (exceeded) {
+              res.writeHead(413, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Payload Too Large: VTO request exceeds maximum allowed size (12 MB)." }));
+              return;
+            }
             try {
               const data = JSON.parse(body || "{}");
               const validation = await vtoService.validateTryOn(data);
-              res.writeHead(validation.valid ? 200 : 400);
+              res.writeHead(validation.valid ? 200 : 400, { "Content-Type": "application/json" });
               res.end(JSON.stringify(validation));
             } catch (err) {
-              res.writeHead(400);
+              res.writeHead(400, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
             }
           });
@@ -152,15 +202,27 @@ export function createServer(): http.Server {
 
         if (req.method === "POST" && pathname === "/api/vto/generate") {
           let body = "";
-          req.on("data", (chunk) => { body += chunk; });
+          let exceeded = false;
+          req.on("data", (chunk) => {
+            body += chunk;
+            if (body.length > MAX_POST_BYTES) {
+              exceeded = true;
+              req.destroy();
+            }
+          });
           req.on("end", async () => {
+            if (exceeded) {
+              res.writeHead(413, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Payload Too Large: VTO request exceeds maximum allowed size (12 MB)." }));
+              return;
+            }
             try {
               const data = JSON.parse(body || "{}");
               const submission = await vtoService.submitTryOn(data);
-              res.writeHead(200);
+              res.writeHead(200, { "Content-Type": "application/json" });
               res.end(JSON.stringify(submission));
             } catch (err) {
-              res.writeHead(400);
+              res.writeHead(400, { "Content-Type": "application/json" });
               res.end(JSON.stringify({ error: sanitizeErrorMessage(err) }));
             }
           });
@@ -170,7 +232,7 @@ export function createServer(): http.Server {
         if (req.method === "GET" && pathname.startsWith("/api/vto/status/")) {
           const jobId = pathname.replace("/api/vto/status/", "");
           const status = await vtoService.checkStatus(jobId);
-          res.writeHead(200);
+          res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(status));
           return;
         }
@@ -178,7 +240,7 @@ export function createServer(): http.Server {
         if (req.method === "GET" && pathname.startsWith("/api/vto/result/")) {
           const jobId = pathname.replace("/api/vto/result/", "");
           const result = await vtoService.fetchResult(jobId);
-          res.writeHead(200);
+          res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(result));
           return;
         }
@@ -186,12 +248,12 @@ export function createServer(): http.Server {
         if (req.method === "POST" && pathname.startsWith("/api/vto/cancel/")) {
           const jobId = pathname.replace("/api/vto/cancel/", "");
           await vtoService.cancelJob(jobId);
-          res.writeHead(200);
+          res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ success: true, jobId, status: "CANCELLED" }));
           return;
         }
 
-        res.writeHead(404);
+        res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "API endpoint not found" }));
         return;
       } catch (err) {

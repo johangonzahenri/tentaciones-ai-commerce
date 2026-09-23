@@ -1,5 +1,5 @@
 # WebXR AR Spatial Session Lifecycle & State Machine Guide
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/AR_SESSION_GUIDE.md

@@ -1,5 +1,5 @@
 # Demo Release Certification & Verification Audit
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/DEMO_RELEASE.md
@@ -14,7 +14,7 @@ SOURCE CODE POLICY: Strictly PRIVATE Repository
 
 * **Project Identifier**: `PROJ-01-TENTACIONES`
 * **Release Tag**: `v1.2.0`
-* **Phase**: Fase 86 — 3D/GLTF Virtual Try-on & Public Demo Deployment
+* **Phase**: Fase 86 â€” 3D/GLTF Virtual Try-on & Public Demo Deployment
 * **Repository Visibility**: `PRIVATE` (`https://github.com/johangonzahenri/tentaciones-ai-commerce.git`)
 * **Upstream Platform**: AI Operating Platform (Parent Platform `PROJ-00`)
 

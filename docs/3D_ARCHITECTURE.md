@@ -1,5 +1,5 @@
 # 3D GLTF Interactive Viewer Architecture
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/3D_ARCHITECTURE.md
@@ -12,7 +12,7 @@ DEPENDENCY OVERHEAD: 0 KB (Zero External NPM Dependencies)
 
 ## 1. Executive Summary
 
-This document specifies the architectural blueprint for the 3D GLTF product visualization layer within **Tentaciones AI Commerce** (`PROJ-01-TENTACIONES`). 
+This document specifies the architectural blueprint for the 3D GLTF product visualization layer within **Tentaciones AI Commerce** (`PROJ-01-TENTACIONES`).
 
 The 3D interactive viewer provides realistic spatial representation of apparel, footwear, and accessories directly in the browser. It delivers fluid 60 FPS orbital manipulation, interactive rotation, zoom, auto-spin, and dynamic material wireframe/solid shading while strictly maintaining zero external runtime dependencies and guaranteed fail-closed security.
 

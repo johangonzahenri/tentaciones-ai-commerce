@@ -1,4 +1,4 @@
-# TENTACIONES AI COMMERCE — DEMO SECURITY & FAIL-CLOSED GUARDRAILS
+# TENTACIONES AI COMMERCE â€” DEMO SECURITY & FAIL-CLOSED GUARDRAILS
 
 ============================================================
 CANONICAL DOCUMENT: docs/DEMO_SECURITY.md
@@ -9,17 +9,17 @@ CORRESPONDING CODE CONTRACT: src/security/demo-guardrails.ts
 
 ## 1. Security Philosophy: Fail-Closed Isolation
 
-When operating in `PUBLIC_DEMO` mode, security is not an afterthought or an advisory filter—it is an **active gatekeeper with fail-closed semantics**. If an anomaly, secret, private endpoint, or real payment credential is encountered at any layer, the system immediately throws a `SecurityViolationError` and halts execution.
+When operating in `PUBLIC_DEMO` mode, security is not an afterthought or an advisory filterâ€”it is an **active gatekeeper with fail-closed semantics**. If an anomaly, secret, private endpoint, or real payment credential is encountered at any layer, the system immediately throws a `SecurityViolationError` and halts execution.
 
 ```
 Incoming Request
-      ↓
-[ assertsSafeDemoMode() ] ── (Detects private host / api key / prod token) ──> [ FAIL-CLOSED: Block & Log ]
-      ↓ Validated Safe
+      â†“
+[ assertsSafeDemoMode() ] â”€â”€ (Detects private host / api key / prod token) â”€â”€> [ FAIL-CLOSED: Block & Log ]
+      â†“ Validated Safe
 [ ITentacionesExperienceService (DemoAdapter) ]
-      ↓ Response Generated
+      â†“ Response Generated
 [ sanitizeErrorMessage() & redactSensitivePayload() ]
-      ↓
+      â†“
 Client Delivery (0 Leaks)
 ```
 

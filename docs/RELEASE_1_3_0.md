@@ -1,5 +1,5 @@
 # Public Demo Release 1.3.0 Specification & Deployment Record
-## AI Operating Platform Portfolio — PROJ-01-TENTACIONES
+## AI Operating Platform Portfolio â€” PROJ-01-TENTACIONES
 
 ============================================================
 CANONICAL DOCUMENT: docs/RELEASE_1_3_0.md
@@ -33,13 +33,13 @@ The release bundles 4 synthetically generated, CC0-1.0 licensed binary/JSON spat
 
 ```text
 public/assets/3d/
-├── footwear/
-│   └── pro-carbon-racer.glb      (1,144 bytes, GLB 2.0 Binary, 10 vertices, 12 triangles)
-├── apparel/
-│   ├── polera-essential.gltf     (2,023 bytes, GLTF 2.0 Embedded, 12 vertices, 16 triangles)
-│   └── silk-evening-dress.gltf   (2,026 bytes, GLTF 2.0 Embedded, 12 vertices, 16 triangles)
-└── accessories/
-    └── reloj-titanio.glb         (1,236 bytes, GLB 2.0 Binary, 14 vertices, 20 triangles)
+â”œâ”€â”€ footwear/
+â”‚   â””â”€â”€ pro-carbon-racer.glb      (1,144 bytes, GLB 2.0 Binary, 10 vertices, 12 triangles)
+â”œâ”€â”€ apparel/
+â”‚   â”œâ”€â”€ polera-essential.gltf     (2,023 bytes, GLTF 2.0 Embedded, 12 vertices, 16 triangles)
+â”‚   â””â”€â”€ silk-evening-dress.gltf   (2,026 bytes, GLTF 2.0 Embedded, 12 vertices, 16 triangles)
+â””â”€â”€ accessories/
+    â””â”€â”€ reloj-titanio.glb         (1,236 bytes, GLB 2.0 Binary, 14 vertices, 20 triangles)
 ```
 
 ---
@@ -48,26 +48,26 @@ public/assets/3d/
 
 ```text
 Product Detail ("Ver en 3D")
-              │
-              ▼
+              â”‚
+              â–¼
     Resolve 3D Asset URL
-              │
-    ┌─────────┴─────────┐
-    ▼                   ▼
+              â”‚
+    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+    â–¼                   â–¼
 .glb Binary         .gltf JSON
-    │                   │
+    â”‚                   â”‚
 ArrayBuffer         fetch JSON
-    │                   │
+    â”‚                   â”‚
 parseGLBBuffer      parseGLTFJson
-    └─────────┬─────────┘
-              ▼
+    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+              â–¼
     Hardware Canvas 3D
    (Perspective Orbit)
-              │
+              â”‚
    (If Network/Fetch Fails)
-              ▼
+              â–¼
    Procedural Fallback 3D
-              ▼
+              â–¼
    2D Product Image View
 ```
 

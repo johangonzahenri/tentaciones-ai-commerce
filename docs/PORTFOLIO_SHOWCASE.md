@@ -1,4 +1,4 @@
-# TENTACIONES AI COMMERCE — PORTFOLIO SHOWCASE & PRESENTATION GUIDE
+# TENTACIONES AI COMMERCE â€” PORTFOLIO SHOWCASE & PRESENTATION GUIDE
 
 ============================================================
 CANONICAL DOCUMENT: docs/PORTFOLIO_SHOWCASE.md
@@ -18,12 +18,12 @@ CORRESPONDING CODE CONTRACT: ITentacionesExperienceService / UI Showcase Drawer
 During a live presentation, investor pitch, or client workshop, the showcase highlights five core capabilities:
 
 ### Pillar 1: Conversational & Natural Language Commerce
-- **Demonstration:** Users search with complex, descriptive queries such as *"zapatillas de running para maratón"* or *"vestido elegante de seda negro para cena"*.
+- **Demonstration:** Users search with complex, descriptive queries such as *"zapatillas de running para maratÃ³n"* or *"vestido elegante de seda negro para cena"*.
 - **Value:** Real-time semantic parsing matches product attributes, categories, and technical tags without keyword brittleness.
 
 ### Pillar 2: Biometric 3D / AR Virtual Fitting
-- **Demonstration:** Select a product $\rightarrow$ Click **"👓 Probar en AR"** $\rightarrow$ Switch between profiles (**Nova**, **Sora**, **Mateo**).
-- **Value:** Dynamic size recommendation with fit confidence scores (e.g. *"Talla M — 96% ajuste óptimo"*), reducing return rates in digital fashion retail by up to 38.5%.
+- **Demonstration:** Select a product $\rightarrow$ Click **"ðŸ‘“ Probar en AR"** $\rightarrow$ Switch between profiles (**Nova**, **Sora**, **Mateo**).
+- **Value:** Dynamic size recommendation with fit confidence scores (e.g. *"Talla M â€” 96% ajuste Ã³ptimo"*), reducing return rates in digital fashion retail by up to 38.5%.
 
 ### Pillar 3: Headless Experience Contract
 - **Demonstration:** Open the **Architecture & Showcase** drawer from the top bar.
@@ -34,7 +34,7 @@ During a live presentation, investor pitch, or client workshop, the showcase hig
 - **Value:** Demonstrates end-to-end purchasing workflow with zero financial risk or real credit card exposure.
 
 ### Pillar 5: AI Virtual Try-On Engine (VTO)
-- **Demonstration:** Select an apparel garment $\rightarrow$ Click **"✨ Probar con IA"** $\rightarrow$ Consent $\rightarrow$ Select avatar or upload user photo $\rightarrow$ Inspect neural synthesis with recommended size.
+- **Demonstration:** Select an apparel garment $\rightarrow$ Click **"âœ¨ Probar con IA"** $\rightarrow$ Consent $\rightarrow$ Select avatar or upload user photo $\rightarrow$ Inspect neural synthesis with recommended size.
 - **Value:** Photorealistic generative try-on resolving customer silhouette uncertainty with provider-agnostic cloud/offline execution.
 
 ### Pillar 6: Commercial Demo Performance Metrics
@@ -56,6 +56,6 @@ During a live presentation, investor pitch, or client workshop, the showcase hig
    - Open AR modal on *Polera Oversized* or *Zapatillas Pro Carbon Racer*.
    - Toggle from *Nova* (1.68m) to *Mateo* (1.82m); watch the recommended size dynamically shift from *S* to *L* with rationales.
 4. **Minute 4: AI Shopping Assistant**
-   - Click *✨ Asistente IA*; ask *"¿Qué zapatillas me recomiendas?"*; show the contextual assistant guiding the purchase.
+   - Click *âœ¨ Asistente IA*; ask *"Â¿QuÃ© zapatillas me recomiendas?"*; show the contextual assistant guiding the purchase.
 5. **Minute 5: Checkout & Architecture Showcase**
    - Complete checkout; open the Architecture drawer to demonstrate Polyrepo separation between Child App and Parent Platform.

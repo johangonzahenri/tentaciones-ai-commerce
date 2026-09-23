@@ -1,4 +1,4 @@
-# TENTACIONES AI COMMERCE — DEPLOYMENT & HOSTING STRATEGY
+# TENTACIONES AI COMMERCE â€” DEPLOYMENT & HOSTING STRATEGY
 
 ============================================================
 CANONICAL DOCUMENT: docs/DEPLOYMENT_STRATEGY.md
@@ -12,17 +12,17 @@ CORRESPONDING CODE CONTRACT: src/server.ts / Operational Modes
 Tentaciones AI Commerce supports three distinct deployment models tailored to operational requirements:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              DEPLOYMENT TOPOLOGY                                │
-├──────────────────────────────────────┬──────────────────────────────────────────┤
-│ Model 1: Public Static / Edge CDN    │ Model 2: Standalone Node / Container     │
-│ (GitHub Pages, Vercel, Netlify, S3)  │ (Docker, Cloud Run, Kubernetes, Fly.io)  │
-├──────────────────────────────────────┼──────────────────────────────────────────┤
-│ - Static assets in `public/`         │ - Standalone Node.js server (`server.ts`)│
-│ - Zero backend runtime required      │ - Native HTTP server (0 npm deps)        │
-│ - Deterministic client fallback      │ - Complete REST API (`/api/*`) endpoints │
-│ - 100% immune to server downtime     │ - Fail-closed server-side gatekeepers    │
-└──────────────────────────────────────┴──────────────────────────────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                              DEPLOYMENT TOPOLOGY                                â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚ Model 1: Public Static / Edge CDN    â”‚ Model 2: Standalone Node / Container     â”‚
+â”‚ (GitHub Pages, Vercel, Netlify, S3)  â”‚ (Docker, Cloud Run, Kubernetes, Fly.io)  â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚ - Static assets in `public/`         â”‚ - Standalone Node.js server (`server.ts`)â”‚
+â”‚ - Zero backend runtime required      â”‚ - Native HTTP server (0 npm deps)        â”‚
+â”‚ - Deterministic client fallback      â”‚ - Complete REST API (`/api/*`) endpoints â”‚
+â”‚ - 100% immune to server downtime     â”‚ - Fail-closed server-side gatekeepers    â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ---
