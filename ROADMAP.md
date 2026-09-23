@@ -2,7 +2,7 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: RELEASE CLOSED (CI/CD Verified · Remote Published · Pages Configured)
+STATUS: RELEASE CLOSURE PENDING — GitHub Pages manual activation required
 VERSION: v1.8.1
 ============================================================
 
@@ -215,7 +215,7 @@ VERSION: v1.8.1
 
 ---
 
-### Fase 21: Final Release Package, Remote Publication & CI/CD Verification (v1.8.1) — [CLOSED]
+### Fase 21: Final Release Package, Remote Publication & CI/CD Verification (v1.8.1) — [IMPLEMENTED / PAGES PENDING]
 * [x] Delimitación formal del artefacto estático de publicación (`docs/PUBLIC_RELEASE_TREE.md`).
 * [x] Normalización de rutas de activos relativas en `public/index.html` y `public/app.js` para compatibilidad con subrutas GitHub Pages.
 * [x] Implementación de fallback sintético de VTO en cliente en `public/app.js` para hosting estático puro sin servidor Node.js.
