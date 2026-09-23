@@ -85,7 +85,7 @@ test("5. Public VTO Demo Route: Fully functional with Demo Provider and 0 extern
   const request: VirtualTryOnExecutionRequest = {
     requestId: "req-pub-demo-smoke",
     userImage: {
-      inputType: "SYNTHETIC_AVATAR",
+      inputType: "DEMO_AVATAR",
       format: "svg",
       mimeType: "image/svg+xml",
       width: 800,

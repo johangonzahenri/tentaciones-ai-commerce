@@ -67,7 +67,7 @@ test("5. Publication Readiness: Real/Demo separation fails closed without FASHN 
   const realRequest: VirtualTryOnExecutionRequest = {
     requestId: "req-pub-separation-check",
     userImage: {
-      inputType: "SYNTHETIC_AVATAR",
+      inputType: "DEMO_AVATAR",
       format: "svg",
       mimeType: "image/svg+xml",
       width: 800,
