@@ -64,12 +64,14 @@ Toda capacidad tÃ©cnica y resultado en este proyecto se clasifica bajo los sig
 | **EV-32** | Smoke Test Profile (`FASHN_FIRST_REAL_SMOKE_TEST`: `tryon-max`, `fast`, `1k`, `num_images=1`, `return_base64=true`) | Script CLI / Tests | `scripts/vto-pilot.mjs` / `tests/fashn-provider-contract.test.ts` | 100% Determinista | **VERIFIED** |
 | **EV-33** | Storefront Demo E2E Certification & Separation Invariant (`REAL â‰  DEMO`) | Test Automatizado / Release Checklist | `tests/vto-demo-e2e.test.ts` (Tests 1-8) | 100% Determinista | **VERIFIED** |
 | **EV-34** | Public Demo Release Candidate Policy & Boundary Verification | Test Automatizado / Health Check | `tests/public-demo-release.test.ts` / `scripts/release-check.mjs` | 100% Determinista | **VERIFIED** |
+| **EV-35** | Final Release Package v1.8.1, GitHub Pages Workflow & Local Commit | Git Commit / Test Runner | Commit `85da624` / `tests/publication-readiness.test.ts` | 100% Determinista | **VERIFIED** |
 
 ---
 
-## 4. REGISTRO DE CLAIMS CORREGIDOS Y ACLARACIONES TÃ‰CNICAS (PHASE 106)
+## 4. REGISTRO DE CLAIMS CORREGIDOS Y ACLARACIONES TÉCNICAS (PHASE 108 & 109)
 
-1. **Release Candidate PÃºblico Certificado:** Se consolida el entorno `PUBLIC_DEMO` como demostraciÃ³n comercial y tÃ©cnica 100% autÃ³noma, sin dependencias externas obligatorias ni fugas de secretos.
-2. **LÃ­mites Operacionales ExplÃ­citos:** Se define formalmente la polÃ­tica en `src/config/demo-release-policy.ts` distinguiendo quÃ© capacidades corresponden a demostraciÃ³n sintÃ©tica y cuÃ¡les a inferencia privada conectada.
-3. **Invariante de SeparaciÃ³n Real:** La inferencia real FASHN permanece en estado `BLOCKED (FAIL-CLOSED)` y no bloquea ni degrada la experiencia pÃºblica de demostraciÃ³n.
-4. **AuditorÃ­a de Salud de Release:** El script `scripts/release-check.mjs` certifica la integridad de archivos, ausencia de credenciales pÃºblicas y consistencia documental.
+1. **Release Package v1.8.1 Certificado:** Se consolida el entorno `PUBLIC_DEMO` como demostración comercial y técnica 100% autónoma en `public/` con fallback sintético local en cliente.
+2. **Límites Operacionales Explícitos:** Se define formalmente la política en `src/config/demo-release-policy.ts` distinguiendo qué capacidades corresponden a demostración sintética y cuáles a inferencia privada conectada.
+3. **Invariante de Separación Real:** La inferencia real FASHN permanece en estado `BLOCKED (FAIL-CLOSED)` y no bloquea ni degrada la experiencia pública de demostración.
+4. **Auditoría de Salud de Release:** Los scripts `scripts/release-check.mjs`, `scripts/release-inventory.mjs` y `scripts/publication-check.mjs` certifican la integridad de archivos, ausencia de credenciales públicas y consistencia documental.
+
