@@ -2,7 +2,7 @@
 
 ============================================================
 PROJECT: PROJ-01-TENTACIONES
-STATUS: FINAL RELEASE PACKAGE READY (Phase 108 Complete)
+STATUS: RELEASE CLOSED (CI/CD Verified · Remote Published · Pages Configured)
 VERSION: v1.8.1
 ============================================================
 
@@ -215,7 +215,7 @@ VERSION: v1.8.1
 
 ---
 
-### Fase 21: Final Release Package & GitHub Pages Preparation (v1.8.1) — [IMPLEMENTED]
+### Fase 21: Final Release Package, Remote Publication & CI/CD Verification (v1.8.1) — [CLOSED]
 * [x] Delimitación formal del artefacto estático de publicación (`docs/PUBLIC_RELEASE_TREE.md`).
 * [x] Normalización de rutas de activos relativas en `public/index.html` y `public/app.js` para compatibilidad con subrutas GitHub Pages.
 * [x] Implementación de fallback sintético de VTO en cliente en `public/app.js` para hosting estático puro sin servidor Node.js.
@@ -223,6 +223,9 @@ VERSION: v1.8.1
 * [x] Creación del script de inventario reproducible de release `scripts/release-inventory.mjs`.
 * [x] Sincronización canónica de versiones (`v1.8.1`) en `package.json`, `ROADMAP.md`, `RELEASE_MANIFEST.md` y `PORTFOLIO_PROJECT_CARD.md`.
 * [x] Ampliación de la suite `tests/publication-readiness.test.ts` (117 pruebas automatizadas totales).
+* [x] Publicación y sincronización en repositorio remoto oficial (`johangonzahenri/tentaciones-ai-commerce`).
+* [x] Reparación y verificación de integridad de dependencias (`package-lock.json`), compilación TypeScript y suite completa en CI (Node 24).
+* [x] Preparación técnica de despliegue en GitHub Pages (`actions/configure-pages@v5`, `upload-pages-artifact@v4`, `deploy-pages@v4`).
 * [x] Conteo exacto de 53 documentos canónicos verificado en disco.
 
 ---
