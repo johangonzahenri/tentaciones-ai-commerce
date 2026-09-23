@@ -237,7 +237,7 @@ test("E2E Demo 7. Real Mode Blocked When Credential Absent (Fail-Closed & No Sil
   assert.equal(gateEvaluation.ready, false);
 });
 
-test("E2E Demo 8. Strict Separation: Real Request (Blocked) â‰  Demo Request (Success)", async () => {
+test("E2E Demo 8. Strict Separation: Real Request (Blocked) != Demo Request (Success)", async () => {
   const modeConfig = resolveOperationalMode({ APP_MODE: "PRIVATE_CONNECTED_DEMO" });
   const demoProvider = new DemoVirtualTryOnProvider();
   const gateway = new VTOExecutionGateway(demoProvider, modeConfig, undefined, async () => {});

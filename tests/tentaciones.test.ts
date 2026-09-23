@@ -46,7 +46,7 @@ test("3. Platform Client Configuration: Configures endpoint URL, application ID,
 
 test("4. Product Discovery: Extracts natural language intent and matches catalog items", () => {
   const engine = new TentacionesCommerceEngine();
-  const res = engine.searchProductsNaturalLanguage("zapatillas de running para maratÃ³n");
+  const res = engine.searchProductsNaturalLanguage("zapatillas de running para maraton");
   assert.equal(res.status, "COMPLETED");
   assert.equal(res.intent.category, "calzado");
   assert.ok(res.matches.length > 0);

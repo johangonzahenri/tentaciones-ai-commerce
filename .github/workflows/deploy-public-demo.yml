@@ -40,7 +40,7 @@ jobs:
         run: npx tsc --project tsconfig.json
 
       - name: Run Automated Test Suites
-        run: node --test "dist/tests/*.test.js"
+        run: node --test dist/tests/*.test.js
 
       - name: Execute Publication Readiness Audit
         run: node scripts/publication-check.mjs
